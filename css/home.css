@@ -57,3 +57,13 @@ table {
 	font-size:14px;
 	font-family: "kepler-std-display",serif;
 }
+.header-item {
+	display: inline;
+	float: left;
+	color:#ffffff;
+	font-size:18px;
+	font-family: "kepler-std-display",serif;
+	text-decoration: none;
+	padding-right: 15px;
+	padding-top: 15px;
+}
