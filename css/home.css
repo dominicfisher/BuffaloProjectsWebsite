@@ -1,0 +1,15 @@
+html,body {
+    height:100%;
+}
+
+.footer-item a {
+	color:#ffffff;
+	font-size:14px;
+	font-family: "kepler-std-display",serif;
+	text-decoration: none;
+}
+.footer-item {
+	color:#ffffff;
+	font-size:14px;
+	font-family: "kepler-std-display",serif;
+}
