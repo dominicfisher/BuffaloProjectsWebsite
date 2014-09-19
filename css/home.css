@@ -61,11 +61,12 @@ table {
 	display: inline;
 	float: left;
 	color:#ffffff;
-	font-size:18px;
-	font-family: "kepler-std-display",serif;
+	font-size:14px;
+	font-family: "museo-sans-condensed",serif;
+	font-weight: 900;
 	text-decoration: none;
 	padding-right: 15px;
-	padding-top: 15px;
+	padding-top: 31px;
 }
 
 .footer-item {
@@ -74,23 +75,43 @@ table {
 	font-family: "kepler-std-display",serif;
 }
 
-.btn {
-  background: #3498db;
-  background-image: -webkit-linear-gradient(top, #3498db, #2980b9);
-  background-image: -moz-linear-gradient(top, #3498db, #2980b9);
-  background-image: -ms-linear-gradient(top, #3498db, #2980b9);
-  background-image: -o-linear-gradient(top, #3498db, #2980b9);
-  background-image: linear-gradient(to bottom, #3498db, #2980b9);
-  font-family: Georgia;
-  color: #ffffff;
-  font-size: 14px;
-  background: #0d0c0c;
-  padding: 10px 20px 10px 20px;
-  border: solid #ffffff 2pxpx;
-  text-decoration: none;
+.section-title{
+	color:#ffffff;
+	font-size:36px;
+	font-family: "kepler-std-display",serif;
 }
 
-.btn:hover {
-  background: #656463;
-  text-decoration: none;
+.section-body {
+	color:#ffffff;
+	font-size:14px;
+	font-family: "museo-sans-condensed",sans-serif;
+	line-height:24px;
+	font-weight: 300;
 }
+
+.greyButtonWrapper {
+	display: inline-block;
+	padding-right:20px;
+}
+
+.greyButtonWrapper:hover .grey-button {
+	background-color:#FFFFFF;
+	color: #252525;
+}
+
+.grey-button  {
+	background-color: #252525;
+	color: #FFFFFF;
+	font-family: "museo-sans-condensed",sans-serif;
+	font-weight:700;
+	font-size: 14px;
+	padding-left: 30px;
+	padding-right: 30px;
+	padding-top: 17px;
+	padding-bottom: 17px;
+	display: inline-block;
+	width:auto;
+	cursor:hand;
+	float:left;
+}
+
