@@ -7,31 +7,38 @@
 		    $routeProvider.
 		      when('/home', {
 		        templateUrl: '/views/public/templates/home.html',
-		        controller: 'HomeController'
+		        controller: 'HomeController',
+		        title: 'Buffalo Projects'
 		      }).
 		      when('/aboutus', {
-		        templateUrl: 'templates/aboutus.html',
-		        controller: 'AboutUsController'
+		        templateUrl: '/views/public/templates/aboutus.html',
+		        controller: 'AboutUsController',
+		        title: 'Buffalo Projects - About Us'
 		      }).
 		      when('/careers', {
-			    templateUrl: 'templates/careers.html',
-			    controller: 'CareersController'
+			    templateUrl: '/views/public/templates/careers.html',
+			    controller: 'CareersController',
+			    title: 'Buffalo Projects - Careers'
 			  }).
 			  when('/contact', {
-				templateUrl: 'templates/contact.html',
-				controller: 'ContactController'
+				templateUrl: '/views/public/templates/contact.html',
+				controller: 'ContactController',
+				title: 'Buffalo Projects - Contact'
 			  }).
 			  when('/apps', {
-				templateUrl: 'templates/apps.html',
-				controller: 'AppsController'
+				templateUrl: '/views/public/templates/apps.html',
+				controller: 'AppsController',
+				title: 'Buffalo Projects - Apps'
 			  }).
 			  when('/blog', {
-				templateUrl: 'templates/blog.html',
-				controller: 'BlogController'
+				templateUrl: '/views/public/templates/blog.html',
+				controller: 'BlogController',
+				title: 'Buffalo Projects - Blog'
 			  }).
 			  when('/news', {
-				templateUrl: 'templates/news.html',
-				controller: 'NewsController'
+				templateUrl: '/views/public/templates/news.html',
+				controller: 'NewsController',
+				title: 'Buffalo Projects - News'
 			  }).
 		      otherwise({
 		        redirectTo: '/home'
@@ -39,9 +46,6 @@
 		    $locationProvider.html5Mode(true);
 		    $locationProvider.hashPrefix('!');
 		  });
-	
-
-
 	
 	app.controller('HomeController', function($scope) {
 	     
