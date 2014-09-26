@@ -39,14 +39,7 @@
 				templateUrl: '/views/public/templates/news.html',
 				controller: 'NewsController',
 				title: 'Buffalo Projects - News'
-			  }).
-		      otherwise({
-		        redirectTo: '/home'
-		      });
-		    $locationProvider.html5Mode(true);
-		    $locationProvider.hashPrefix('!');
-		  });
-	
+
 	app.controller('HomeController', function($scope) {
 	     
 	    //$scope.message = 'This is Add new order screen';
