@@ -39,6 +39,13 @@
 				templateUrl: '/views/public/templates/news.html',
 				controller: 'NewsController',
 				title: 'Buffalo Projects - News'
+			  }).
+			  otherwise({
+			        redirectTo: '/home'
+		      });
+		    
+		    $locationProvider.html5Mode(true);
+		  });
 
 	app.controller('HomeController', function($scope) {
 	     
@@ -59,6 +66,24 @@
 	});
 	
 	app.controller('ContactController', function($scope) {
+	     
+	    //$scope.message = 'This is Add new order screen';
+	     
+	});
+	
+	app.controller('AppsController', function($scope) {
+	     
+	    //$scope.message = 'This is Add new order screen';
+	     
+	});
+	
+	app.controller('BlogController', function($scope) {
+	     
+	    //$scope.message = 'This is Add new order screen';
+	     
+	});
+	
+	app.controller('NewsController', function($scope) {
 	     
 	    //$scope.message = 'This is Add new order screen';
 	     
