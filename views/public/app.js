@@ -80,7 +80,7 @@
 	
 	app.controller('CareersController', function($scope) {
 	     
-	    //$scope.message = 'This is Add new order screen';
+	    this.jobs = jobs;
 	     
 	});
 	
@@ -151,3 +151,4 @@ var homepageSlides = [
 	},
 	];
 
+var jobs = [];
