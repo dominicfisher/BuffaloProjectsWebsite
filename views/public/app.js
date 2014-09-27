@@ -13,32 +13,32 @@
 		      when('/aboutus', {
 		        templateUrl: '/views/public/templates/aboutus.html',
 		        controller: 'AboutUsController',
-		        title: 'Buffalo Projects - About Us'
+		        title: 'About Us - Buffalo Projects'
 		      }).
 		      when('/careers', {
 			    templateUrl: '/views/public/templates/careers.html',
 			    controller: 'CareersController',
-			    title: 'Buffalo Projects - Careers'
+			    title: 'Careers - Buffalo Projects'
 			  }).
 			  when('/contact', {
 				templateUrl: '/views/public/templates/contact.html',
-				controller: 'ContactController',
-				title: 'Buffalo Projects - Contact'
+				controller: 'ContactController - Buffalo Projects',
+				title: 'Contact'
 			  }).
 			  when('/apps', {
 				templateUrl: '/views/public/templates/apps.html',
-				controller: 'AppsController',
-				title: 'Buffalo Projects - Apps'
+				controller: 'AppsController - Buffalo Projects',
+				title: 'Apps'
 			  }).
 			  when('/blog', {
 				templateUrl: '/views/public/templates/blog.html',
-				controller: 'BlogController',
-				title: 'Buffalo Projects - Blog'
+				controller: 'BlogController - Buffalo Projects',
+				title: 'Blog'
 			  }).
 			  when('/news', {
 				templateUrl: '/views/public/templates/news.html',
-				controller: 'NewsController',
-				title: 'Buffalo Projects - News'
+				controller: 'NewsController - Buffalo Projects',
+				title: 'News'
 			  }).
 			  otherwise({
 			        redirectTo: '/home'
@@ -47,6 +47,12 @@
 		    $locationProvider.html5Mode(true);
 		  });
 
+	app.run(['$location', '$rootScope', function($location, $rootScope) {
+	    $rootScope.$on('$routeChangeSuccess', function (event, current, previous) {
+	        $rootScope.title = current.$$route.title;
+	    });
+	}]);
+	
 	app.controller('HomeController', function($scope) {
 	     
 	    //$scope.message = 'This is Add new order screen';
