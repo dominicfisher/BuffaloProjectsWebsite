@@ -53,9 +53,22 @@
 	    });
 	}]);
 	
+	app.filter('unsafe', function($sce) {
+	    return function(val) {
+	        return $sce.trustAsHtml(val);
+	    };
+	});
+	
+	app.filter('trusted', ['$sce', function ($sce) {
+	    return function(url) {
+	        return $sce.trustAsResourceUrl(url);
+	    };
+	}]);
+	
 	app.controller('HomeController', function($scope) {
 	     
-	    //$scope.message = 'This is Add new order screen';
+		this.homepageSplash = homepageSplash;
+	    this.homeSlides = homepageSlides;
 	     
 	});
 	
@@ -95,5 +108,46 @@
 	     
 	});
 
-})()
+})();
+
+var tempBodyCopy = 'Letterpress mlkshk wayfarers, kogi retro ugh before they sold out viral flannel mustache. Swag aliqua cupidatat distillery. Pork belly Odd Future gluten-free tousled, lo-fi Shoreditch plaid. Salvia PBR synth dolore. Exercitation shabby chic McSweeney&apos;s cred 90&apos;s laboris. Cornhole accusamus street art slow-carb YOLO semiotics iPhone, salvia voluptate.'
+
+var homepageSplash = {
+	id				:	'0',
+	videoPath		:	'http://s3-us-west-2.amazonaws.com/jaci.judelson/Ikea_hello_eng.webm',
+	title			:	'Love life',
+	bodyCopy		:	tempBodyCopy,
+	learnMoreAction	:	''
+};
+
+var homepageSlides = [
+	{
+		id				:	'1',
+		videoPath		:	'http://s3-us-west-1.amazonaws.com/tool.digital/tori-500-ios-app.webm',
+		title			:	'Simple, redefined',
+		bodyCopy		:	tempBodyCopy,
+		learnMoreAction	:	''
+	},
+	{
+		id				:	'2',
+		videoPath		:	'http://s3-us-west-2.amazonaws.com/jason.zada/rct_casestudy.webm',
+		title			:	'Creating moments',
+		bodyCopy		:	tempBodyCopy,
+		learnMoreAction	:	''
+	},
+	{
+		id				:	'3',
+		videoPath		:	'http://s3.amazonaws.com/tool.test/tool-reel.webm',
+		title			:	'Classic craftmanshsip',
+		bodyCopy		:	tempBodyCopy,
+		learnMoreAction	:	''
+	},
+	{
+		id				:	'4',
+		videoPath		:	'http://s3-us-west-2.amazonaws.com/ben.tricklebank/first-love-casestudy.webm',
+		title			:	'Classic craftmanshsip',
+		bodyCopy		:	tempBodyCopy,
+		learnMoreAction	:	''
+	},
+	];
 
