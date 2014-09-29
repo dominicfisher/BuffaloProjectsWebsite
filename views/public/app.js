@@ -9,6 +9,7 @@
 		        templateUrl: '/views/public/templates/home.html',
 		        controller: 'HomeController',
 		        title: 'Buffalo Projects'
+		        
 		      }).
 		      when('/aboutus', {
 		        templateUrl: '/views/public/templates/aboutus.html',
@@ -47,6 +48,32 @@
 		    $locationProvider.html5Mode(true);
 		  });
 
+	app.controller('appController', function( $scope, $route, $routeParams ){
+		
+		render = function(){
+
+            switch($route.current.title) {
+            	case 'Buffalo Projects':
+            		
+            		break
+            }
+
+        };
+
+        // Listen for changes to the Route. When the route
+        // changes, let's set the renderAction model value so
+        // that it can render in the Strong element.
+        $scope.$on(
+            "$routeChangeSuccess",
+            function( $currentRoute, $previousRoute ){
+
+                // Update the rendering.
+                render();
+
+            }
+        );
+	});
+
 	app.run(['$location', '$rootScope', function($location, $rootScope) {
 	    $rootScope.$on('$routeChangeSuccess', function (event, current, previous) {
 	        $rootScope.title = current.$$route.title;
@@ -66,11 +93,53 @@
 	}]);
 	
 	app.controller('HomeController', function($scope) {
-	     
+	    
+		$scope.load = function() {
+		       // do your $() stuff here
+
+			$('#homepageSplashText').css({
+    	        position:'absolute',
+    	        left: ($(window).width() - $('#homepageSplashText').outerWidth())/2,
+    	        top: ($('#homepageSplashText').parent().height() - $('#homepageSplashText').outerHeight())/2
+    	    });
+
+		};
+		   
+		
+		$scope.load();
 		this.homepageSplash = homepageSplash;
 	    this.homeSlides = homepageSlides;
 	     
 	});
+	
+	app.controller('QuotesController', function($scope) {
+		this.quotes = [];
+		this.quotes = quotes;
+		var firstItem = this.quotes[0];
+		
+		var position = 1;
+		
+		$scope.load = function() {
+			setTimeout(animateSlide, 3000);
+		}
+		
+		function animateSlide() {
+			var newPosition = -(position * 301);
+			
+			$('#quoteContainer').animate({top:newPosition + 'px'}, 1000, function() {
+				position++;
+				if(position == quotes.length) {
+					position = 1;
+					$('#quoteContainer').css({top:'0px'});
+				}
+				setTimeout(animateSlide, 3000);
+			});
+			
+			
+		}
+		
+		$scope.load();
+	})
 	
 	app.controller('AboutUsController', function($scope) {
 	     
@@ -114,7 +183,7 @@ var tempBodyCopy = 'Letterpress mlkshk wayfarers, kogi retro ugh before they sol
 
 var homepageSplash = {
 	id				:	'0',
-	videoPath		:	'http://s3-us-west-2.amazonaws.com/jaci.judelson/Ikea_hello_eng.webm',
+	videoPath		:	'http://www.beamtv.com/archive/file/RsMtCdstcS/hd?width=1280&height=720',
 	title			:	'Love life',
 	bodyCopy		:	tempBodyCopy,
 	learnMoreAction	:	''
@@ -152,3 +221,22 @@ var homepageSlides = [
 	];
 
 var jobs = [];
+
+var quotes = [
+	{
+		quote	:	'Finally my conversations simplified',
+		author	:	'Adrienne Fisher',
+	},
+	{
+		quote	:	'I just replaced 15 apps with one.',
+		author	:	'Paul Gordon',
+	},
+	{
+		quote	:	'Wow, just wow!',
+		author	:	'Justin Watkins',
+	},
+	{
+		quote	:	'Finally my conversations simplified',
+		author	:	'Adrienne Fisher',
+	}
+	]
