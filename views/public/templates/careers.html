@@ -36,10 +36,12 @@
 				<div style="float:right; width: 50%;  color: #000000;">
 					<ul style="width:100%">
 						<li style="width:100%; float:left;">
-							<img style="display:block; float:left;padding-right:10px;" src="sdfds"/>
-							<p style="float:left;font-family: 'museo-sans-condensed',serif; color: #666666; font-weight: 700; font-size: 14px; text-transform: uppercase;">
-								encrypted emails sent
-							</p>
+							<div>
+								<img style="display:block; float:left;padding-right:10px;" src="sdfds"/>
+								<p style="float:left;font-family: 'museo-sans-condensed',serif; color: #666666; font-weight: 700; font-size: 14px; text-transform: uppercase;">
+									encrypted emails sent
+								</p>
+							</div>
 						</li>
 						<li style="width:100%: float:left;">
 							<img style="display:block; float:left;padding-right:10px;" src="sdfds"/>
@@ -154,14 +156,27 @@
 			</div>
 		</div>
 	</div>
-	<div ng-show="careertab===2">benefits</div>
-	<div ng-show="careertab===3">studio</div>
-	<div ng-controller="CareersController as careers">
+	<div ng-show="careertab===2" style="padding-left:100px; background-color: #FFFFFF; color: #333333">
+		<div>OUR benefits</div>
+		<div>Mumblecore lomo Shoreditch yr direct trade artisan. Cray hella High Life literally Helvetica. Trust fund hella Schlitz small batch, lo-fi lomo YOLO pour-over mlkshk readymade. Letterpress crucifix Intelligentsia, viral flexitarian raw denim occupy you probably haven't heard of them McSweeney's. Schlitz raw denim squid gentrify, tattooed biodiesel pour-over literally. Freegan Intelligentsia ugh photo booth, quinoa vegan distillery bespoke Portland you probably haven't heard of them dreamcatcher four loko DIY Brooklyn. Williamsburg dreamcatcher pickled Schlitz banjo Shoreditch.</div>
+	</div>
+	<div ng-show="careertab===3" style="padding-left:100px; background-color: #FFFFFF;color:#333333">
+		<div>Our studio</div>
+		<div>Mumblecore lomo Shoreditch yr direct trade artisan. Cray hella High Life literally Helvetica. Trust fund hella Schlitz small batch, lo-fi lomo YOLO pour-over mlkshk readymade. Letterpress crucifix Intelligentsia, viral flexitarian raw denim occupy you probably haven't heard of them McSweeney's. Schlitz raw denim squid gentrify, tattooed biodiesel pour-over literally. Freegan Intelligentsia ugh photo booth, quinoa vegan distillery bespoke Portland you probably haven't heard of them dreamcatcher four loko DIY Brooklyn. Williamsburg dreamcatcher pickled Schlitz banjo Shoreditch.</div>
+	</div>
+	<div ng-controller="CareersController as careers" style="background-color: #FFFFF; padding-bottom:20px;padding-top:50px; float: left; color:#333333">
 		<div ng-show="careers.jobs.length">
 			we have jobs
 		</div>
 		<div ng-show="!(carerrs.jobs.length)">
-			we have no jobs
+			<div style="width:85%; margin:0 auto;">
+				<div style="font-family: 'kepler-std-display',serif; font-size: 50px; color:#333333; font-weight:300; text-align: center; padding-top:100px; padding-bottom:30px; line-height:56px; font-style:italic;">
+					we have no jobs
+				</div>
+				<div>
+					<span>Mumblecore lomo Shoreditch yr direct trade artisan. Cray hella High Life literally Helvetica. Trust fund hella Schlitz small batch, lo-fi lomo YOLO pour-over mlkshk readymade. Letterpress crucifix Intelligentsia, viral flexitarian raw denim occupy you probably haven't heard of them McSweeney's. Schlitz raw denim squid gentrify, tattooed biodiesel pour-over literally. Freegan Intelligentsia ugh photo booth, quinoa vegan distillery bespoke Portland you probably haven't heard of them dreamcatcher four loko DIY Brooklyn. <a href="mailto:jobs@buffaloprojects.com">jobs@buffaloprojects.com</a> pickled Schlitz banjo Shoreditch.</span>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>

@@ -1,6 +1,6 @@
 <div id="header" ng-controller='HomeController as home'>
 	<div class="scrollSlide">
-		<video style="width:100%;" loop="1" autoplay="true" muted="true" ng-src="{{home.homepageSplash.videoPath | trusted}}"></video>
+		<video id="video0" style="width:100%;" loop="1" autoplay="true" muted="true" ng-src="{{home.homepageSplash.videoPath | trusted}}"></video>
 		<div style="background-color:rgba(0, 0, 0, 0.75); top:0; left:0; width:100%; height:100%; position:absolute;"></div>
 		<div style="position:absolute; width:100%; height: 100%; top: 0; left:0;">
 			<div id="homepageSplashText" style="text-align: left; width: 40%; border-style:solid; border-width: 1px; border-color: #FFFFFF; padding:20px;   position: absolute; ">
@@ -12,7 +12,7 @@
 						{{home.homepageSplash.bodyCopy}}
 					</div>
 					<div style="text-align: center; width:100%; padding-top:20px; padding-bottom: 20px;">
-						<a class="greyButtonWrapper" href="asd">
+						<a class="greyButtonWrapper" href ng-click="playHomePageVideo(0)">
 						<div class="grey-button">
 							LEARN MORE
 						</div></a>
@@ -33,9 +33,13 @@
 			<div id="quoteContainer" style="width:75%; margin: 0 auto; position:relative;">
 				<div ng-repeat="quoteItem in quotes.quotes">
 					<div style="width:100%; float: left; height:301px;margin: 0 auto; position:relative">
-						<div style="position: absolute; height:301px;  font-family: 'kepler-std-display',serif; font-size:50px; font-weight: 300; text-align: center; text-transform:lowercase; font-style: italic;">
+						<!--QUOTE BELOW-->
+						<div style="position: absolute;  margin: 0 auto; height:301px;">
 							&quot;{{quoteItem.quote}}&quot;<br>
-							<p style="font-family: 'museo-sans-condensed',serif; font-style:normal; text-transform: none; font-size:20px; text-align: left; float:right">{{quoteItem.author}}</p>
+							<!--QUOTE AUTHOR BELOW-->
+							<p style="text-align: left; float:right">
+								{{quoteItem.author}}
+							</p>
 						</div>
 					</div>
 				</div>
@@ -44,7 +48,7 @@
 		</div>
 	</div>
 	<div class="scrollSlide" ng-repeat="homeVideoItem in home.homeSlides">
-		<video style="width:100%;" loop="1" autoplay="true" muted="true" ng-src="{{homeVideoItem.videoPath | trusted}}"></video>
+		<video id="video{{homeVideoItem.id}}" style="width:100%;" loop="1" autoplay="true" muted="true" ng-src="{{homeVideoItem.videoPath | trusted}}"></video>
 		<div style="background-color:rgba(0, 0, 0, 0.75); top:0; left:0; width:100%; height:100%; position:absolute;"></div>
 		<div style="position: absolute; top: 0; left: 0; width: 100%; height:100%; margin:auto 0" >
 			<div style="text-align:center; padding-top:100px; width: 40%; margin-left:auto; margin-right: auto; display:block;">
@@ -56,7 +60,7 @@
 						{{homeVideoItem.bodyCopy}}
 					</div>
 					<div style="text-align: center; width:100%; padding-top:20px; padding-bottom: 20px;">
-						<a class="greyButtonWrapper" href="asd">
+						<a class="greyButtonWrapper" href ng-click="playHomePageVideo(homeVideoItem.id)">
 						<div class="grey-button">
 							LEARN MORE
 						</div></a>
