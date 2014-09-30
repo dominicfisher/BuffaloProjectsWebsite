@@ -109,8 +109,18 @@
 		$scope.load();
 		this.homepageSplash = homepageSplash;
 	    this.homeSlides = homepageSlides;
+	    
+	    $scope.playHomePageVideo = function(videoId) {
+	    	$('video').each(
+	    			alert(this)
+	    	);
+	    	//if( ! $("video").prop('muted') ) 
+	    	//$('#videoId').get(0).prop('muted', false)
+		}
 	     
 	});
+	
+	
 	
 	app.controller('QuotesController', function($scope) {
 		this.quotes = [];
