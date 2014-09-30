@@ -33,9 +33,13 @@
 			<div id="quoteContainer" style="width:75%; margin: 0 auto; position:relative;">
 				<div ng-repeat="quoteItem in quotes.quotes">
 					<div style="width:100%; float: left; height:301px;margin: 0 auto; position:relative">
-						<div style="position: absolute;  margin: 0 auto; height:301px;  font-family: 'kepler-std-display',serif; font-size:50px; font-weight: 300; text-align: center; text-transform:lowercase; font-style: italic;">
+						<!--QUOTE BELOW-->
+						<div style="position: absolute;  margin: 0 auto; height:301px;">
 							&quot;{{quoteItem.quote}}&quot;<br>
-							<p style="font-family: 'museo-sans-condensed',serif; font-style:normal; text-transform: none; font-size:20px; text-align: left; float:right">{{quoteItem.author}}</p>
+							<!--QUOTE AUTHOR BELOW-->
+							<p style="text-align: left; float:right">
+								{{quoteItem.author}}
+							</p>
 						</div>
 					</div>
 				</div>
