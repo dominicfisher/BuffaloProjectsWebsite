@@ -111,9 +111,26 @@
 	    this.homeSlides = homepageSlides;
 	    
 	    $scope.playHomePageVideo = function(videoId) {
-	    	$('video').each(
-	    			alert(this)
-	    	);
+	    	$("video").each(function(){
+	    		if(!$(this).prop('muted')) {
+	    			$(this).get(0).pause();
+	    			var playingIdText = $(this).attr('id');
+	    			var playingId = playingIdText.substring(5, playingIdText.length);
+	    			$("#videoOverlay" + playingId).fadeIn();
+	    	    	$("#videoOverlayText" + playingId).fadeIn();
+	    	    	$("#video" + playingId).prop('muted', true);
+	    	    	$("#video" + playingId).get(0).pause();
+	    	    	$("#video" + playingId).get(0).currentTime = 0;
+	    	    	$("#video" + playingId).get(0).play();
+	    		}
+	    	});
+	    	$("#videoOverlay" + videoId).fadeOut();
+	    	$("#videoOverlayText" + videoId).fadeOut();
+	    	$("#video" + videoId).prop('muted', false);
+	    	$("#video" + videoId).get(0).pause();
+	    	$("#video" + videoId).get(0).currentTime = 0;
+	    	$("#video" + videoId).get(0).play();
+	    	
 	    	//if( ! $("video").prop('muted') ) 
 	    	//$('#videoId').get(0).prop('muted', false)
 		}
