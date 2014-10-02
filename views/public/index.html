@@ -32,11 +32,14 @@
 		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.23/angular.min.js"></script>
         <script type="text/javascript" src="/views/public/js/vendor/angular-route.min.js"></script>
 		<script type="text/javascript" src="/views/public/app.js"></script>
+		<script src='https://api.tiles.mapbox.com/mapbox.js/v2.1.2/mapbox.js'></script>
+		<link href='https://api.tiles.mapbox.com/mapbox.js/v2.1.2/mapbox.css' rel='stylesheet' />
+		<script src="/views/public/js/contact.js"></script>
 		<script>
-	function changeTab(value) {
-		alert('hello');
-	}
-</script>
+			function changeTab(value) {
+				alert('hello');
+			}
+		</script>
 
 	</head>
 
@@ -498,16 +501,16 @@
 			</div>
 			<ul style="list-style-type: none; padding:0px;">
 				<li class="footer-item">
-					<a href="aboutus.html">about us</a>
+					<a href="/aboutus">about us</a>
 				</li>
 				<li class="footer-item">
-					<a href="contact.html">contact</a>
+					<a href="/contact">contact</a>
 				</li>
 				<li class="footer-item">
-					<a href="careers.html">careers</a>
+					<a href="/careers">careers</a>
 				</li>
 				<li class="footer-item">
-					<a href="investors.html">investors</a>
+					<a href="/investors">investors</a>
 				</li>
 			</ul>
 		</div>
