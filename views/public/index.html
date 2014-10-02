@@ -32,9 +32,14 @@
 		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.23/angular.min.js"></script>
         <script type="text/javascript" src="/views/public/js/vendor/angular-route.min.js"></script>
 		<script type="text/javascript" src="/views/public/app.js"></script>
+		
+		<!--
 		<script src='https://api.tiles.mapbox.com/mapbox.js/v2.1.2/mapbox.js'></script>
-		<link href='https://api.tiles.mapbox.com/mapbox.js/v2.1.2/mapbox.css' rel='stylesheet' />
-		<script src="/views/public/js/contact.js"></script>
+		<link href='https://api.tiles.mapbox.com/mapbox.js/v2.1.2/mapbox.css' rel='stylesheet' />-->
+		
+		<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+		<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+		<script src="/views/public/js/vendor/leaflet/angular-leaflet-directive.js"></script>
 		<script>
 			function changeTab(value) {
 				alert('hello');
@@ -491,7 +496,7 @@
 				</li>
 			</ul>
 		</div>
-		<div ng-view></div>
+		<div ng-view style="width:100%; height:100%"></div>
 		
 
 		<div style="height: 250px; width:100%; background-color:#252525;padding-left: 10px; padding-top: 10px;position: relative; float:left;">

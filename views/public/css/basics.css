@@ -56,3 +56,8 @@ table {
   border:0;
   height: 100%; }
  }
+ 
+a:link {
+	color:#ee2024;
+	text-decoration: none;
+}

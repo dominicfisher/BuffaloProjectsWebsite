@@ -1,6 +1,6 @@
 (function() {
 
-	var app = angular.module('bpwebsiteApp', ['ngRoute']);
+	var app = angular.module('bpwebsiteApp', ['ngRoute', 'leaflet-directive']);
 	
 	app.config(
 		  function($routeProvider, $locationProvider) {
@@ -23,8 +23,8 @@
 			  }).
 			  when('/contact', {
 				templateUrl: '/views/public/templates/contact.html',
-				controller: 'ContactController - Buffalo Projects',
-				title: 'Contact'
+				controller: 'ContactController',
+				title: 'Contact - Buffalo Projects'
 			  }).
 			  when('/apps', {
 				templateUrl: '/views/public/templates/apps.html',
@@ -180,11 +180,47 @@
 	     
 	});
 	
-	app.controller('ContactController', function($scope) {
-	     
-	    //$scope.message = 'This is Add new order screen';
-	     
-	});
+	app.controller('ContactController', [ '$scope', function($scope) {
+		
+		$scope.load = function() {
+			$('#buffalomap').css('height', window.innerHeight);
+		}
+		
+		$scope.load();
+		
+		var tilesDict = {
+			mapbox_streets: {
+                name: 'Mapbox Streets',
+                url: 'http://api.tiles.mapbox.com/v4/{mapid}/{z}/{x}/{y}.png?access_token={apikey}',
+                type: 'xyz',
+                options: {
+                    apikey: 'pk.eyJ1IjoiY2hsb2Vwcm9qZWN0IiwiYSI6Ims2aDRPNVUifQ.JWpm-PqK8m676TNUAbQaWQ',
+                    mapid: 'chloeproject.map-gnfkv8ht'
+                }
+            }
+        };
+
+     
+        angular.extend($scope, {
+            london: {
+                lat: 39.001676741504525,
+                lng: -94.59741353988647,
+                zoom: 16
+            },
+            defaults: {
+                zoomControl: false,
+                scrollWheelZoom: false
+            },
+            tiles: tilesDict.mapbox_streets
+        });
+
+        $scope.markers = new Array();
+        
+        $scope.markers.push({
+            lat: 39.001676741504525,
+            lng: -94.59741353988647
+        });
+   }]);
 	
 	app.controller('AppsController', function($scope) {
 	     
