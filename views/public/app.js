@@ -102,7 +102,7 @@
     	        left: ($(window).width() - $('#homepageSplashText').outerWidth())/2,
     	        top: ($('#homepageSplashText').parent().height() - $('#homepageSplashText').outerHeight())/2
     	    });
-
+			$('#header').animate({backgroundColor:'rgba(0,0,0,0.0)'});
 		};
 		   
 		
@@ -170,13 +170,23 @@
 	
 	app.controller('AboutUsController', function($scope) {
 	     
-	    //$scope.message = 'This is Add new order screen';
+		$scope.load = function() {
+	    	$('#header').animate({backgroundColor:'rgba(0,0,0,0.0)'});
+	    }
+	    
+	    $scope.load();
 	     
 	});
 	
 	app.controller('CareersController', function($scope) {
 	     
 	    this.jobs = jobs;
+	    
+	    $scope.load = function() {
+	    	$('#header').animate({backgroundColor:'rgba(0,0,0,0.0)'});
+	    }
+	    
+	    $scope.load();
 	     
 	});
 	
@@ -184,6 +194,8 @@
 		
 		$scope.load = function() {
 			$('#buffalomap').css('height', window.innerHeight);
+			//$('#header').animate({backgroundColor:'rgba(0.0, 0.0, 0.0, 1.0)'});
+			$('#header').animate({backgroundColor:'rgba(0,0,0,1.0)'});
 		}
 		
 		$scope.load();
@@ -224,19 +236,31 @@
 	
 	app.controller('AppsController', function($scope) {
 	     
-	    //$scope.message = 'This is Add new order screen';
+		$scope.load = function() {
+	    	$('#header').animate({backgroundColor:'rgba(0,0,0,0.0)'});
+	    }
+	    
+	    $scope.load();
 	     
 	});
 	
 	app.controller('BlogController', function($scope) {
 	     
-	    //$scope.message = 'This is Add new order screen';
+		$scope.load = function() {
+	    	$('#header').animate({backgroundColor:'rgba(0,0,0,0.0)'});
+	    }
+	    
+	    $scope.load();
 	     
 	});
 	
 	app.controller('NewsController', function($scope) {
 	     
-	    //$scope.message = 'This is Add new order screen';
+		$scope.load = function() {
+	    	$('#header').animate({backgroundColor:'rgba(0,0,0,0.0)'});
+	    }
+	    
+	    $scope.load();
 	     
 	});
 
