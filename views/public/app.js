@@ -28,18 +28,18 @@
 			  }).
 			  when('/apps', {
 				templateUrl: '/views/public/templates/apps.html',
-				controller: 'AppsController - Buffalo Projects',
-				title: 'Apps'
+				controller: 'AppsController',
+				title: 'Apps - Buffalo Projects'
 			  }).
 			  when('/blog', {
 				templateUrl: '/views/public/templates/blog.html',
-				controller: 'BlogController - Buffalo Projects',
-				title: 'Blog'
+				controller: 'BlogController',
+				title: 'Blog - Buffalo Projects'
 			  }).
 			  when('/news', {
 				templateUrl: '/views/public/templates/news.html',
-				controller: 'NewsController - Buffalo Projects',
-				title: 'News'
+				controller: 'NewsController',
+				title: 'News - Buffalo Projects'
 			  }).
 			  otherwise({
 			        redirectTo: '/home'
