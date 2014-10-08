@@ -14,3 +14,10 @@
 	padding-right:20px;
 	text-decoration: none;
 }
+
+}.header-item
+	font-size:50px
+	font-weight:300
+	text-align:center
+	text-transform:lowercase
+	font-style:italic
