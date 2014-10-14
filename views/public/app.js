@@ -94,9 +94,10 @@
 	
 	app.controller('HomeController', function($scope) {
 	    
+		this.homepageSplash = homepageSplash;
+	    this.homeSlides = homepageSlides;
+	    
 		$scope.load = function() {
-		       // do your $() stuff here
-
 			$('#homepageSplashText').css({
     	        position:'absolute',
     	        left: ($(window).width() - $('#homepageSplashText').outerWidth())/2,
@@ -107,8 +108,6 @@
 		   
 		
 		$scope.load();
-		this.homepageSplash = homepageSplash;
-	    this.homeSlides = homepageSlides;
 	    
 	    $scope.playHomePageVideo = function(videoId) {
 	    	$("video").each(function(){
@@ -130,9 +129,6 @@
 	    	$("#video" + videoId).get(0).pause();
 	    	$("#video" + videoId).get(0).currentTime = 0;
 	    	$("#video" + videoId).get(0).play();
-	    	
-	    	//if( ! $("video").prop('muted') ) 
-	    	//$('#videoId').get(0).prop('muted', false)
 		}
 	     
 	});
