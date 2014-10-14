@@ -124,10 +124,21 @@ table {
 	float:left;
 }
 
+.quote-item {
+	font-family: 'kepler-std-display',serif;
+	font-size:50px;
+	font-weight: 300; 
+	text-align: center;
+	text-transform:lowercase;
+	font-style: italic;
+	display: inline-block;
+	vertical-align: middle;
 }
 
-.body-item 
-	font-family:"museo-sans-condensed" serif
-	font-style:normal
-	text-transform:none
-	font-size:20px
+.quote-author {
+	font-family: 'museo-sans-condensed',serif;
+	font-style:normal;
+	text-transform: none;
+	font-size:20px;
+}
+	
