@@ -8,38 +8,51 @@
 		      when('/home', {
 		        templateUrl: '/views/public/templates/home.html',
 		        controller: 'HomeController',
-		        title: 'Buffalo Projects'
+		        title: 'Buffalo Projects',
+		        isWeather : 'false'
 		        
 		      }).
 		      when('/aboutus', {
 		        templateUrl: '/views/public/templates/aboutus.html',
 		        controller: 'AboutUsController',
-		        title: 'About Us - Buffalo Projects'
+		        title: 'About Us - Buffalo Projects',
+		        isWeather : 'false'
 		      }).
 		      when('/careers', {
 			    templateUrl: '/views/public/templates/careers.html',
 			    controller: 'CareersController',
-			    title: 'Careers - Buffalo Projects'
+			    title: 'Careers - Buffalo Projects',
+			    isWeather : 'false'
 			  }).
 			  when('/contact', {
 				templateUrl: '/views/public/templates/contact.html',
 				controller: 'ContactController',
-				title: 'Contact - Buffalo Projects'
+				title: 'Contact - Buffalo Projects',
+				isWeather : 'false'
 			  }).
 			  when('/apps', {
 				templateUrl: '/views/public/templates/apps.html',
 				controller: 'AppsController',
-				title: 'Apps - Buffalo Projects'
+				title: 'Apps - Buffalo Projects',
+				isWeather : 'false'
 			  }).
 			  when('/blog', {
 				templateUrl: '/views/public/templates/blog.html',
 				controller: 'BlogController',
-				title: 'Blog - Buffalo Projects'
+				title: 'Blog - Buffalo Projects',
+				isWeather : 'false'
 			  }).
 			  when('/news', {
 				templateUrl: '/views/public/templates/news.html',
 				controller: 'NewsController',
-				title: 'News - Buffalo Projects'
+				title: 'News - Buffalo Projects',
+				isWeather : 'false'
+			  }).
+			  when('/weather', {
+				  templateUrl: '/views/public/templates/weather.html',
+				  controller: 'WeatherController',
+				  title: 'Weather - Buffalo Projects',
+				  isWeather : 'true'
 			  }).
 			  otherwise({
 			        redirectTo: '/home'
@@ -50,8 +63,11 @@
 
 	app.controller('appController', function( $scope, $route, $routeParams ){
 		
+		$scope.isWeather = true;
+		
 		render = function(){
 
+			$scope.isWeather = $route.current.isWeather;
             switch($route.current.title) {
             	case 'Buffalo Projects':
             		
@@ -74,9 +90,12 @@
         );
 	});
 
-	app.run(['$location', '$rootScope', function($location, $rootScope) {
+	app.run(['$location', '$rootScope', function($location, $rootScope, $scope) {
+		$rootScope.isWeather = '';
 	    $rootScope.$on('$routeChangeSuccess', function (event, current, previous) {
 	        $rootScope.title = current.$$route.title;
+	        
+	        $rootScope.isWeather = current.$$route.isWeather;
 	    });
 	}]);
 	
@@ -91,6 +110,10 @@
 	        return $sce.trustAsResourceUrl(url);
 	    };
 	}]);
+	
+	app.controller('WeatherController', function($scope) {
+		
+	})
 	
 	app.controller('HomeController', function($scope) {
 	    
@@ -237,7 +260,6 @@
 	    }
 	    
 	    $scope.load();
-	     
 	});
 	
 	app.controller('BlogController', function($scope) {
