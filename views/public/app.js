@@ -68,8 +68,6 @@
 		render = function(){
 
 			$scope.isWeather = $route.current.isWeather;
-			alert($route.current.isWeather)
-			alert($scope.isWeather);
             switch($route.current.title) {
             	case 'Buffalo Projects':
             		
@@ -115,6 +113,34 @@
 	
 	app.controller('WeatherController', function($scope) {
 		
+		$scope.userpicture = "";
+		$scope.username = "";
+		$scope.password = "";
+		
+		$scope.showSignup = function() {
+			var parentWidth = $('#slideContainer').width();
+			var newWidth = parentWidth/3;
+			$('#loginContainer').css('display','none');
+			$('#slideContainer').animate({left: -newWidth+'px'}, 1000, "easeOutQuart", function() {
+				
+			});
+
+		}
+		
+		$scope.showLogin = function() {
+			var parentWidth = $('#slideContainer').width();
+			var newWidth = parentWidth/3;
+			$('#signUpContainer').css('display','none');
+			$('#slideContainer').animate({left: -newWidth+'px'}, 1000, "easeOutQuart", function() {
+				
+			});
+		}
+	})
+	
+	app.controller('LoginFormController', function($scope) {
+		this.weatherLogin = function() {
+			alert('login');
+		}
 	})
 	
 	app.controller('HomeController', function($scope) {

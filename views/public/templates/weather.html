@@ -1,6 +1,99 @@
-<div style="width: 100%; height: 100%">
-	<div style="width: 100%; height: 100%; overflow: hidden;">
+<div style="width: 100%; height: 100%" ng-controller='WeatherController as home'>
+	<div style="width: 100%; height: 100%; overflow: hidden; position:absolute; z-index:999; top:0px; left:0px;">
 		<img id="weatherbackground" src="/views/public/assets/img/cherry_blossoms.jpg" />
 	</div>
-	<div style="width: 25%; height: 100%"></div>
+
+	<div id="sidebar" style="position:absolute; z-index:999; top:0px; left:0px;  width:25%; height: 100%; border-left: 1px solid #999999; border-right:  1px solid #999999; background: rgba(0, 0, 0, 0.25); overflow: hidden; left:37.5%; ">
+		
+			<div id="slideContainer" style="height:100%; width: 300%; position: absolute; ">
+				<div id="weatherHomeLoginContainer" style="text-align: center; margin 0 auto;  float: left; height: 100%; width: 33.33%; vertical-align: middle">
+					<div style="position:absolute; top:50%; display:block; width:33.33%">
+						<div style="padding:20px; margin-top: -50%;">
+							<ul style="list-style-type: none;">
+								<li>
+									<span style="font-family: 'kepler-std-display',serif; color:#FFFFFF; font-size: 50px; text-align: center;"> Thank you</span>
+									<span style="font-family: 'museo-sans-condensed',serif; color: #FFFFFF; font-style:normal; font-weight:300; font-size:13px; text-align: center; line-height: 20px;">Sed before they sold out officia, semiotics gentrify labore Bushwick deserunt hashtag vegan esse cillum cornhole PBR&B chillwave. Sriracha skateboard letterpress, small batch enim nostrud Shoreditch church-key before they sold out vegan. </span>
+								</li>
+								<li>
+									<ul style="list-style-type: none; display: inline-block; width: 160px; padding-top: 50px;">
+										<li>
+											<a href ng-click="showLogin()">
+											<div  style="font-family: 'museo-sans-condensed',serif; color: #FFFFFF; font-style:normal; font-weight:300; font-size:21px; float: left; padding-right:20px; display: block;">
+												LOGIN
+											</div></a>
+										</li>
+										<li>
+											<span style="font-family: 'museo-sans-condensed',serif; color: #FFFFFF; font-style:normal; font-weight:300; font-size:21px; float: left; display: block; padding-right: 20px; padding-top:0px;">|</span>
+										</li>
+										<li>
+											<a href ng-click="showSignup()">
+											<div  style="font-family: 'museo-sans-condensed',serif; color: #FFFFFF; font-style:normal; font-weight:300; font-size:21px; float: left; display: block;">
+												SIGNUP
+											</div></a>
+										</li>
+
+									</ul>
+								</li>
+								<li>
+
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div id="loginSignUpParent" style=" float: left; width: 33.33%; display: inline-block; height: 100%">
+					<div id="loginContainer" style="position: absolute;  width: 100%; height: 100%;">
+						<div style="position:absolute; top:50%; display:block; width:33.33%">
+						<div style="padding:20px; margin-top: -50%;">
+							<ul style="list-style-type: none; margin: auto">
+								<li style="padding-bottom:10px; text-align: center; margin: auto; height: 50px;  ">
+									<div style=" height:50px; position: absolute; z-index: 999; text-align: center; padding:0px; left: 50%; ">
+									<div style="width:50px; height:50px; display:inline-block; position: relative; text-align: center; margin-left:-25px;">
+										
+										<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 75 75" enable-background="new 0 0 75 75" xml:space="preserve">
+<g>
+	<circle fill="#BCBEC0" cx="37.5" cy="37.5" r="37"/>
+	
+		<circle fill="none" stroke="#A7A9AC" stroke-width="0.5" stroke-miterlimit="10" stroke-dasharray="0.5007,0.5007" cx="37.5" cy="37.5" r="37"/>
+</g>
+<g id="_x39_73-user-toolbar-selected_x40_2x.png">
+	<g>
+		<path fill="#D1D3D4" d="M45,45.7c-1.4-0.7-2.2-1.7-2.4-2.9c-0.4-2.1,1.1-4.4,1.1-4.4l0,0c0.1-0.1,2-4.6,2-11.8
+			c0-5.5-1.8-11.6-8.2-11.6s-8.2,6.1-8.2,11.6c0,7.2,1.9,11.7,2,11.8c0,0,1.5,2.4,1.1,4.5c-0.2,1.2-1,2.1-2.4,2.9
+			c-9.3,3.5-15,5.2-15,8.3v3.4c0,1.3,1,2.5,2,2.5H58c1,0,2-1.3,2-2.5v-3.4C60,50.9,54.3,49.3,45,45.7z"/>
+	</g>
+</g>
+</svg>
+										</div>
+									</div>
+									
+									<div id="userPicture"  style=" height:50px; position: absolute; z-index: 999; text-align: center; padding:0px; left: 50%; display: none; ">
+										<div style="width:50px; height:50px; display:inline-block; position: relative; text-align: center; margin-left:-25px;">
+											<img ng-src="{{userpicture}}" width="50px" height="50px">
+										</div>
+									</div>
+								</li>
+								<form name="loginForm" class="login-form" ng-submit="weatherLogin()" ng-controller="LoginFormController">		
+									<li style="padding-bottom:10px;">
+										<input type="text" placeholder="username" ng-model="username">
+									</li>
+									<li style="padding-bottom: 20px;padding-bottom: 20px;">
+										<input type="password" placeholder="password" ng-model="password">
+									</li>
+									<li style="text-align:center; width:100%; float: left; margin auto;">
+										<input type="submit" value="LOGIN" style="font-family: 'museo-sans-condensed',serif; border: none; background-color: rgba(0, 0, 0, 0); color: #FFFFFF; text-decoration: none; font-style:normal; font-weight:300; font-size:21px;  text-align: center; display: block;" />
+									</li>
+								</form>
+							</ul>
+						</div>
+					</div>
+					</div>
+					<div id="signUpContainer" style="position: absolute; background-color: #FF0000; width: 100%; height: 100%;">signup</div>
+				</div>
+				<div id="sidebar" style=" float: left; background-color: #00FF00; width: 33.33%; height: 100%; display: inline-block">
+					sdfsdfsd
+				</div>
+		</div>
+	</div>
 </div>
