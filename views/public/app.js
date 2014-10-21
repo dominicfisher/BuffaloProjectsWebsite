@@ -68,6 +68,8 @@
 		render = function(){
 
 			$scope.isWeather = $route.current.isWeather;
+			alert($route.current.isWeather)
+			alert($scope.isWeather);
             switch($route.current.title) {
             	case 'Buffalo Projects':
             		
