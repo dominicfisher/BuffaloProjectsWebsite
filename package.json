@@ -3,8 +3,15 @@
   "description": "hello world test app",
   "version": "0.0.1",
   "private": true,
+  "scripts": {
+	    "start": "node nodeapp.js"
+  },
   "dependencies": {
     "express": "4.x",
-    "jade": "*"
+    "jade": "*",
+    "mongodb": "*",
+    "bcrypt": "0.x",
+    "node-uuid" : "1.x"
   }
 }
+

@@ -1,6 +1,22 @@
 (function() {
+	
+	
 
-	var app = angular.module('bpwebsiteApp', ['ngRoute', 'leaflet-directive']);
+	var app = angular.module('bpwebsiteApp', ['ngRoute', 'leaflet-directive', 'ngCookies']);
+	
+	app.directive('ngEnter', function () {
+	    return function (scope, element, attrs) {
+	        element.bind("keydown keypress", function (event) {
+	            if(event.which === 13) {
+	                scope.$apply(function (){
+	                    scope.$eval(attrs.ngEnter);
+	                });
+	 
+	                event.preventDefault();
+	            }
+	        });
+	    };
+	});
 	
 	app.config(
 		  function($routeProvider, $locationProvider) {
@@ -111,11 +127,17 @@
 	    };
 	}]);
 	
-	app.controller('WeatherController', function($scope) {
+	app.controller('WeatherController', function($scope, $cookies) {
+		
+		$scope.previousUsers = [];
+		if($cookies) {
+			$scope.previousUsers = $cookies.previousUsers;
+		}
 		
 		$scope.userpicture = "";
 		$scope.username = "";
 		$scope.password = "";
+		$scope.login_error = "sdfdsfds"
 		
 		$scope.showSignup = function() {
 			var parentWidth = $('#slideContainer').width();
@@ -135,12 +157,58 @@
 				
 			});
 		}
+		
+		$scope.addLoginUserToCookies = function(userObject) {
+			
+			var found = false;
+			$scope.previousUsers.forEach(function(existingUser) {
+				if(existingUser.username == userObject.username) {
+					found = true;
+				}
+			})
+			
+			if(!found) {
+				$scope.previousUsers.push(userObject);
+			}
+			
+			$cookies.previousUsers = $scope.previousUsers;
+		}
 	})
 	
-	app.controller('LoginFormController', function($scope) {
-		this.weatherLogin = function() {
-			alert('login');
+	app.controller('LoginFormController', function($scope, $http) {
+		$scope.weatherLogin = function() {
+			if($.trim($scope.username) == "" && $.trim($scope.password) == "") {
+				$scope.login_error = "We know it's weird, but we have to have a username and passord to get this going.";
+				$('#loginError').fadeIn(500);
+				return false;
+			} else {
+				$('#loginError').fadeOut(500);
+				$('#loginLoader').css('display', 'inline-block');
+				$("#loginChildren").animate({ opacity: 0.5 }, 1000, "easeOutQuart", function() {
+					
+					$http.post('/login', {username:$scope.username, password:$scope.password}).
+					  success(function(data, status, headers, config) {
+					    // this callback will be called asynchronously
+					    // when the response is available
+						  alert('we are good')
+					  }).
+					  error(function(data, status, headers, config) {
+					    // called asynchronously if an error occurs
+					    // or server returns response with an error status.
+						  $scope.login_error = "We know it's weird, but we have to have a username and passord to get this going.";
+							$('#loginError').fadeIn(500);
+					  });
+					
+				});
+			}
 		}
+		
+		$scope.loginChange = function() {
+			if($.trim($scope.username) != "" && $.trim($scope.password) != "") {
+				$('#loginError').fadeOut(500);
+			}
+		}
+		
 	})
 	
 	app.controller('HomeController', function($scope) {
