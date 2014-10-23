@@ -8,7 +8,7 @@ var app = express();
 var AWS = require('aws-sdk');
 
 AWS.config.loadFromPath('config.json');
-
+app.post('/login/', login.login);
 app.use(express.static(__dirname));
 //app.use(app.router);
 
@@ -17,7 +17,7 @@ app.use(function(req, res) {
   res.sendFile(__dirname + '/views/public/index.html');
 });
 
-app.post('/login/', login.login);
+
 
 var server = app.listen(3000, function() {
     console.log('Listening on port %d', server.address().port);

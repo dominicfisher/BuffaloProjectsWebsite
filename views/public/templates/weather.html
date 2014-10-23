@@ -48,7 +48,7 @@
 							<ul style="list-style-type: none; margin: auto">
 								<li style="padding-bottom:10px; text-align: center; margin: auto; height: 50px;  ">
 									<div style=" height:50px; position: absolute; z-index: 999; text-align: center; padding:0px; left: 50%; ">
-										<div style="width:50px; height:50px; display:inline-block; position: relative; text-align: center; margin-left:-25px;">
+										<div id="defaultUserPicture" style="width:50px; height:50px; display:inline-block; position: relative; text-align: center; margin-left:-25px;">
 
 											<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 											viewBox="0 0 75 75" enable-background="new 0 0 75 75" xml:space="preserve">
@@ -69,29 +69,32 @@
 									</div>
 
 									<div id="userPicture"  style=" height:50px; position: absolute; z-index: 999; text-align: center; padding:0px; left: 50%; display: none; ">
-										<div style="width:50px; height:50px; display:inline-block; position: relative; text-align: center; margin-left:-25px;">
+										<div style="width:50px; height:50px; display:inline-block; position: relative; text-align: center; margin-left:0%;">
 											<img ng-src="{{userpicture}}" width="50px" height="50px">
 										</div>
 									</div>
+									<div id="userSideBar" style=" display: none;">
+											<div style="width:100%; text-align: center; font-family: 'museo-sans-condensed',serif; font-size: 14px; color:#FFFFFF">{{name}}</div>
+										</div>
 								</li>
 								<div>
-									
-								<form name="loginForm" action="" class="login-form" ng-submit="weatherLogin()" ng-controller="LoginFormController as login">
-									<li style="padding-bottom:10px;">
-										<div id="loginError" style="background-color: #FF0000; color: #FFFFFF; font-family: 'museo-sans-condensed',serif;; font-size: 14px; padding: 10px; display:none;">{{login_error}}</div>
-									</li>
-									<li style="padding-bottom:10px;">
-										<input type="text" placeholder="username" tabindex="1" ng-model="username" ng-change="loginChange()" ng-enter="weatherLogin()">
-									</li>
-									<li style="padding-bottom: 20px;padding-bottom: 20px;">
-										<input type="password" placeholder="password" tabindex="2" ng-model="password" ng-change="loginChange()" ng-enter="weatherLogin()">
-									</li>
-									<li style="text-align:center; width:100%; float: left; margin auto;">
-										<input type="submit" value="LOGIN" tabindex="3" style="font-family: 'museo-sans-condensed',serif; border: none; background-color: rgba(0, 0, 0, 0); color: #FFFFFF; text-decoration: none; font-style:normal; font-weight:300; font-size:21px;  text-align: center; display: inner-block;" />
-									</li>
-									
-								</form>
-								
+								<div id="loginFormParent">
+									<form name="loginForm" action="" class="login-form" ng-submit="weatherLogin()" ng-controller="LoginFormController as login">
+										<li style="padding-bottom:10px;">
+											<div id="loginError" style="background-color: #FF0000; color: #FFFFFF; font-family: 'museo-sans-condensed',serif; font-size: 14px; padding: 10px; display:none;">{{login_error}}</div>
+										</li>
+										<li style="padding-bottom:10px;">
+											<input type="text" placeholder="username" tabindex="1" ng-model="username" ng-change="loginChange()" ng-enter="weatherLogin()">
+										</li>
+										<li style="padding-bottom: 20px;padding-bottom: 20px;">
+											<input type="password" placeholder="password" tabindex="2" ng-model="password" ng-change="loginChange()" ng-enter="weatherLogin()">
+										</li>
+										<li style="text-align:center; width:100%; float: left; margin auto;">
+											<input type="submit" value="LOGIN" tabindex="3" style="font-family: 'museo-sans-condensed',serif; border: none; background-color: rgba(0, 0, 0, 0); color: #FFFFFF; text-decoration: none; font-style:normal; font-weight:300; font-size:21px;  text-align: center; display: inner-block;" />
+										</li>
+										
+									</form>
+								</div>
 								</div>
 								
 								
@@ -99,10 +102,13 @@
 						</div>
 					</div>
 					<div id="loginLoader" style="position: absolute; z-index: 99999;  top:50%;left:0px; width: 33.33%; height:300px; display:none;">
-						<div style="margin-top:-50%;  width: 100%; height:100%;">
+						<div style="margin-top:-70%;  width: 100%; height:100%;">
 							<ul style="list-style-type: none; padding-top: 130px;">
 								<li style="text-align: center">
 									<img src="/views/public/assets/img/728.gif" style="display: inline-block" />
+								</li>
+								<li style="width:100%; text-align: center; font-family: 'museo-sans-condensed',serif; font-size: 14px; color:#FFFFFF; padding-top: 20px;">
+									checking to see if we know you.
 								</li>
 							</ul>
 						</div>

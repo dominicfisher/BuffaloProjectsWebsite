@@ -18,6 +18,12 @@
 	    };
 	});
 	
+	app.filter('unsafe', function($sce) {
+	    return function(val) {
+	        return $sce.trustAsHtml(val);
+	    };
+	});
+	
 	app.config(
 		  function($routeProvider, $locationProvider) {
 		    $routeProvider.
@@ -173,6 +179,18 @@
 			
 			$cookies.previousUsers = $scope.previousUsers;
 		}
+		
+		$scope.changeUserPicture = function(path) {
+			$scope.userpicture = path;
+		}
+		
+		$scope.changeUserName = function(name) {
+			$scope.name = name;
+		}
+		
+		$scope.changeUserId = function(userid) {
+			$scope.userid = userid;
+		}
 	})
 	
 	app.controller('LoginFormController', function($scope, $http) {
@@ -184,13 +202,27 @@
 			} else {
 				$('#loginError').fadeOut(500);
 				$('#loginLoader').css('display', 'inline-block');
-				$("#loginChildren").animate({ opacity: 0.5 }, 1000, "easeOutQuart", function() {
+				$("#loginChildren").animate({ opacity: 0.25 }, 1000, "easeOutQuart", function() {
 					
 					$http.post('/login', {username:$scope.username, password:$scope.password}).
 					  success(function(data, status, headers, config) {
-					    // this callback will be called asynchronously
-					    // when the response is available
-						  alert('we are good')
+					    if(data.error == null) {
+					    	$scope.changeUserPicture(data.data.profilePicture);
+					    	$scope.changeUserName(data.data.name);
+					    	$scope.changeUserId(data.data.userid);
+					    	$('#loginLoader').fadeOut();
+					    	$('#loginFormParent').fadeOut();
+					    	$('#defaultUserPicture').fadeOut();
+					    	$('#userPicture').css('display', 'inline-block');
+					    	$('#userpicture').fadeIn();
+					    	$("#loginChildren").animate({ opacity: 1 }, 1000, "easeOutQuart");
+					    	$('#userSideBar').fadeIn();
+					    } else {
+					    	$("#loginChildren").animate({ opacity: 1 }, 1000, "easeOutQuart");
+					    	$scope.login_error = data.error;
+					    	$('#loginError').fadeIn(500);
+					    	$('#loginLoader').fadeOut();
+					    }
 					  }).
 					  error(function(data, status, headers, config) {
 					    // called asynchronously if an error occurs
