@@ -1,42 +1,78 @@
-input[type=text] {
-	width:100%; 
-	height: 30px; 
-	border: 1px solid #CCC; 
-	padding: 0px 10px 8px 10px; 
-	width:93%;
+input[type=text]
+{
+	width: 100%;
+	height: 30px;
+	border: 1px solid #CCC;
+	padding: 0px 10px 8px 10px;
+	width: 93%;
 }
 
-input[type=password] {
-	width:100%; 
-	height: 30px; 
-	border: 1px solid #CCC; 
-	padding: 0px 10px 8px 10px; 
-	width:93%;
+input[type=password]
+{
+	width: 100%;
+	height: 30px;
+	border: 1px solid #CCC;
+	padding: 0px 10px 8px 10px;
+	width: 93%;
 }
 
-input[type=submit] {
-	cursor:pointer;	
+input[type=submit]
+{
+	cursor: pointer;
 }
 
-input[type=submit]:focus {
-	outline:0;
+input[type=submit]:focus
+{
+	outline: 0;
 }
 
-.weatherSubHeader {
-	height:25px;
-	font-family: 'kepler-std-display',serif;
-	font-size:26px;
-	color:#FFFFFF;
-	width:100%;
-	float:left;
-	padding-top:0;
-	padding-bottom:10px;
+.weatherSubHeader
+{
+	height: 25px;
+	font-family: 'kepler-std-display', serif;
+	font-size: 26px;
+	color: #FFFFFF;
+	width: 100%;
+	float: left;
+	padding-top: 0;
+	padding-bottom: 10px;
 }
 
-.weatherFormFieldTitle {
-	font-family: "tk-freight-display-pro",serif;
-	font-size:12px;
-	color:#666666;
-	margin:0px 0 0px 0;
+.weatherFormFieldTitle
+{
+	font-family: "tk-freight-display-pro", serif;
+	font-size: 12px;
+	color: #666666;
+	margin: 0px 0 0px 0;
 	padding: 0px 0px 10px;
+}
+
+.file_button_container, .file_button_container input
+{
+	background: transparent url('/views/public/assets/img/uploadButton.png') left top no-repeat;
+	height: 51px;
+	width: 132px;
+	display:inline-block;
+}
+
+.file_button_container
+{
+	background: transparent url('/views/public/assets/img/uploadButton.png') left top no-repeat;
+	display:inline-block;
+}
+
+.file_button_container input
+{
+	opacity: 0;
+}
+
+.meter {
+	width:100%;
+	height:2px;
+}
+
+.meter span {
+	display:block;
+	height:100%;
+	background-color: #347ec4;
 }

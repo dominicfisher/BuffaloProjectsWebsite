@@ -74,30 +74,60 @@
 										</div>
 									</div>
 									<div id="userSideBar" style=" display: none; padding-top: 60px;">
-											<div style="width:100%; text-align: center; font-family: 'museo-sans-condensed',serif; font-size: 22px; color:#FFFFFF">{{name}}</div>
-										</div>
+										<ul>
+											<li>
+												<div style="width:100%; text-align: center; font-family: 'museo-sans-condensed',serif; font-size: 22px; color:#FFFFFF">
+													{{name}}
+												</div>
+											</li>
+											<li style="padding-top:20px; text-align: center; float: left; margin: 0 auto; width: 100%;">
+												<div class="file_button_container">
+													<input type="file" ng-file-select="uploadWeatherImage($files)">
+													<!--<input name="file" type="file"  accept="image/jpeg, image/png" ng-file-select="uploadWeatherImage($files)"/>-->
+												</div>
+											</li>
+											<li style="float:left; width: 100%; padding-top:10px;">
+												<div class="meter">
+													<span style="width: 25%"></span>
+												</div>
+											</li>
+											<li style="float:left; padding-top:20px; width: 100%;">
+												<div style="width:100" ng-controller="WeatherPhotosController as weatherController">
+													<div ng-show="weatherController.weatherPictures.length >0" style="width:33% float:left" ng-reeat="weatherPictureItem in weatherController.weatherPictures">
+														<img ng-src="{{weatherPictureItem.picturePath}}" />
+													</div>
+													<div ng-show="weatherController.weatherPictures.length ==0" style="width:100%">
+														<span style="color:#FFFFFF; font-family: 'museo-sans-condensed',serif; text-align: center; font-size: 12px;"> Upload some pictures to get start.</span>
+													</div>
+												</div>
+												
+											</li>
+										</ul>
+
+									</div>
 								</li>
 								<div>
-								<div id="loginFormParent">
-									<form name="loginForm" action="" class="login-form" ng-submit="weatherLogin()" ng-controller="LoginFormController as login">
-										<li style="padding-bottom:10px;">
-											<div id="loginError" style="background-color: #FF0000; color: #FFFFFF; font-family: 'museo-sans-condensed',serif; font-size: 14px; padding: 10px; display:none;">{{login_error}}</div>
-										</li>
-										<li style="padding-bottom:10px;">
-											<input type="text" placeholder="username" tabindex="1" ng-model="username" ng-change="loginChange()" ng-enter="weatherLogin()">
-										</li>
-										<li style="padding-bottom: 20px;padding-bottom: 20px;">
-											<input type="password" placeholder="password" tabindex="2" ng-model="password" ng-change="loginChange()" ng-enter="weatherLogin()">
-										</li>
-										<li style="text-align:center; width:100%; float: left; margin auto;">
-											<input type="submit" value="LOGIN" tabindex="3" style="font-family: 'museo-sans-condensed',serif; border: none; background-color: rgba(0, 0, 0, 0); color: #FFFFFF; text-decoration: none; font-style:normal; font-weight:300; font-size:21px;  text-align: center; display: inner-block;" />
-										</li>
-										
-									</form>
+									<div id="loginFormParent">
+										<form name="loginForm" action="" class="login-form" ng-submit="weatherLogin()" ng-controller="LoginFormController as login">
+											<li style="padding-bottom:10px;">
+												<div id="loginError" style="background-color: #FF0000; color: #FFFFFF; font-family: 'museo-sans-condensed',serif; font-size: 14px; padding: 10px; display:none;">
+													{{login_error}}
+												</div>
+											</li>
+											<li style="padding-bottom:10px;">
+												<input type="text" placeholder="username" tabindex="1" ng-model="username" ng-change="loginChange()" ng-enter="weatherLogin()">
+											</li>
+											<li style="padding-bottom: 20px;padding-bottom: 20px;">
+												<input type="password" placeholder="password" tabindex="2" ng-model="password" ng-change="loginChange()" ng-enter="weatherLogin()">
+											</li>
+											<li style="text-align:center; width:100%; float: left; margin auto;">
+												<input type="submit" value="LOGIN" tabindex="3" style="font-family: 'museo-sans-condensed',serif; border: none; background-color: rgba(0, 0, 0, 0); color: #FFFFFF; text-decoration: none; font-style:normal; font-weight:300; font-size:21px;  text-align: center; display: inner-block;" />
+											</li>
+
+										</form>
+									</div>
 								</div>
-								</div>
-								
-								
+
 							</ul>
 						</div>
 					</div>

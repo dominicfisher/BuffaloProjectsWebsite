@@ -1,198 +1,268 @@
 (function() {
+
+
+
+	var app = angular.module('bpwebsiteApp', ['ngRoute', 'leaflet-directive', 'ngCookies', 'angularFileUpload']);
+
+	app.directive('ngEnter', function () {
+		return function (scope, element, attrs) {
+			element.bind("keydown keypress", function (event) {
+				if(event.which === 13) {
+					scope.$apply(function (){
+						scope.$eval(attrs.ngEnter);
+					});
+
+					event.preventDefault();
+				}
+			});
+		};
+	});
 	
+	/*app.directive('file', function() {
+		  return {
+		    restrict: 'AE',
+		    scope: {
+		      file: '@',
+		    },
+		    link: function(scope, el, attrs){
+		      el.bind('change', function(event){
+		        var files = event.target.files;
+		        var file = files[0];
+		        scope.file = file;
+		        scope.$parent.file = file;
+		        scope.$apply();
+		      });
+		    },
+		    controller: function($scope) {
+		    	alert('hello1')
+		    	$scope.edit = function() {
+		    		$scope.uploadWeatherImage();
+		    	}
+		    }
+		  };
+		});*/
+
+	app.filter('unsafe', function($sce) {
+		return function(val) {
+			return $sce.trustAsHtml(val);
+		};
+	});
 	
 
-	var app = angular.module('bpwebsiteApp', ['ngRoute', 'leaflet-directive', 'ngCookies']);
-	
-	app.directive('ngEnter', function () {
-	    return function (scope, element, attrs) {
-	        element.bind("keydown keypress", function (event) {
-	            if(event.which === 13) {
-	                scope.$apply(function (){
-	                    scope.$eval(attrs.ngEnter);
-	                });
-	 
-	                event.preventDefault();
-	            }
-	        });
-	    };
-	});
-	
-	app.filter('unsafe', function($sce) {
-	    return function(val) {
-	        return $sce.trustAsHtml(val);
-	    };
-	});
-	
+
 	app.config(
-		  function($routeProvider, $locationProvider) {
-		    $routeProvider.
-		      when('/home', {
-		        templateUrl: '/views/public/templates/home.html',
-		        controller: 'HomeController',
-		        title: 'Buffalo Projects',
-		        isWeather : 'false'
-		        
-		      }).
-		      when('/aboutus', {
-		        templateUrl: '/views/public/templates/aboutus.html',
-		        controller: 'AboutUsController',
-		        title: 'About Us - Buffalo Projects',
-		        isWeather : 'false'
-		      }).
-		      when('/careers', {
-			    templateUrl: '/views/public/templates/careers.html',
-			    controller: 'CareersController',
-			    title: 'Careers - Buffalo Projects',
-			    isWeather : 'false'
-			  }).
-			  when('/contact', {
-				templateUrl: '/views/public/templates/contact.html',
-				controller: 'ContactController',
-				title: 'Contact - Buffalo Projects',
-				isWeather : 'false'
-			  }).
-			  when('/apps', {
-				templateUrl: '/views/public/templates/apps.html',
-				controller: 'AppsController',
-				title: 'Apps - Buffalo Projects',
-				isWeather : 'false'
-			  }).
-			  when('/blog', {
-				templateUrl: '/views/public/templates/blog.html',
-				controller: 'BlogController',
-				title: 'Blog - Buffalo Projects',
-				isWeather : 'false'
-			  }).
-			  when('/news', {
-				templateUrl: '/views/public/templates/news.html',
-				controller: 'NewsController',
-				title: 'News - Buffalo Projects',
-				isWeather : 'false'
-			  }).
-			  when('/weather', {
-				  templateUrl: '/views/public/templates/weather.html',
-				  controller: 'WeatherController',
-				  title: 'Weather - Buffalo Projects',
-				  isWeather : 'true'
-			  }).
-			  otherwise({
-			        redirectTo: '/home'
-		      });
-		    
-		    $locationProvider.html5Mode(true);
-		  });
+			function($routeProvider, $locationProvider) {
+				$routeProvider.
+				when('/home', {
+					templateUrl: '/views/public/templates/home.html',
+					controller: 'HomeController',
+					title: 'Buffalo Projects',
+					isWeather : 'false'
+
+				}).
+				when('/aboutus', {
+					templateUrl: '/views/public/templates/aboutus.html',
+					controller: 'AboutUsController',
+					title: 'About Us - Buffalo Projects',
+					isWeather : 'false'
+				}).
+				when('/careers', {
+					templateUrl: '/views/public/templates/careers.html',
+					controller: 'CareersController',
+					title: 'Careers - Buffalo Projects',
+					isWeather : 'false'
+				}).
+				when('/contact', {
+					templateUrl: '/views/public/templates/contact.html',
+					controller: 'ContactController',
+					title: 'Contact - Buffalo Projects',
+					isWeather : 'false'
+				}).
+				when('/apps', {
+					templateUrl: '/views/public/templates/apps.html',
+					controller: 'AppsController',
+					title: 'Apps - Buffalo Projects',
+					isWeather : 'false'
+				}).
+				when('/blog', {
+					templateUrl: '/views/public/templates/blog.html',
+					controller: 'BlogController',
+					title: 'Blog - Buffalo Projects',
+					isWeather : 'false'
+				}).
+				when('/news', {
+					templateUrl: '/views/public/templates/news.html',
+					controller: 'NewsController',
+					title: 'News - Buffalo Projects',
+					isWeather : 'false'
+				}).
+				when('/weather', {
+					templateUrl: '/views/public/templates/weather.html',
+					controller: 'WeatherController',
+					title: 'Weather - Buffalo Projects',
+					isWeather : 'true'
+				}).
+				otherwise({
+					redirectTo: '/home'
+				});
+
+				$locationProvider.html5Mode(true);
+			});
 
 	app.controller('appController', function( $scope, $route, $routeParams ){
-		
+
 		$scope.isWeather = true;
-		
+
 		render = function(){
 
 			$scope.isWeather = $route.current.isWeather;
-            switch($route.current.title) {
-            	case 'Buffalo Projects':
-            		
-            		break
-            }
+			switch($route.current.title) {
+			case 'Buffalo Projects':
 
-        };
+				break
+			}
 
-        // Listen for changes to the Route. When the route
-        // changes, let's set the renderAction model value so
-        // that it can render in the Strong element.
-        $scope.$on(
-            "$routeChangeSuccess",
-            function( $currentRoute, $previousRoute ){
+		};
 
-                // Update the rendering.
-                render();
+		// Listen for changes to the Route. When the route
+		// changes, let's set the renderAction model value so
+		// that it can render in the Strong element.
+		$scope.$on(
+				"$routeChangeSuccess",
+				function( $currentRoute, $previousRoute ){
 
-            }
-        );
+					// Update the rendering.
+					render();
+
+				}
+		);
 	});
 
 	app.run(['$location', '$rootScope', function($location, $rootScope, $scope) {
 		$rootScope.isWeather = '';
-	    $rootScope.$on('$routeChangeSuccess', function (event, current, previous) {
-	        $rootScope.title = current.$$route.title;
-	        
-	        $rootScope.isWeather = current.$$route.isWeather;
-	    });
+		$rootScope.$on('$routeChangeSuccess', function (event, current, previous) {
+			$rootScope.title = current.$$route.title;
+
+			$rootScope.isWeather = current.$$route.isWeather;
+		});
 	}]);
-	
+
 	app.filter('unsafe', function($sce) {
-	    return function(val) {
-	        return $sce.trustAsHtml(val);
-	    };
+		return function(val) {
+			return $sce.trustAsHtml(val);
+		};
 	});
-	
+
 	app.filter('trusted', ['$sce', function ($sce) {
-	    return function(url) {
-	        return $sce.trustAsResourceUrl(url);
-	    };
+		return function(url) {
+			return $sce.trustAsResourceUrl(url);
+		};
 	}]);
-	
-	app.controller('WeatherController', function($scope, $cookies) {
-		
+
+	app.controller('WeatherController', function($scope, $cookies, $upload) {
+
 		$scope.previousUsers = [];
 		if($cookies) {
 			$scope.previousUsers = $cookies.previousUsers;
 		}
-		
+
 		$scope.userpicture = "";
 		$scope.username = "";
 		$scope.password = "";
-		$scope.login_error = "sdfdsfds"
+		$scope.login_error = "sdfdsfds";
+
+		$scope.creds = {
+			bucket: 'your_bucket',
+			access_key: 'your_access_key',
+			secret_key: 'your_secret_key'
+		}
 		
+		$scope.getIt = function() {
+			alert('upload');
+		}
+
+		$scope.uploadWeatherImage = function($files) {
+			//$files: an array of files selected, each file has name, size, and type.
+		    for (var i = 0; i < $files.length; i++) {
+		      var file = $files[i];
+		      $scope.upload = $upload.upload({
+		    	  url: 'https://angular-file-upload.s3.amazonaws.com/', //S3 upload url including bucket name,
+		          method: 'POST',
+		          data : {
+		            key: file.name, // the key to store the file on S3, could be file name or customized
+		            AWSAccessKeyId: '<YOUR AWS AccessKey Id>', 
+		            acl: 'private', // sets the access to the uploaded file in the bucker: private or public 
+		            policy: $scope.policy, // base64-encoded json policy (see article below)
+		            signature: $scope.signature, // base64-encoded signature based on policy string (see article below)
+		            "Content-Type": file.type != '' ? file.type : 'application/octet-stream', // content type of the file (NotEmpty),
+		            filename: file.name // this is needed for Flash polyfill IE8-9
+		          },
+		          file: file,
+		      }).progress(function(evt) {
+		        console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total));
+		      }).success(function(data, status, headers, config) {
+		        // file is uploaded successfully
+		        console.log(data);
+		      });
+		      //.error(...)
+		      //.then(success, error, progress); 
+		      // access or attach event listeners to the underlying XMLHttpRequest.
+		      //.xhr(function(xhr){xhr.upload.addEventListener(...)})
+		    }
+		    /* alternative way of uploading, send the file binary with the file's content-type.
+		       Could be used to upload files to CouchDB, imgur, etc... html5 FileReader is needed. 
+		       It could also be used to monitor the progress of a normal http post/put request with large data*/
+		    // $scope.upload = $upload.http({...})  see 88#issuecomment-31366487 for sample code.
+		}
+
 		$scope.showSignup = function() {
 			var parentWidth = $('#slideContainer').width();
 			var newWidth = parentWidth/3;
 			$('#loginContainer').css('display','none');
 			$('#slideContainer').animate({left: -newWidth+'px'}, 1000, "easeOutQuart", function() {
-				
+
 			});
 
 		}
-		
+
 		$scope.showLogin = function() {
 			var parentWidth = $('#slideContainer').width();
 			var newWidth = parentWidth/3;
 			$('#signUpContainer').css('display','none');
 			$('#slideContainer').animate({left: -newWidth+'px'}, 1000, "easeOutQuart", function() {
-				
+
 			});
 		}
-		
+
 		$scope.addLoginUserToCookies = function(userObject) {
-			
+
 			var found = false;
 			$scope.previousUsers.forEach(function(existingUser) {
 				if(existingUser.username == userObject.username) {
 					found = true;
 				}
 			})
-			
+
 			if(!found) {
 				$scope.previousUsers.push(userObject);
 			}
-			
+
 			$cookies.previousUsers = $scope.previousUsers;
 		}
-		
+
 		$scope.changeUserPicture = function(path) {
 			$scope.userpicture = path;
 		}
-		
+
 		$scope.changeUserName = function(name) {
 			$scope.name = name;
 		}
-		
+
 		$scope.changeUserId = function(userid) {
 			$scope.userid = userid;
 		}
 	})
-	
+
 	app.controller('LoginFormController', function($scope, $http) {
 		$scope.weatherLogin = function() {
 			if($.trim($scope.username) == "" && $.trim($scope.password) == "") {
@@ -203,109 +273,115 @@
 				$('#loginError').fadeOut(500);
 				$('#loginLoader').css('display', 'inline-block');
 				$("#loginChildren").animate({ opacity: 0.25 }, 1000, "easeOutQuart", function() {
-					
+
 					$http.post('/login', {username:$scope.username, password:$scope.password}).
-					  success(function(data, status, headers, config) {
-					    if(data.error == null) {
-					    	$scope.changeUserPicture(data.data.profilePicture);
-					    	$scope.changeUserName(data.data.name);
-					    	$scope.changeUserId(data.data.userid);
-					    	$('#loginLoader').fadeOut();
-					    	$('#loginFormParent').fadeOut();
-					    	$('#defaultUserPicture').fadeOut();
-					    	$('#userPicture').css('display', 'inline-block');
-					    	$('#userpicture').fadeIn();
-					    	$("#loginChildren").animate({ opacity: 1}, 1000, "easeOutQuart");
-					    	$('#userSideBar').fadeIn();
-					    	$('#sidebar').animate({'left': '0px'}, 1000);
-					    	$('#sidebarHeight').animate({'margin-top' : '0%'}, 1000);
-					    	$('#loginChildren').animate({'top': '0%'}, 1000);
-					    	
-					    	$('#sidebar').animate({backgroundColor: 'rgba(0,0,0,1.0)'}, 1000);
-					    	
-					    } else {
-					    	$("#loginChildren").animate({ opacity: 1 }, 1000, "easeOutQuart");
-					    	$scope.login_error = data.error;
-					    	$('#loginError').fadeIn(500);
-					    	$('#loginLoader').fadeOut();
-					    }
-					  }).
-					  error(function(data, status, headers, config) {
-					    // called asynchronously if an error occurs
-					    // or server returns response with an error status.
-						  $scope.login_error = "We know it's weird, but we have to have a username and passord to get this going.";
+					success(function(data, status, headers, config) {
+						if(data.error == null) {
+							$scope.changeUserPicture(data.data.profilePicture);
+							$scope.changeUserName(data.data.name);
+							$scope.changeUserId(data.data.userid);
+							$('#loginLoader').fadeOut();
+							$('#loginFormParent').fadeOut();
+							$('#defaultUserPicture').fadeOut();
+							$('#userPicture').css('display', 'inline-block');
+							$('#userpicture').fadeIn();
+							$("#loginChildren").animate({ opacity: 1}, {queue:false, duration:1000, easing : "easeOutQuart"});
+							$('#userSideBar').fadeIn();
+							$('#sidebar').animate({'left': '0px'}, {queue:false, duration:1000, easing : "easeOutQuart"});
+							$('#sidebarHeight').animate({'margin-top' : '0%'}, {queue:false, duration:1000, easing : "easeOutQuart"});
+							$('#loginChildren').animate({'top': '0%'}, {queue:false, duration:1000, easing : "easeOutQuart"});
+
+							$('#sidebar').animate({backgroundColor: 'rgba(0,0,0,1.0)'}, 1000);
+
+						} else {
+							$("#loginChildren").animate({ opacity: 1 }, 1000, "easeOutQuart");
+							$scope.login_error = data.error;
 							$('#loginError').fadeIn(500);
-					  });
-					
+							$('#loginLoader').fadeOut();
+						}
+					}).
+					error(function(data, status, headers, config) {
+						// called asynchronously if an error occurs
+						// or server returns response with an error status.
+						$scope.login_error = "We know it's weird, but we have to have a username and passord to get this going.";
+						$('#loginError').fadeIn(500);
+					});
+
 				});
 			}
 		}
-		
+
+
+
 		$scope.loginChange = function() {
 			if($.trim($scope.username) != "" && $.trim($scope.password) != "") {
 				$('#loginError').fadeOut(500);
 			}
 		}
-		
+
 	})
 	
+	app.controller('WeatherPhotosController', function($scope) {
+		this.weatherPictures = [];
+	})
+
 	app.controller('HomeController', function($scope) {
-	    
+
 		this.homepageSplash = homepageSplash;
-	    this.homeSlides = homepageSlides;
-	    
+		this.homeSlides = homepageSlides;
+
 		$scope.load = function() {
 			$('#homepageSplashText').css({
-    	        position:'absolute',
-    	        left: ($(window).width() - $('#homepageSplashText').outerWidth())/2,
-    	        top: ($('#homepageSplashText').parent().height() - $('#homepageSplashText').outerHeight())/2
-    	    });
+				position:'absolute',
+				left: ($(window).width() - $('#homepageSplashText').outerWidth())/2,
+				top: ($('#homepageSplashText').parent().height() - $('#homepageSplashText').outerHeight())/2
+			});
 			$('#header').animate({backgroundColor:'rgba(0,0,0,0.0)'});
 		};
-		   
-		
+
+
 		$scope.load();
-	    
-	    $scope.playHomePageVideo = function(videoId) {
-	    	$("video").each(function(){
-	    		if(!$(this).prop('muted')) {
-	    			$(this).get(0).pause();
-	    			var playingIdText = $(this).attr('id');
-	    			var playingId = playingIdText.substring(5, playingIdText.length);
-	    			$("#videoOverlay" + playingId).fadeIn();
-	    	    	$("#videoOverlayText" + playingId).fadeIn();
-	    	    	$("#video" + playingId).prop('muted', true);
-	    	    	$("#video" + playingId).get(0).pause();
-	    	    	$("#video" + playingId).get(0).currentTime = 0;
-	    	    	$("#video" + playingId).get(0).play();
-	    		}
-	    	});
-	    	$("#videoOverlay" + videoId).fadeOut();
-	    	$("#videoOverlayText" + videoId).fadeOut();
-	    	$("#video" + videoId).prop('muted', false);
-	    	$("#video" + videoId).get(0).pause();
-	    	$("#video" + videoId).get(0).currentTime = 0;
-	    	$("#video" + videoId).get(0).play();
+
+		$scope.playHomePageVideo = function(videoId) {
+			$("video").each(function(){
+				if(!$(this).prop('muted')) {
+					$(this).get(0).pause();
+					var playingIdText = $(this).attr('id');
+					var playingId = playingIdText.substring(5, playingIdText.length);
+					$("#videoOverlay" + playingId).fadeIn();
+					$("#videoOverlayText" + playingId).fadeIn();
+					$("#video" + playingId).prop('muted', true);
+					$("#video" + playingId).get(0).pause();
+					$("#video" + playingId).get(0).currentTime = 0;
+					$("#video" + playingId).get(0).play();
+				}
+			});
+			$("#videoOverlay" + videoId).fadeOut();
+			$("#videoOverlayText" + videoId).fadeOut();
+			$("#video" + videoId).prop('muted', false);
+			$("#video" + videoId).get(0).pause();
+			$("#video" + videoId).get(0).currentTime = 0;
+			$("#video" + videoId).get(0).play();
 		}
-	     
+
 	});
-	
-	
-	
+
+
+
 	app.controller('QuotesController', function($scope) {
 		this.quotes = [];
 		this.quotes = quotes;
 		var firstItem = this.quotes[0];
-		
+
 		var position = 1;
-		
+
 		$scope.load = function() {
 			setTimeout(animateSlide, 3000);
 		}
-		
+
 		function animateSlide() {
 			var newPosition = -(position * 301);
-			
+
 			$('#quoteContainer').animate({top:newPosition + 'px'}, 1000, function() {
 				position++;
 				if(position == quotes.length) {
@@ -314,118 +390,118 @@
 				}
 				setTimeout(animateSlide, 3000);
 			});
-			
-			
+
+
 		}
-		
+
 		$scope.load();
 	})
-	
+
 	app.controller('AboutUsController', function($scope) {
-	     
+
 		$scope.load = function() {
-	    	$('#header').animate({backgroundColor:'rgba(0,0,0,0.0)'});
-	    }
-	    
-	    $scope.load();
-	     
+			$('#header').animate({backgroundColor:'rgba(0,0,0,0.0)'});
+		}
+
+		$scope.load();
+
 	});
-	
+
 	app.controller('CareersController', function($scope) {
-	     
-	    this.jobs = jobs;
-	    
-	    $scope.load = function() {
-	    	$('#header').animate({backgroundColor:'rgba(0,0,0,0.0)'});
-	    }
-	    
-	    $scope.load();
-	     
+
+		this.jobs = jobs;
+
+		$scope.load = function() {
+			$('#header').animate({backgroundColor:'rgba(0,0,0,0.0)'});
+		}
+
+		$scope.load();
+
 	});
-	
+
 	app.controller('ContactController', [ '$scope', function($scope) {
-		
+
 		$scope.load = function() {
 			$('#buffalomap').css('height', window.innerHeight);
 			//$('#header').animate({backgroundColor:'rgba(0.0, 0.0, 0.0, 1.0)'});
 			$('#header').animate({backgroundColor:'rgba(0,0,0,1.0)'});
 		}
-		
+
 		$scope.load();
-		
+
 		var tilesDict = {
 			mapbox_streets: {
-                name: 'Mapbox Streets',
-                url: 'http://api.tiles.mapbox.com/v4/{mapid}/{z}/{x}/{y}.png?access_token={apikey}',
-                type: 'xyz',
-                options: {
-                    apikey: 'pk.eyJ1IjoiY2hsb2Vwcm9qZWN0IiwiYSI6Ims2aDRPNVUifQ.JWpm-PqK8m676TNUAbQaWQ',
-                    mapid: 'chloeproject.map-gnfkv8ht'
-                }
-            }
-        };
+				name: 'Mapbox Streets',
+				url: 'http://api.tiles.mapbox.com/v4/{mapid}/{z}/{x}/{y}.png?access_token={apikey}',
+				type: 'xyz',
+				options: {
+					apikey: 'pk.eyJ1IjoiY2hsb2Vwcm9qZWN0IiwiYSI6Ims2aDRPNVUifQ.JWpm-PqK8m676TNUAbQaWQ',
+					mapid: 'chloeproject.map-gnfkv8ht'
+				}
+			}
+		};
 
-     
-        angular.extend($scope, {
-            london: {
-                lat: 39.001676741504525,
-                lng: -94.59741353988647,
-                zoom: 16
-            },
-            defaults: {
-                zoomControl: false,
-                scrollWheelZoom: false
-            },
-            tiles: tilesDict.mapbox_streets
-        });
 
-        $scope.markers = new Array();
-        
-        $scope.markers.push({
-            lat: 39.001676741504525,
-            lng: -94.59741353988647
-        });
-   }]);
-	
+		angular.extend($scope, {
+			london: {
+				lat: 39.001676741504525,
+				lng: -94.59741353988647,
+				zoom: 16
+			},
+			defaults: {
+				zoomControl: false,
+				scrollWheelZoom: false
+			},
+			tiles: tilesDict.mapbox_streets
+		});
+
+		$scope.markers = new Array();
+
+		$scope.markers.push({
+			lat: 39.001676741504525,
+			lng: -94.59741353988647
+		});
+	}]);
+
 	app.controller('AppsController', function($scope) {
-	     
+
 		$scope.load = function() {
-	    	$('#header').animate({backgroundColor:'rgba(0,0,0,0.0)'});
-	    }
-	    
-	    $scope.load();
+			$('#header').animate({backgroundColor:'rgba(0,0,0,0.0)'});
+		}
+
+		$scope.load();
 	});
-	
+
 	app.controller('BlogController', function($scope) {
-	     
+
 		$scope.load = function() {
-	    	$('#header').animate({backgroundColor:'rgba(0,0,0,0.0)'});
-	    }
-	    
-	    $scope.load();
-	     
+			$('#header').animate({backgroundColor:'rgba(0,0,0,0.0)'});
+		}
+
+		$scope.load();
+
 	});
-	
+
 	app.controller('NewsController', function($scope) {
-	     
+
 		$scope.load = function() {
-	    	$('#header').animate({backgroundColor:'rgba(0,0,0,0.0)'});
-	    }
-	    
-	    $scope.load();
-	     
+			$('#header').animate({backgroundColor:'rgba(0,0,0,0.0)'});
+		}
+
+		$scope.load();
+
 	});
 
 })();
 
 var tempBodyCopy = 'Letterpress mlkshk wayfarers, kogi retro ugh before they sold out viral flannel mustache. Swag aliqua cupidatat distillery. Pork belly Odd Future gluten-free tousled, lo-fi Shoreditch plaid. Salvia PBR synth dolore. Exercitation shabby chic McSweeney&apos;s cred 90&apos;s laboris. Cornhole accusamus street art slow-carb YOLO semiotics iPhone, salvia voluptate.'
 
-var homepageSplash = {
-	id				:	'0',
-	videoPath		:	'http://www.beamtv.com/archive/file/RsMtCdstcS/hd?width=1280&height=720',
-	title			:	'Love life',
-	bodyCopy		:	tempBodyCopy,
-	learnMoreAction	:	''
+	var homepageSplash = {
+		id				:	'0',
+		videoPath		:	'http://www.beamtv.com/archive/file/RsMtCdstcS/hd?width=1280&height=720',
+		title			:	'Love life',
+		bodyCopy		:	tempBodyCopy,
+		learnMoreAction	:	''
 };
 
 var homepageSlides = [
