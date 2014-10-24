@@ -3,7 +3,7 @@
 		<img id="weatherbackground" src="/views/public/assets/img/cherry_blossoms.jpg" />
 	</div>
 
-	<div id="sidebar" style="position:absolute; z-index:999; top:0px; left:0px;  width:25%; height: 100%; border-left: 1px solid #999999; border-right:  1px solid #999999; background: rgba(0, 0, 0, 0.25); overflow: hidden; left:37.5%; ">
+	<div id="sidebar" style="position:absolute; z-index:999; top:0px; width:25%; height: 100%; border-left: 1px solid #999999; border-right:  1px solid #999999; background: rgba(0, 0, 0, 0.25); overflow: hidden; left:37.5%; ">
 
 		<div id="slideContainer" style="height:100%; width: 300%; position: absolute; ">
 			<div id="weatherHomeLoginContainer" style="text-align: center; margin 0 auto;  float: left; height: 100%; width: 33.33%; vertical-align: middle">
@@ -44,7 +44,7 @@
 			<div id="loginSignUpParent" style=" float: left; width: 33.33%; display: inline-block; height: 100%">
 				<div id="loginContainer" style="position: absolute;  width: 100%; height: 100%;">
 					<div id="loginChildren" style="position:absolute; top:50%; display:block; width:33.33%">
-						<div style="padding:20px; margin-top: -50%;">
+						<div id="sidebarHeight" style="padding:20px; margin-top: -50%;">
 							<ul style="list-style-type: none; margin: auto">
 								<li style="padding-bottom:10px; text-align: center; margin: auto; height: 50px;  ">
 									<div style=" height:50px; position: absolute; z-index: 999; text-align: center; padding:0px; left: 50%; ">
@@ -69,12 +69,12 @@
 									</div>
 
 									<div id="userPicture"  style=" height:50px; position: absolute; z-index: 999; text-align: center; padding:0px; left: 50%; display: none; ">
-										<div style="width:50px; height:50px; display:inline-block; position: relative; text-align: center; margin-left:0%;">
+										<div style="width:50px; height:50px; display:inline-block; position: relative; text-align: center; margin-left:-25px;">
 											<img ng-src="{{userpicture}}" width="50px" height="50px">
 										</div>
 									</div>
-									<div id="userSideBar" style=" display: none;">
-											<div style="width:100%; text-align: center; font-family: 'museo-sans-condensed',serif; font-size: 14px; color:#FFFFFF">{{name}}</div>
+									<div id="userSideBar" style=" display: none; padding-top: 60px;">
+											<div style="width:100%; text-align: center; font-family: 'museo-sans-condensed',serif; font-size: 22px; color:#FFFFFF">{{name}}</div>
 										</div>
 								</li>
 								<div>

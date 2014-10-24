@@ -215,8 +215,14 @@
 					    	$('#defaultUserPicture').fadeOut();
 					    	$('#userPicture').css('display', 'inline-block');
 					    	$('#userpicture').fadeIn();
-					    	$("#loginChildren").animate({ opacity: 1 }, 1000, "easeOutQuart");
+					    	$("#loginChildren").animate({ opacity: 1}, 1000, "easeOutQuart");
 					    	$('#userSideBar').fadeIn();
+					    	$('#sidebar').animate({'left': '0px'}, 1000);
+					    	$('#sidebarHeight').animate({'margin-top' : '0%'}, 1000);
+					    	$('#loginChildren').animate({'top': '0%'}, 1000);
+					    	
+					    	$('#sidebar').animate({backgroundColor: 'rgba(0,0,0,1.0)'}, 1000);
+					    	
 					    } else {
 					    	$("#loginChildren").animate({ opacity: 1 }, 1000, "easeOutQuart");
 					    	$scope.login_error = data.error;
