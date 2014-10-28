@@ -18,6 +18,12 @@
 		};
 	});
 	
+	$('#file').change(function() {
+        $(this).fileExif(function(exifObject) {
+        	alert(exifObject.Model);
+        });
+    });
+
 	/*app.directive('file', function() {
 		  return {
 		    restrict: 'AE',
@@ -47,7 +53,7 @@
 			return $sce.trustAsHtml(val);
 		};
 	});
-	
+
 
 
 	app.config(
@@ -172,48 +178,74 @@
 		$scope.login_error = "sdfdsfds";
 
 		$scope.creds = {
-			bucket: 'your_bucket',
-			access_key: 'your_access_key',
-			secret_key: 'your_secret_key'
+			bucket: 'buffaloimages',
+			access_key: 'AKIAJVOCBJTWQV3KBXKQ',
+			secret_key: 'vVo8Tu/jmILLIBLt9K7GgZ6zFXNY4xvjyRl2W8Dx'
 		}
-		
+
+		$scope.sizeLimit      = 10585760; // 10MB in Bytes
+		$scope.uploadProgress = 0;
+
 		$scope.getIt = function() {
 			alert('upload');
 		}
 
 		$scope.uploadWeatherImage = function($files) {
-			//$files: an array of files selected, each file has name, size, and type.
-		    for (var i = 0; i < $files.length; i++) {
-		      var file = $files[i];
-		      $scope.upload = $upload.upload({
-		    	  url: 'https://angular-file-upload.s3.amazonaws.com/', //S3 upload url including bucket name,
-		          method: 'POST',
-		          data : {
-		            key: file.name, // the key to store the file on S3, could be file name or customized
-		            AWSAccessKeyId: '<YOUR AWS AccessKey Id>', 
-		            acl: 'private', // sets the access to the uploaded file in the bucker: private or public 
-		            policy: $scope.policy, // base64-encoded json policy (see article below)
-		            signature: $scope.signature, // base64-encoded signature based on policy string (see article below)
-		            "Content-Type": file.type != '' ? file.type : 'application/octet-stream', // content type of the file (NotEmpty),
-		            filename: file.name // this is needed for Flash polyfill IE8-9
-		          },
-		          file: file,
-		      }).progress(function(evt) {
-		        console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total));
-		      }).success(function(data, status, headers, config) {
-		        // file is uploaded successfully
-		        console.log(data);
-		      });
-		      //.error(...)
-		      //.then(success, error, progress); 
-		      // access or attach event listeners to the underlying XMLHttpRequest.
-		      //.xhr(function(xhr){xhr.upload.addEventListener(...)})
-		    }
-		    /* alternative way of uploading, send the file binary with the file's content-type.
-		       Could be used to upload files to CouchDB, imgur, etc... html5 FileReader is needed. 
-		       It could also be used to monitor the progress of a normal http post/put request with large data*/
-		    // $scope.upload = $upload.http({...})  see 88#issuecomment-31366487 for sample code.
+			$('.meter span').animate({width: '0%'}, 500, "easeOutQuart");
+			// Configure The S3 Object 
+			AWS.config.update({ accessKeyId: $scope.creds.access_key, secretAccessKey: $scope.creds.secret_key });
+			AWS.config.region = 'us-east-1';
+			var bucket = new AWS.S3({ params: { Bucket: $scope.creds.bucket } });
+
+			$scope.file = $files[0];
+			
+			$('#file').fileExif(function(exifObject) {
+				alert(exifObject.GPSLatitude);
+				alert(exifObject.GPSLongitude);
+			})
+			
+			var uniqueFileName = $scope.uniqueWeatherFileName();
+			//var fileName = $scope.file.name;
+			//var fileEnding = fileName.lastIndexOf(".")
+			uniqueFileName += $scope.file.name.substring($scope.file.name.lastIndexOf("."), $scope.file.name.length);
+			
+			if($scope.file) {
+				var params = { Key: uniqueFileName, ContentType: $scope.file.type, Body: $scope.file, ServerSideEncryption: 'AES256', ACL :'public-read-write'  };
+
+				bucket.putObject(params, function(err, data) {
+					if(err) {
+						// There Was An Error With Your S3 Config
+						alert(err.message);
+						return false;
+					}
+					else {
+						// Success!
+						//alert('Upload Done');
+						$('.meter span').animate({width: '0%'}, 500, "easeOutQuart");
+					}
+				})
+				.on('httpUploadProgress',function(progress) {
+					$('.meter span').animate({width: Math.round(progress.loaded / progress.total * 100) + '%'}, 500, "easeOutQuart");
+					//$('.meter span').width(Math.round(progress.loaded / progress.total * 100) + '%');
+					// Log Progress Information
+					console.log(Math.round(progress.loaded / progress.total * 100) + '% done');
+				});
+			}
+			else {
+				// No File Selected
+				alert('No File Selected');
+			}
 		}
+		
+		$scope.uniqueWeatherFileName = function() {
+		    var text     = "weatherbg_";
+		    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+		    for( var i=0; i < 30; i++ ) {
+		      text += possible.charAt(Math.floor(Math.random() * possible.length));
+		    }
+		    return text;
+		  }
 
 		$scope.showSignup = function() {
 			var parentWidth = $('#slideContainer').width();
@@ -264,6 +296,7 @@
 	})
 
 	app.controller('LoginFormController', function($scope, $http) {
+
 		$scope.weatherLogin = function() {
 			if($.trim($scope.username) == "" && $.trim($scope.password) == "") {
 				$scope.login_error = "We know it's weird, but we have to have a username and passord to get this going.";
@@ -320,7 +353,7 @@
 		}
 
 	})
-	
+
 	app.controller('WeatherPhotosController', function($scope) {
 		this.weatherPictures = [];
 	})
