@@ -235,6 +235,7 @@
 				// No File Selected
 				alert('No File Selected');
 			}
+
 		}
 		
 		$scope.uniqueWeatherFileName = function() {
