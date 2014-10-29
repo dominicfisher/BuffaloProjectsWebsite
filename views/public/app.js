@@ -179,8 +179,8 @@
 
 		$scope.creds = {
 			bucket: 'buffaloimages',
-			access_key: 'AKIAJVOCBJTWQV3KBXKQ',
-			secret_key: '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'
+			access_key: '',
+			secret_key: ''
 		}
 
 		$scope.sizeLimit      = 10585760; // 10MB in Bytes
