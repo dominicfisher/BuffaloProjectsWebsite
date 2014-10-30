@@ -82,9 +82,10 @@
 											</li>
 											<li style="padding-top:20px; text-align: center; float: left; margin: 0 auto; width: 100%;">
 												<div class="file_button_container">
-													<input type="file" id="file" ng-file-select="uploadWeatherImage($files)">
+													<input type="file" id="file" ng-file-select="uploadBrowserImage($files)">
 													<!--<input name="file" type="file"  accept="image/jpeg, image/png" ng-file-select="uploadWeatherImage($files)"/>-->
 												</div>
+												<div ng-show="dropSupported" id="fileDrag" class="drop-box" ng-file-drop="uploadDragImage($files)" ng-file-drop-available="dropSupported=true" ng-file-drag-over-class="dragover" ng-file-drag-over-delay="100">or drop files <div>here</div></div>
 											</li>
 											<li style="float:left; width: 100%; padding-top:10px;">
 												<div class="meter">
@@ -92,13 +93,11 @@
 												</div>
 											</li>
 											<li style="float:left; padding-top:20px; width: 100%;">
-												<div style="width:100" ng-controller="WeatherPhotosController as weatherController">
-													<div ng-show="weatherController.weatherPictures.length >0" style="width:33% float:left" ng-reeat="weatherPictureItem in weatherController.weatherPictures">
-														<img ng-src="{{weatherPictureItem.picturePath}}" />
-													</div>
-													<div ng-show="weatherController.weatherPictures.length ==0" style="width:100%">
-														<span style="color:#FFFFFF; font-family: 'museo-sans-condensed',serif; text-align: center; font-size: 12px;"> Upload some pictures to get start.</span>
-													</div>
+												<div style="width:100%">
+													<span ng-show="!weatherPictures.length" style="color:#FFFFFF; font-family: 'museo-sans-condensed',serif; text-align: center; font-size: 12px;">Upload some pictures to get start.</span>
+												    <div style="width:45%;  float:left; margin-right:10px; display: inline-block; background-color:#666666;" ng-repeat="weatherPictureItem in weatherPictures">
+												    		<a href ng-click="showImageDetail(weatherPictureItem.path)"><img ng-src="https://s3.amazonaws.com/buffaloimages/{{weatherPictureItem.path}}" style="width:100%; vertical-align: middle"></a>
+												    </div>
 												</div>
 												
 											</li>
@@ -151,6 +150,15 @@
 			<div id="sidebar" style=" float: left; background-color: #00FF00; width: 33.33%; height: 100%; display: inline-block">
 				sdfsdfsd
 			</div>
+		</div>
+	</div>
+	<div id="weatherImageDetail" style="position: absolute; z-index:1000; top:0px; left:25%; width:25%; height: 100%;  background: #000000; display: none;">
+		
+		<div id="detailMap" style="width:100%; height:100%">
+			<leaflet  center="london" width="100%" height="100%" defaults="defaults" markers="markers" tiles="tiles"></leaflet>
+		</div>
+		<div style="position:absolute; z-index: :1001; top: 10px; left:0%; width: 100%; height:50px; background:#FEFEFE; ">
+			<div style="color: #333333; font-family: 'museo-sans-condensed',sans-serif; font-size:14px; font-weight:700; padding:10px;">{{currentPicture.path}}</div>
 		</div>
 	</div>
 </div>

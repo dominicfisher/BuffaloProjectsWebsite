@@ -118,6 +118,8 @@
 	app.controller('appController', function( $scope, $route, $routeParams ){
 
 		$scope.isWeather = true;
+		
+		//$scope.weatherPictures = [];
 
 		render = function(){
 
@@ -165,12 +167,53 @@
 		};
 	}]);
 
-	app.controller('WeatherController', function($scope, $cookies, $upload) {
+	app.controller('WeatherController', function($scope, $cookies, $upload, leafletData) {
+		
+		var tilesDict = {
+			mapbox_streets: {
+				name: 'Mapbox Streets',
+				url: 'http://api.tiles.mapbox.com/v4/{mapid}/{z}/{x}/{y}.png?access_token={apikey}',
+				type: 'xyz',
+				options: {
+					apikey: 'pk.eyJ1IjoiY2hsb2Vwcm9qZWN0IiwiYSI6Ims2aDRPNVUifQ.JWpm-PqK8m676TNUAbQaWQ',
+					mapid: 'chloeproject.map-gnfkv8ht'
+				}
+			}
+		};
+		
+		angular.extend($scope, {
+            london: {
+                lat: 39.001676741504525,
+                lng: -94.59741353988647,
+                zoom: 16
+            },
+            markers: {
+                london: {
+                    lat: 39.001676741504525,
+                    lng: -94.59741353988647,
+                    draggable: true
+                }
+            },
+            defaults: {
+            	zoomControl: false,
+				scrollWheelZoom: true
+            },
+            tiles: tilesDict.mapbox_streets
+        });
+		
+		$scope.markers = new Array();
 
+		$scope.markers.push({
+			lat: 39.001676741504525,
+			lng: -94.59741353988647
+		});
+		
 		$scope.previousUsers = [];
 		if($cookies) {
 			$scope.previousUsers = $cookies.previousUsers;
 		}
+		
+		$scope.weatherPictures = [];
 
 		$scope.userpicture = "";
 		$scope.username = "";
@@ -182,6 +225,7 @@
 			access_key: '',
 			secret_key: ''
 		}
+		$scope.firstWeatherImage = true;
 
 		$scope.sizeLimit      = 10585760; // 10MB in Bytes
 		$scope.uploadProgress = 0;
@@ -189,8 +233,66 @@
 		$scope.getIt = function() {
 			alert('upload');
 		}
+		
+		$scope.showImageDetail = function(path) {
+			
+			if($('#weatherImageDetail').css('display') == "none") {
+				$('#weatherImageDetail').fadeIn();
+			}
+			
+			leafletData.getMap().then(function(map) {
+                map.invalidateSize();
+            });
+			//alert(path);
+			for( var i=0; i < $scope.weatherPictures.length; i++ ) {
+				if($scope.weatherPictures[i].path == path) {
+					$scope.currentPicture = $scope.weatherPictures[i]
+				}
+			}
+			
+			$scope.markers = new Array();
+			
+			if($scope.currentPicture.lat) {
+				$scope.london.lat = $scope.currentPicture.lat;
+				$scope.london.lon = $scope.currentPicture.lon;
+				
+				$scope.markers.push({
+					lat: $scope.currentPicture.lat,
+					lng: $scope.currentPicture.lon
+				});
+				
+			} else {
+				$scope.london.lat = 39.001676741504525;
+				$scope.london.lon = -94.59741353988647;
+				
+				$scope.markers.push({
+					lat: 39.001676741504525,
+					lng: -94.59741353988647
+				});
+			}
+			
+			$scope.london.zoom = 16;
 
-		$scope.uploadWeatherImage = function($files) {
+			
+	
+			
+		}
+
+		$scope.uploadBrowserImage = function($files) {
+			$scope.dragImage = false;
+			$scope.fileBrowser = true;
+			$scope.uploadWeatherImage($files);
+		}
+		
+		$scope.uploadDragImage = function($files) {
+			$scope.dragImage = true;
+			$scope.fileBrowser = false;
+			$scope.uploadWeatherImage($files);
+		}
+		
+		$scope.uploadWeatherImage =function($files) {
+		
+		
 			$('.meter span').animate({width: '0%'}, 500, "easeOutQuart");
 			// Configure The S3 Object 
 			AWS.config.update({ accessKeyId: $scope.creds.access_key, secretAccessKey: $scope.creds.secret_key });
@@ -199,43 +301,76 @@
 
 			$scope.file = $files[0];
 			
-			$('#file').fileExif(function(exifObject) {
-				alert(exifObject.GPSLatitude);
-				alert(exifObject.GPSLongitude);
-			})
+			$scope.weatherWidth = '0 px';
+
 			
-			var uniqueFileName = $scope.uniqueWeatherFileName();
-			//var fileName = $scope.file.name;
-			//var fileEnding = fileName.lastIndexOf(".")
-			uniqueFileName += $scope.file.name.substring($scope.file.name.lastIndexOf("."), $scope.file.name.length);
+			var pictureObject = {};
+			
+			
 			
 			if($scope.file) {
-				var params = { Key: uniqueFileName, ContentType: $scope.file.type, Body: $scope.file, ServerSideEncryption: 'AES256', ACL :'public-read-write'  };
+				
+				var fileExtension = $scope.file.name.substring($scope.file.name.lastIndexOf("."), $scope.file.name.length);
+				fileExtension = fileExtension.toLowerCase();
+				
+				if(fileExtension !=".jpg" && fileExtension !=".jpeg" && fileExtension !=".png") {
+					//NOT IMAGE FILE
+				} else {
+					var uniqueFileName = $scope.uniqueWeatherFileName();
+					//var fileName = $scope.file.name;
+					//var fileEnding = fileName.lastIndexOf(".")
+					uniqueFileName += fileExtension;
+					pictureObject.path = uniqueFileName;
+					
+					if($scope.fileBrowser) {
+						$('#file').fileExif(function(exifObject) {
+							
+							if(exifObject.GPSLatitude) {
+								pictureObject.lat = exifObject.GPSLatitude[0] + (exifObject.GPSLatitude[1]/60);
+								pictureObject.lon = exifObject.GPSLongitude[0] + (exifObject.GPSLongitude[1]/60);
+							}
+						})
+					} else {
+						/*console.log('ere')
+						$scope.file.fileExif(function(exifObject) {
+							
+							if(exifObject.GPSLatitude) {
+								pictureObject.lat = exifObject.GPSLatitude[0] + (exifObject.GPSLatitude[1]/60);
+								pictureObject.lat = exifObject.GPSLongitude[0] + (exifObject.GPSLongitude[1]/60);
+							}
+						})*/
+					}
+					
+					
+					var params = { Key: uniqueFileName, ContentType: $scope.file.type, Body: $scope.file, ServerSideEncryption: 'AES256', ACL :'public-read-write'  };
 
-				bucket.putObject(params, function(err, data) {
-					if(err) {
-						// There Was An Error With Your S3 Config
-						alert(err.message);
-						return false;
-					}
-					else {
-						// Success!
-						//alert('Upload Done');
-						$('.meter span').animate({width: '0%'}, 500, "easeOutQuart");
-					}
-				})
-				.on('httpUploadProgress',function(progress) {
-					$('.meter span').animate({width: Math.round(progress.loaded / progress.total * 100) + '%'}, 500, "easeOutQuart");
-					//$('.meter span').width(Math.round(progress.loaded / progress.total * 100) + '%');
-					// Log Progress Information
-					console.log(Math.round(progress.loaded / progress.total * 100) + '% done');
-				});
+					bucket.putObject(params, function(err, data) {
+						if(err) {
+							// There Was An Error With Your S3 Config
+							alert(err.message);
+							return false;
+						}
+						else {
+							// Success!
+							//alert('Upload Done');
+							$('.meter span').animate({width: '0%'}, 100, "easeOutQuart");
+							$scope.weatherPictures.unshift(pictureObject);
+							$scope.$apply();
+							console.log($scope.weatherPictures.length)
+							console.log('done');
+						}
+					})
+					.on('httpUploadProgress',function(progress) {
+						$('.meter span').animate({width: Math.round(progress.loaded / progress.total * 100) + '%'}, 100, "easeOutQuart");
+					});
+				}
+				
 			}
 			else {
 				// No File Selected
 				alert('No File Selected');
 			}
-
+			$scope.$apply();
 		}
 		
 		$scope.uniqueWeatherFileName = function() {
@@ -355,9 +490,6 @@
 
 	})
 
-	app.controller('WeatherPhotosController', function($scope) {
-		this.weatherPictures = [];
-	})
 
 	app.controller('HomeController', function($scope) {
 

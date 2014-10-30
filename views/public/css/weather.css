@@ -53,12 +53,14 @@ input[type=submit]:focus
 	height: 51px;
 	width: 132px;
 	display:inline-block;
+	padding-bottom:10px;
 }
 
 .file_button_container
 {
 	background: transparent url('/views/public/assets/img/uploadButton.png') left top no-repeat;
 	display:inline-block;
+	padding-bottom:10px;
 }
 
 .file_button_container input
@@ -75,4 +77,24 @@ input[type=submit]:focus
 	display:block;
 	height:100%;
 	background-color: #347ec4;
+}
+
+.drop-box {
+	display:inline-block;
+	background: #333333;
+	border: 1px dashed #DDD;
+	width: 132px;
+	height: 50px; 
+	text-align: center;
+	padding-top: 25px; 
+	color:#FFFFFF;
+	font-family: "museo-sans-condensed",sans-serif;
+	font-weight:300;
+	font-size: 14px;
+}
+
+.drop-box.dragover {
+	border: 1px dashed #347ec4;
+	background:#FFFFFF;
+	color:#347ec4;
 }
