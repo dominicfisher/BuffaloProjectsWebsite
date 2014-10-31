@@ -54,6 +54,7 @@ input[type=submit]:focus
 	width: 132px;
 	display:inline-block;
 	padding-bottom:10px;
+	cursor:pointer;
 }
 
 .file_button_container
@@ -61,6 +62,7 @@ input[type=submit]:focus
 	background: transparent url('/views/public/assets/img/uploadButton.png') left top no-repeat;
 	display:inline-block;
 	padding-bottom:10px;
+	cursor:pointer;
 }
 
 .file_button_container input

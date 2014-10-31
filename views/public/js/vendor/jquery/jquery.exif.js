@@ -607,6 +607,7 @@ function readTagValue(oFile, iEntryOffset, iTIFFStart, iDirStart, bBigEnd)
     var iNumValues = oFile.getLongAt(iEntryOffset+4, bBigEnd);
     var iValueOffset = oFile.getLongAt(iEntryOffset+8, bBigEnd) + iTIFFStart;
 
+
     switch (iType) {
         case 1: // byte, 8-bit unsigned int
         case 7: // undefined, 8-bit byte, value depending on field

@@ -255,6 +255,10 @@
 			if($scope.currentPicture.lat) {
 				$scope.london.lat = $scope.currentPicture.lat;
 				$scope.london.lon = $scope.currentPicture.lon;
+				console.log('+++++++++++++++++++++++++++')
+				console.log($scope.currentPicture.lat);
+				console.log($scope.currentPicture.lon);
+				
 				
 				$scope.markers.push({
 					lat: $scope.currentPicture.lat,
@@ -326,9 +330,25 @@
 						$('#file').fileExif(function(exifObject) {
 							
 							if(exifObject.GPSLatitude) {
-								pictureObject.lat = exifObject.GPSLatitude[0] + (exifObject.GPSLatitude[1]/60);
-								pictureObject.lon = exifObject.GPSLongitude[0] + (exifObject.GPSLongitude[1]/60);
+								
+								if(exifObject.GPSLatitudeRef == "S") {
+									pictureObject.lat = '-';
+									pictureObject.lat += exifObject.GPSLatitude[0] + (exifObject.GPSLatitude[1]/60);
+								} else {
+									pictureObject.lat = exifObject.GPSLatitude[0] + (exifObject.GPSLatitude[1]/60);
+								}
+								
+								
+								if(exifObject.GPSLongitudeRef == "W") {
+									pictureObject.lon = '-';
+									pictureObject.lon += exifObject.GPSLongitude[0] + (exifObject.GPSLongitude[1]/60);
+								} else {
+									pictureObject.lon = exifObject.GPSLongitude[0] + (exifObject.GPSLongitude[1]/60);
+								}
 							}
+							
+							console.log(pictureObject.lat);
+							console.log(pictureObject.lon);
 						})
 					} else {
 						/*console.log('ere')
