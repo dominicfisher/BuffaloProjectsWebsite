@@ -181,18 +181,11 @@
 			}
 		};
 		
-		angular.extend($scope, {
+		angular.extend($scope,  {
             london: {
                 lat: 39.001676741504525,
                 lng: -94.59741353988647,
                 zoom: 16
-            },
-            markers: {
-                london: {
-                    lat: 39.001676741504525,
-                    lng: -94.59741353988647,
-                    draggable: true
-                }
             },
             defaults: {
             	zoomControl: false,
@@ -200,13 +193,7 @@
             },
             tiles: tilesDict.mapbox_streets
         });
-		
-		$scope.markers = new Array();
 
-		$scope.markers.push({
-			lat: 39.001676741504525,
-			lng: -94.59741353988647
-		});
 		
 		$scope.previousUsers = [];
 		if($cookies) {
@@ -238,12 +225,12 @@
 			
 			if($('#weatherImageDetail').css('display') == "none") {
 				$('#weatherImageDetail').fadeIn();
+				$('#detailMap').height($('#detailMap').width());
+				leafletData.getMap().then(function(map) {
+	                map.invalidateSize();
+	            });
 			}
-			
-			leafletData.getMap().then(function(map) {
-                map.invalidateSize();
-            });
-			//alert(path);
+
 			for( var i=0; i < $scope.weatherPictures.length; i++ ) {
 				if($scope.weatherPictures[i].path == path) {
 					$scope.currentPicture = $scope.weatherPictures[i]
@@ -252,33 +239,53 @@
 			
 			$scope.markers = new Array();
 			
+			
+			
 			if($scope.currentPicture.lat) {
-				$scope.london.lat = $scope.currentPicture.lat;
-				$scope.london.lon = $scope.currentPicture.lon;
-				console.log('+++++++++++++++++++++++++++')
-				console.log($scope.currentPicture.lat);
-				console.log($scope.currentPicture.lon);
+				console.log('has a lat')
 				
-				
+				angular.extend($scope,  {
+					london: {
+		                lat: Number($scope.currentPicture.lat),
+		                lng: Number($scope.currentPicture.lon),
+		                zoom: 16,
+		                animate:true
+		            }
+                });
+
 				$scope.markers.push({
-					lat: $scope.currentPicture.lat,
-					lng: $scope.currentPicture.lon
-				});
+	                lat: Number($scope.currentPicture.lat),
+	                lng: Number($scope.currentPicture.lon),
+	                draggable : true
+	            });
 				
 			} else {
-				$scope.london.lat = 39.001676741504525;
-				$scope.london.lon = -94.59741353988647;
+				console.log('does not has a lat');
+				
+				angular.extend($scope,  {
+					london: {
+		                lat: 39.001676741504525,
+		                lng: -94.59741353988647,
+		                zoom: 16,
+		                animate:true
+		            }
+                });
 				
 				$scope.markers.push({
-					lat: 39.001676741504525,
-					lng: -94.59741353988647
-				});
+	                lat: 39.001676741504525,
+	                lng: -94.59741353988647,
+	                draggable : true
+	            });
 			}
-			
-			$scope.london.zoom = 16;
+		}
 
-			
-	
+		
+		$scope.getCurrentLatLng = function() {
+			if($scope.markers) {
+				return $scope.markers[0].lat + ', ' + $scope.markers[0].lng;
+			} else {
+				return '39.001676741504525, -94.59741353988647'
+			}
 			
 		}
 

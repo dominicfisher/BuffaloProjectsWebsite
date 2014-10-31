@@ -152,13 +152,26 @@
 			</div>
 		</div>
 	</div>
-	<div id="weatherImageDetail" style="position: absolute; z-index:1000; top:0px; left:25%; width:25%; height: 100%;  background: #000000; display: none;">
-		
-		<div id="detailMap" style="width:100%; height:100%">
-			<leaflet  center="london" width="100%" height="100%" defaults="defaults" markers="markers" tiles="tiles"></leaflet>
-		</div>
-		<div style="position:absolute; z-index: :1001; top: 10px; left:0%; width: 100%; height:50px; background:#FEFEFE; ">
-			<div style="color: #333333; font-family: 'museo-sans-condensed',sans-serif; font-size:14px; font-weight:700; padding:10px;">{{currentPicture.path}}</div>
-		</div>
+	<div id="weatherImageDetail" style="position: absolute; z-index:1000; top:0px; left:25%; width:25%; height: 100%;  display: none;">
+	
+		<ul style="list-style-type: none; width:100%;">
+			<li style="float:left; padding-top:10px; padding-bottom: 10px; width: 100%">
+				<div style="top: 10px;  width: 100%; height:50px; background:#FEFEFE; ">
+					<div style="color: #333333; font-family: 'museo-sans-condensed',sans-serif; font-size:12px; font-weight:700; padding:10px; width: 100%;">{{currentPicture.path}}</div>
+				</div>
+			</li>
+			<li style="float:left; padding-bottom:10px; width:100%;">
+				<div style="width:100%; height:100px; background-color: #FFFFFF padding-left:10px; padding-rihgt:10px;">
+					<span style="color: #333333; font-family: 'museo-sans-condensed',sans-serif; font-size:14px; font-weight:300; padding:10px;">Search for an address or lat/lon to assign to this picture</span>
+					<div style="margin-left:10px; margin-right:10px; width:100%">
+						<input type="text">
+					</div>
+					<span style="color: #999999; font-family: 'museo-sans-condensed',sans-serif; font-size:12px; font-weight:300; padding:10px;" ng-bind="getCurrentLatLng()"></span>
+				</div>
+				<div id="detailMap" style="width:100%">
+					<leaflet  center="london" width="100%" height="100%" defaults="defaults" markers="markers" tiles="tiles"></leaflet>
+				</div>
+			</li>
+		</ul>
 	</div>
 </div>
