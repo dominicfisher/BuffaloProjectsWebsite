@@ -237,6 +237,11 @@
 				}
 			}
 			
+			$( ".thumbnail" ).each(function( index ) {
+				$(this).css
+				  console.log( index + ": " + $( this ).text() );
+				});
+			
 			$scope.markers = new Array();
 			
 			

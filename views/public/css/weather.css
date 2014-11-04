@@ -104,3 +104,13 @@ input[type=submit]:focus
 .leaflet-container .leaflet-control-attribution {
 	display:none;
 }
+
+.thumbnail {
+	border 1px solid #347ec4;
+	padding:10px;
+	width: 100%;
+}
+
+.thumbnail.selected {
+	border:none;
+}
