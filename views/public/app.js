@@ -17,24 +17,29 @@
 			});
 		};
 	});
-	
+
 	app.directive('fadeIn', function($timeout){
-	    return {
-	        restrict: 'A',
-	        link: function($scope, $element, attrs){
-	            $element.addClass("ng-hide-remove");
-	            $element.on('load', function() {
-	                $element.addClass("ng-hide-add");
-	            });
-	        }
-	    }
-	})
-	
+		return {
+			restrict: 'A',
+			link: function($scope, $element, attrs){
+				$element.addClass("ng-hide-remove");
+				$element.on('load', function() {
+					$element.addClass("ng-hide-add");
+				});
+			}
+		}
+	});
+
+
+
+
+
+
 	$('#file').change(function() {
-        $(this).fileExif(function(exifObject) {
-        	alert(exifObject.Model);
-        });
-    });
+		$(this).fileExif(function(exifObject) {
+			alert(exifObject.Model);
+		});
+	});
 
 	/*app.directive('file', function() {
 		  return {
@@ -130,7 +135,7 @@
 	app.controller('appController', function( $scope, $route, $routeParams ){
 
 		$scope.isWeather = true;
-		
+
 		//$scope.weatherPictures = [];
 
 		render = function(){
@@ -156,6 +161,8 @@
 
 				}
 		);
+
+
 	});
 
 	app.run(['$location', '$rootScope', function($location, $rootScope, $scope) {
@@ -180,14 +187,14 @@
 	}]);
 
 	app.controller('WeatherController', function($scope, $cookies, $upload, leafletData) {
-		
+
 		$scope.currentPicturePath = 'cherry_blossoms.jpg';
 		$scope.currentPictureSeason = '';
 		$scope.currentPictureLocationLabel = '';
 		$scope.currentPictureLocationLatLon = '';
 		$scope.currentPictureWeatherTags = [];
 		$scope.weatherTagToAdd = '';
-		
+
 		var tilesDict = {
 			mapbox_streets: {
 				name: 'Mapbox Streets',
@@ -199,26 +206,26 @@
 				}
 			}
 		};
-		
-		angular.extend($scope,  {
-            london: {
-                lat: 39.001676741504525,
-                lng: -94.59741353988647,
-                zoom: 16
-            },
-            defaults: {
-            	zoomControl: false,
-				scrollWheelZoom: true
-            },
-            tiles: tilesDict.mapbox_streets
-        });
 
-		
+		angular.extend($scope,  {
+			london: {
+				lat: 39.001676741504525,
+				lng: -94.59741353988647,
+				zoom: 16
+			},
+			defaults: {
+				zoomControl: false,
+				scrollWheelZoom: true
+			},
+			tiles: tilesDict.mapbox_streets
+		});
+
+
 		$scope.previousUsers = [];
 		if($cookies) {
 			$scope.previousUsers = $cookies.previousUsers;
 		}
-		
+
 		$scope.weatherPictures = [];
 
 		$scope.userpicture = "";
@@ -239,106 +246,172 @@
 		$scope.getIt = function() {
 			alert('upload');
 		}
-		
+
 		$scope.showImageDetail = function(path) {
-			
+
+
+
+
+
+
 			if($('#weatherImageDetail').css('display') == "none") {
 				$('#weatherImageDetail').fadeIn();
 				$('#detailMap').height($('#detailMap').width());
 				leafletData.getMap().then(function(map) {
-	                map.invalidateSize();
-	            });
+					map.invalidateSize();
+				});
+				$('#weatherImageDetailScroller').height( $('#weatherImageDetail').height() - 51);
 			}
 
-			var j = 0;
-			for( var i=0; i < $scope.weatherPictures.length; i++ ) {
-				if($scope.weatherPictures[i].path == path) {
-					j = i;
-					$scope.currentPicture = $scope.weatherPictures[i];
-					$scope.currentPicturePath = $scope.currentPicture.path;
+			$('#mainCol .placeholder img').fadeOut(function() {
+				
+				$(this).remove();
+				
+				$('#mainCol .placeholder').append('<img id="item_'+photo.id+'+" src="'+photo.src+'" alt="" style="display: none;" />')
+										  .append('<img id="ajaxLoader" src="/images/ajaxload/big/green.gif" />')
+										  .find('img:eq(0)')
+										  .load(function() {
+											$('#ajaxLoader').remove();
+											$(this).fadeIn();
+										  });
+				
+			});
+			$('#weatherbackgroundContainer').fadeOut(function() {
+
+				$('#weatherbackground').remove();
+
+				$scope.currentPicture = {};
+				$scope.currentPicturePath = '';
+				$scope.currentPictureLocationLabel = '';
+				$scope.currentPictureSeason = '';
+				$scope.currentPictureWeatherTags  = [];
+
+				var j = 0;
+				for( var i=0; i < $scope.weatherPictures.length; i++ ) {
+					if($scope.weatherPictures[i].path == path) {
+						j = i;
+						$scope.currentPicture = $scope.weatherPictures[i];
+
+						$scope.currentPicturePath = $scope.currentPicture.path;
+
+						if($scope.weatherPictures[i].address) {
+							$scope.currentPictureLocationLabel = $scope.weatherPictures[i].address;
+						}
+
+						if($scope.weatherPictures[i].season) {
+							$scope.currentPictureSeason = $scope.weatherPictures[i].season
+						} else {
+							$scope.currentPictureSeason = '';
+						}
+
+						if($scope.weatherPictures[i].tags) {
+							$scope.currentPictureWeatherTags = $scope.weatherPictures[i].tags
+						}
+					}
 				}
-			}
-			
-			
-			
-			
+				//$('#mainCol .placeholder').append('<img id="item_'+photo.id+'+" src="'+photo.src+'" alt="" style="display: none;" />')
+				$('#weatherbackgroundContainer').append('<img id="weatherbackground"  src="https://s3.amazonaws.com/buffaloimages/' + $scope.currentPicture.path +'"  />')
+				$('#weatherbackground').load(function() {
+					console.log('loaded')
+					console.log($('#weatherbackground').width())
+					if($('#weatherbackground').width() < $('#weatherbackgroundContainer').width()) {
+
+						var startWidth = $('#weatherbackground').width();
+						var startHeight = $('#weatherbackground').height();
+						$('#weatherbackground').width($('#weatherbackgroundContainer').width());
+						$('#weatherbackground').height( ($('#weatherbackgroundContainer').width()/startWidth) * startHeight )
+					}
+
+					console.log($('#weatherbackground').width())
+					if($('#weatherbackground').height() < $('#weatherbackgroundContainer').height()) {
+
+						var startWidth = $('#weatherbackground').width();
+						var startHeight = $('#weatherbackground').height();
+
+						$('#weatherbackground').height($('#weatherbackgroundContainer').height());
+						$('#weatherbackground').width( ($('#weatherbackgroundContainer').height()/startHeight) * startWidth )
+					}
+					$('#weatherbackgroundContainer').fadeIn()
+				})
+				//var imgLoad = imagesLoaded( document.querySelector('#weatherbackground'))
+				//imgLoad.on( 'done', function( instance ) {
+
+
+
 				var a = 0;
-				  $( ".thumbnail" ).each(function() {
-					  alert('hello');
-					  if(a == j) {
-						  $(this).addClass('selected');
-					  } else {
-						  $(this).removeClass('selected');
-					  }
-					  a++;
-				  });
-				
-			
-			$scope.markers = new Array();
-			
-			
-			
-			if($scope.currentPicture.lat) {
-				if($scope.currentPicture.locationLabel) {
-					$scope.currentPictureLocationLabel = $scope.currentPicture.locationLabel;
-				} else {
-					$scope.currentPictureLocationLabel = $scope.currentPicture.lat + ", " + $scope.currentPicture.lon;
-				}
-				$scope.currentPictureLocationLatLon = $scope.currentPicture.lat + ", " + $scope.currentPicture.lon;
-				
-				angular.extend($scope,  {
-					london: {
-		                lat: Number($scope.currentPicture.lat),
-		                lng: Number($scope.currentPicture.lon),
-		                zoom: 16,
-		                animate:true
-		            }
-                });
+				$( ".thumbnail" ).each(function() {
+					if(a == j) {
+						$(this).addClass('selected');
+					} else {
+						$(this).removeClass('selected');
+					}
+					a++;
+				});
 
-				$scope.markers.push({
-	                lat: Number($scope.currentPicture.lat),
-	                lng: Number($scope.currentPicture.lon),
-	                draggable : true
-	            });
-				
-			} else {
-				console.log('does not has a lat');
-				
-				angular.extend($scope,  {
-					london: {
-		                lat: 39.001676741504525,
-		                lng: -94.59741353988647,
-		                zoom: 16,
-		                animate:true
-		            }
-                });
-				
-				$scope.markers.push({
-	                lat: 39.001676741504525,
-	                lng: -94.59741353988647,
-	                draggable : true
-	            });
-				
-				$scope.currentPictureLocationLabel = '39.001676741504525, -94.59741353988647';
-				$scope.currentPictureLocationLatLon = '39.001676741504525, -94.59741353988647';
-			}
-			
+
+				$scope.markers = new Array();
+
+
+
+				if($scope.currentPicture.lat) {
+					if($scope.currentPicture.locationLabel) {
+						$scope.currentPictureLocationLabel = $scope.currentPicture.locationLabel;
+					} else {
+						$scope.currentPictureLocationLabel = $scope.currentPicture.lat + ", " + $scope.currentPicture.lon;
+					}
+					$scope.currentPictureLocationLatLon = $scope.currentPicture.lat + ", " + $scope.currentPicture.lon;
+
+					angular.extend($scope,  {
+						london: {
+							lat: Number($scope.currentPicture.lat),
+							lng: Number($scope.currentPicture.lon),
+							zoom: 16,
+							animate:true
+						}
+					});
+
+					$scope.markers.push({
+						lat: Number($scope.currentPicture.lat),
+						lng: Number($scope.currentPicture.lon),
+						draggable : true
+					});
+
+				} else {
+					console.log('does not has a lat');
+
+					angular.extend($scope,  {
+						london: {
+							lat: 39.001676741504525,
+							lng: -94.59741353988647,
+							zoom: 16,
+							animate:true
+						}
+					});
+
+					$scope.markers.push({
+						lat: 39.001676741504525,
+						lng: -94.59741353988647,
+						draggable : true
+					});
+
+					$scope.currentPictureLocationLabel = '39.001676741504525, -94.59741353988647';
+					$scope.currentPictureLocationLatLon = '39.001676741504525, -94.59741353988647';
+
+				}
+			})
+
 			$scope.$on('leafletDirectiveMarker.dragend', function(e, args) {
-			    $scope.currentPictureLocationLabel = $scope.markers[0].lat + ', ' + $scope.markers[0].lng;
-			    $scope.currentPictureLocationLatLon = $scope.markers[0].lat + ', ' + $scope.markers[0].lng;
+				$scope.currentPictureLocationLabel = $scope.markers[0].lat + ', ' + $scope.markers[0].lng;
+				$scope.currentPictureLocationLatLon = $scope.markers[0].lat + ', ' + $scope.markers[0].lng;
 			});
-			
-			$scope.$on('leafletDirectiveMarker.drag', function(e, args) {
-			    $scope.currentPictureLocationLabel = $scope.markers[0].lat + ', ' + $scope.markers[0].lng;
-			    $scope.currentPictureLocationLatLon = $scope.markers[0].lat + ', ' + $scope.markers[0].lng;
-			});
+
 		}
 
-		
+
 		$scope.selectedSeason = function(season) {
 			$scope.currentPictureSeason = season;
 		}
-		
+
 		$scope.addWeatherTag = function() {
 			var found = false;
 			for(var i = 0; i<$scope.currentPictureWeatherTags.length; i++) {
@@ -346,14 +419,23 @@
 					found = true;
 				}
 			}
-			
+
 			if(!found) {
-				$scope.currentPictureWeatherTags.unshift($scope.weatherTagToAdd)
+				$scope.currentPictureWeatherTags.push($('#weatherTagInput').val())
 			}
-			
-			$scope.weatherTagToAdd
+
+			$('#weatherTagInput').val('')
 		}
-		
+
+		$scope.removeWeatherTag = function(weatherTag) {
+			for(var i = 0; i<$scope.currentPictureWeatherTags.length; i++) {
+				if($scope.currentPictureWeatherTags[i]== weatherTag) {
+					$scope.currentPictureWeatherTags.splice(i, 1);
+					break
+				}
+			}
+		}
+
 		$scope.deleteImage = function() {
 			for( var i=0; i < $scope.weatherPictures.length; i++ ) {
 				if($scope.weatherPictures[i].path == $scope.currentPicturePath) {
@@ -363,9 +445,18 @@
 				}
 			}
 		}
-		
+
 		$scope.saveImage = function() {
-			
+			alert('save')
+			for( var i=0; i < $scope.weatherPictures.length; i++ ) {
+				if($scope.weatherPictures[i].path == $scope.currentPicturePath) {
+					$scope.weatherPictures[i].lat = $scope.markers[0].lat;
+					$scope.weatherPictures[i].lon - $scope.markers[0].lon;
+					$scope.weatherPictures[i].address = $scope.currentPictureLocationLabel;
+					$scope.weatherPictures[i].season = $scope.currentPictureSeason;
+					$scope.weatherPictures[i].tags = $scope.currentPictureWeatherTags;
+				}
+			}
 		}
 
 		$scope.uploadBrowserImage = function($files) {
@@ -373,16 +464,16 @@
 			$scope.fileBrowser = true;
 			$scope.uploadWeatherImage($files);
 		}
-		
+
 		$scope.uploadDragImage = function($files) {
 			$scope.dragImage = true;
 			$scope.fileBrowser = false;
 			$scope.uploadWeatherImage($files);
 		}
-		
+
 		$scope.uploadWeatherImage =function($files) {
-		
-		
+
+
 			$('.meter span').animate({width: '0%'}, 500, "easeOutQuart");
 			// Configure The S3 Object 
 			AWS.config.update({ accessKeyId: $scope.creds.access_key, secretAccessKey: $scope.creds.secret_key });
@@ -390,62 +481,65 @@
 			var bucket = new AWS.S3({ params: { Bucket: $scope.creds.bucket } });
 
 			$scope.file = $files[0];
-			
+
 			$scope.weatherWidth = '0 px';
 
-			
+
 			var pictureObject = {};
-			
-			
-			
+
+
+
 			if($scope.file) {
-				
+
 				var fileExtension = $scope.file.name.substring($scope.file.name.lastIndexOf("."), $scope.file.name.length);
 				fileExtension = fileExtension.toLowerCase();
-				
+
 				if(fileExtension !=".jpg" && fileExtension !=".jpeg" && fileExtension !=".png") {
 					//NOT IMAGE FILE
 				} else {
-					var uniqueFileName = $scope.uniqueWeatherFileName();
+					var uniqueFileName =  $scope.uniqueWeatherFileName();
 					//var fileName = $scope.file.name;
 					//var fileEnding = fileName.lastIndexOf(".")
 					uniqueFileName += fileExtension;
 					pictureObject.path = uniqueFileName;
-					
+					pictureObject.season = '';
+
 					if($scope.fileBrowser) {
 						$('#file').fileExif(function(exifObject) {
-							
+
 							if(exifObject.GPSLatitude) {
-								
+
 								if(exifObject.GPSLatitudeRef == "S") {
 									pictureObject.lat = '-';
 									pictureObject.lat += exifObject.GPSLatitude[0] + (exifObject.GPSLatitude[1]/60);
 								} else {
 									pictureObject.lat = exifObject.GPSLatitude[0] + (exifObject.GPSLatitude[1]/60);
 								}
-								
-								
+
+
 								if(exifObject.GPSLongitudeRef == "W") {
 									pictureObject.lon = '-';
 									pictureObject.lon += exifObject.GPSLongitude[0] + (exifObject.GPSLongitude[1]/60);
 								} else {
 									pictureObject.lon = exifObject.GPSLongitude[0] + (exifObject.GPSLongitude[1]/60);
 								}
+
+								pictureObject.address = pictureObject.lat + ', ' + pictureObject.lon;
 							}
 
 						})
 					} else {
 						/*console.log('ere')
 						$scope.file.fileExif(function(exifObject) {
-							
+
 							if(exifObject.GPSLatitude) {
 								pictureObject.lat = exifObject.GPSLatitude[0] + (exifObject.GPSLatitude[1]/60);
 								pictureObject.lat = exifObject.GPSLongitude[0] + (exifObject.GPSLongitude[1]/60);
 							}
 						})*/
 					}
-					
-					
+
+
 					var params = { Key: uniqueFileName, ContentType: $scope.file.type, Body: $scope.file, ServerSideEncryption: 'AES256', ACL :'public-read-write'  };
 
 					bucket.putObject(params, function(err, data) {
@@ -468,7 +562,7 @@
 						$('.meter span').animate({width: Math.round(progress.loaded / progress.total * 100) + '%'}, 100, "easeOutQuart");
 					});
 				}
-				
+
 			}
 			else {
 				// No File Selected
@@ -476,16 +570,16 @@
 			}
 			$scope.$apply();
 		}
-		
-		$scope.uniqueWeatherFileName = function() {
-		    var text     = "weatherbg_";
-		    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-		    for( var i=0; i < 30; i++ ) {
-		      text += possible.charAt(Math.floor(Math.random() * possible.length));
-		    }
-		    return text;
-		  }
+		$scope.uniqueWeatherFileName = function() {
+			var text     = "weatherbg_";
+			var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+			for( var i=0; i < 30; i++ ) {
+				text += possible.charAt(Math.floor(Math.random() * possible.length));
+			}
+			return text;
+		}
 
 		$scope.showSignup = function() {
 			var parentWidth = $('#slideContainer').width();
@@ -762,6 +856,12 @@
 
 	});
 
+	$(window).resize(function() {
+		$('#weatherImageDetailScroller').height( $('#weatherImageDetail').height() - 51);
+	})
+
+
+
 })();
 
 var tempBodyCopy = 'Letterpress mlkshk wayfarers, kogi retro ugh before they sold out viral flannel mustache. Swag aliqua cupidatat distillery. Pork belly Odd Future gluten-free tousled, lo-fi Shoreditch plaid. Salvia PBR synth dolore. Exercitation shabby chic McSweeney&apos;s cred 90&apos;s laboris. Cornhole accusamus street art slow-carb YOLO semiotics iPhone, salvia voluptate.'
@@ -825,4 +925,5 @@ var quotes = [
 		author	:	'Adrienne Fisher',
 	}
 	]
+
 

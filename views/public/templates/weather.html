@@ -1,6 +1,6 @@
 <div style="width: 100%; height: 100%" ng-controller='WeatherController as home'>
-	<div style="width: 100%; height: 100%; overflow: hidden; position:absolute; z-index:999; top:0px; left:0px;">
-		<img id="weatherbackground" width="100%" height="100%" ng-src="https://s3.amazonaws.com/buffaloimages/{{currentPicturePath}}" class="animate-show" fade-in />
+	<div id="weatherbackgroundContainer" style="width: 100%; height: 100%; overflow: hidden; position:absolute; z-index:999; top:0px; left:0px;">
+		<img id="weatherbackground"  ng-src="https://s3.amazonaws.com/buffaloimages/{{currentPicturePath}}"  imageonload />
 	</div>
 
 	<div id="sidebar" style="position:absolute; z-index:999; top:0px; width:25%; height: 100%; border-left: 1px solid #999999; border-right:  1px solid #999999; background: rgba(0, 0, 0, 0.25); overflow: hidden; left:37.5%; ">
@@ -156,50 +156,60 @@
 			</div>
 		</div>
 	</div>
-	<div id="weatherImageDetail" style="position: absolute; z-index:1000; top:0px; left:25%; width:25%; height: 100%;  display: none;">
-	
-		<ul style="list-style-type: none; width:100%;">
-			<li style="float:left; padding-top:10px; padding-bottom: 10px; width: 100%">
-				<div style="top: 10px;  width: 100%; height:50px; background:#FEFEFE; ">
-					<div style="padding:10px; width: 100%; color: #333333; font-family: 'museo-sans-condensed',sans-serif; font-size:12px; font-weight:300;">{{currentPicture.path}}</div>
-				</div>
-			</li>
-			<li style="float:left; padding-bottom:10px; width:100%;">
-				<div style="width:100%; height:140px; background-color: #FEFEFE;">
-					<span style="color: #333333; font-family: 'museo-sans-condensed',sans-serif; font-size:14px; font-weight:300; padding:10px;">Search for an address or lat/lon to assign to this picture</span>
-					<div style="margin-left:10px; width:90%">
-						<input type="text" value="{{currentPictureLocationLabel}}">
+	<div id="weatherImageDetail" style="position: absolute; z-index:1000; top:0px; left:25%; width:25%; height: 100%;  display: none; ">
+		<div id="weatherImageDetailScroller" style="width:100%; height:100%; overflow-y: scroll">
+			<ul style="list-style-type: none; width:100%;">
+				<li style="float:left; padding-top:10px; padding-bottom: 10px; width: 100%">
+					<div style="top: 10px;  width: 100%; height:50px; background:#FEFEFE; ">
+						<div style="padding:10px; width: 100%; color: #333333; font-family: 'museo-sans-condensed',sans-serif; font-size:12px; font-weight:300;">{{currentPicture.path}}</div>
 					</div>
-					<span style="color: #999999; font-family: 'museo-sans-condensed',sans-serif; font-size:12px; font-weight:300; padding:10px; text-align: center" ng-bind="currentPictureLocationLatLon"></span>
-				</div>
-				<div id="detailMap" style="width:100%">
-					<leaflet  center="london" width="100%" height="100%" defaults="defaults" markers="markers" tiles="tiles"></leaflet>
-				</div>
-			</li>
-			<li style="width:100%; float:left; padding-bottom: 10px;">
-				<div style="width:100%; height:65px; background-color: #FEFEFE;">
-					<span style="padding-left:10px; padding-top:10px; font-family: 'museo-sans-condensed',sans-serif; font-size:14px; color:#333333; font-weight:300; color:#333333; padding-bottom:10px;">Which season was this photo taken?</span>
-					<a class="radioItem" ng-class="{radioItemSelected: currentPictureSeason=='Spring'}" ng-click="selectedSeason('Spring')" href>Spring</a>
-					<a class="radioItem" ng-class="{radioItemSelected: currentPictureSeason=='Summer'}" ng-click="selectedSeason('Summer')" href>Summer</a>
-					<a class="radioItem" ng-class="{radioItemSelected: currentPictureSeason=='Fall'}" ng-click="selectedSeason('Fall')" href>Fall</a>
-					<a class="radioItem" ng-class="{radioItemSelected: currentPictureSeason=='Winter'}" ng-click="selectedSeason('Winter')" href>Winter</a>
-				</div>
-			</li>
-			<li style="width:100%; float:left;">
-				<div style="width:100%; height:100px; background-color: #FEFEFE;">
-					<div style="width:90%; padding-left: 10px; padding-top: 10px;">
-						<form ng-submit="addWeatherTag()">
-							<input id="weatherTagInput" type="text" ng-model="weatherTagToAdd" style="padding-left:10px; float:left;" /><input id="submitWeatherTagButton" type="submit" value="" />
-						</form>
+				</li>
+				<li style="float:left; padding-bottom:10px; width:100%;">
+					<div style="width:100%; height:140px; background-color: #FEFEFE;">
+						<span style="color: #333333; font-family: 'museo-sans-condensed',sans-serif; font-size:14px; font-weight:300; padding:10px;">Search for an address or lat/lon to assign to this picture</span>
+						<div style="margin-left:10px; width:90%">
+							<input type="text" value="{{currentPictureLocationLabel}}">
+						</div>
+						<span style="color: #999999; font-family: 'museo-sans-condensed',sans-serif; font-size:12px; font-weight:300; padding:10px; text-align: center" ng-bind="currentPictureLocationLatLon"></span>
 					</div>
-				</div>
-				<div ng-repeat="weatherTag in currentPictureWeatherTags">
-					<div>
-						<span>{{weatherTag}}</span><a href ng-click="removeTag(weatherTag)"><img ng-src="/views/public/assets/img/weather_tag_right.png"/></a>
+					<div id="detailMap" style="width:100%">
+						<leaflet  center="london" width="100%" height="100%" defaults="defaults" markers="markers" tiles="tiles"></leaflet>
 					</div>
-				</div>
-			</li>
-		</ul>
+				</li>
+				<li style="width:100%; float:left; padding-bottom: 10px;">
+					<div style="width:100%; height:65px; background-color: #FEFEFE;">
+						<span style="padding-left:10px; padding-top:10px; font-family: 'museo-sans-condensed',sans-serif; font-size:14px; color:#333333; font-weight:300; color:#333333; padding-bottom:10px;">Which season was this photo taken?</span>
+						<a class="radioItem" ng-class="{radioItemSelected: currentPictureSeason=='Spring'}" ng-click="selectedSeason('Spring')" href>Spring</a>
+						<a class="radioItem" ng-class="{radioItemSelected: currentPictureSeason=='Summer'}" ng-click="selectedSeason('Summer')" href>Summer</a>
+						<a class="radioItem" ng-class="{radioItemSelected: currentPictureSeason=='Fall'}" ng-click="selectedSeason('Fall')" href>Fall</a>
+						<a class="radioItem" ng-class="{radioItemSelected: currentPictureSeason=='Winter'}" ng-click="selectedSeason('Winter')" href>Winter</a>
+					</div>
+				</li>
+				<li style="width:100%; float:left;">
+					<div style="width:100%; height:60px; background-color: #FEFEFE;">
+						<div style="width:100%; padding-left: 10px; padding-top: 10px;">
+							<form ng-submit="addWeatherTag()">
+								<div style="width:100%">
+									<div style="float:left; padding-right:10px;">
+										<input id="weatherTagInput" type="text" style="padding-left:10px; float:left; width:100%" />
+									</div>
+									<div style="float:right; ">
+										<input id="submitWeatherTagButton" type="submit" value="" />
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+					<div style="padding-left: 10px;">
+						<div ng-repeat="weatherTag1 in currentPictureWeatherTags"  class="weatherTag" style="padding-right:10px;">
+							<div >
+								<span>{{weatherTag1}}</span><a style="float:left; padding-right: 10px;" href ng-click="removeWeatherTag(weatherTag1)"><img ng-src="/views/public/assets/img/weather_tag_right.png" /></a>
+							</div>
+						</div>
+					</div>
+				</li>
+			</ul>
+		</div>
 		<div style="width:100%; height: 51px; position: absolute; bottom:0px;">
 			<div ng-click="deleteImage()" style="cursor:pointer; width:50%; background: #999999; color:#FFFFFF; float:left; height: 100%; text-align:center; font-family: 'museo-sans-condensed',sans-serif; font-size:18px;">
 				<span style="margin-top:17px;">DELETE IMAGE</span>

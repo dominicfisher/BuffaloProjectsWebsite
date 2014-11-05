@@ -109,7 +109,8 @@ input[type=submit]:focus
 	border:none;
 	width: 100%;
 	width:100%;
-	vertical-align: middle
+	vertical-align: middle;
+	padding-bottom:10px;
 }
 
 .thumbnail.selected {
@@ -164,9 +165,7 @@ input[type=submit]:focus
 	text-decoration:none;
 }
 
-.weatherTag {
-	
-}
+
 
 .animate-show.ng-hide-add, .animate-show.ng-hide-remove {
     transition: all linear 0.5s;
@@ -184,9 +183,34 @@ input[type=submit]:focus
 #submitWeatherTagButton
 {
 	background: transparent url('/views/public/assets/img/addWeatherTagButton.jpg') left top no-repeat;
-	height: 51px;
-	width: 132px;
+	height: 40px;
+	width: 79px;
 	display:inline-block;
 	padding-bottom:10px;
 	cursor:pointer;
+	border:none;
+	float:right;
+}
+
+.weatherTag span {
+	height:26px;
+	background:#FFFFFF;
+	padding-top:12px;
+	padding-right:5px;
+	padding-left:5px;
+	border-bottom:  1px solid #347EC4;
+	border-left:  1px solid #347EC4;
+	border-top:  1px solid #347EC4;
+	font-family: "museo-sans-condensed",sans-serif;
+	font-weight:300;
+	font-size: 14px;
+	color:#333333;
+	display:inline-block;
+	float:left;
+}
+
+.weatherTag {
+	display:inline-block;
+	float:left;
+	padding-bottom:10px;
 }
