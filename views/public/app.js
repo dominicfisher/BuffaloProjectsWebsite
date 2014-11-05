@@ -18,6 +18,18 @@
 		};
 	});
 	
+	app.directive('fadeIn', function($timeout){
+	    return {
+	        restrict: 'A',
+	        link: function($scope, $element, attrs){
+	            $element.addClass("ng-hide-remove");
+	            $element.on('load', function() {
+	                $element.addClass("ng-hide-add");
+	            });
+	        }
+	    }
+	})
+	
 	$('#file').change(function() {
         $(this).fileExif(function(exifObject) {
         	alert(exifObject.Model);
@@ -169,6 +181,11 @@
 
 	app.controller('WeatherController', function($scope, $cookies, $upload, leafletData) {
 		
+		$scope.currentPicturePath = 'cherry_blossoms.jpg';
+		$scope.currentPictureSeason = '';
+		$scope.currentPictureLocationLabel = '';
+		$scope.currentPictureLocationLatLon = '';
+		
 		var tilesDict = {
 			mapbox_streets: {
 				name: 'Mapbox Streets',
@@ -231,23 +248,41 @@
 	            });
 			}
 
+			var j = 0;
 			for( var i=0; i < $scope.weatherPictures.length; i++ ) {
 				if($scope.weatherPictures[i].path == path) {
-					$scope.currentPicture = $scope.weatherPictures[i]
+					j = i;
+					$scope.currentPicture = $scope.weatherPictures[i];
+					$scope.currentPicturePath = $scope.currentPicture.path;
 				}
 			}
 			
-			$( ".thumbnail" ).each(function( index ) {
-				$(this).css
-				  console.log( index + ": " + $( this ).text() );
-				});
+			
+			
+			
+				var a = 0;
+				  $( ".thumbnail" ).each(function() {
+					  alert('hello');
+					  if(a == j) {
+						  $(this).addClass('selected');
+					  } else {
+						  $(this).removeClass('selected');
+					  }
+					  a++;
+				  });
+				
 			
 			$scope.markers = new Array();
 			
 			
 			
 			if($scope.currentPicture.lat) {
-				console.log('has a lat')
+				if($scope.currentPicture.locationLabel) {
+					$scope.currentPictureLocationLabel = $scope.currentPicture.locationLabel;
+				} else {
+					$scope.currentPictureLocationLabel = $scope.currentPicture.lat + ", " + $scope.currentPicture.lon;
+				}
+				$scope.currentPictureLocationLatLon = $scope.currentPicture.lat + ", " + $scope.currentPicture.lon;
 				
 				angular.extend($scope,  {
 					london: {
@@ -281,16 +316,38 @@
 	                lng: -94.59741353988647,
 	                draggable : true
 	            });
+				
+				$scope.currentPictureLocationLabel = '39.001676741504525, -94.59741353988647';
+				$scope.currentPictureLocationLatLon = '39.001676741504525, -94.59741353988647';
 			}
+			
+			$scope.$on('leafletDirectiveMarker.dragend', function(e, args) {
+			    $scope.currentPictureLocationLabel = $scope.markers[0].lat + ', ' + $scope.markers[0].lng;
+			    $scope.currentPictureLocationLatLon = $scope.markers[0].lat + ', ' + $scope.markers[0].lng;
+			});
+			
+			$scope.$on('leafletDirectiveMarker.drag', function(e, args) {
+			    $scope.currentPictureLocationLabel = $scope.markers[0].lat + ', ' + $scope.markers[0].lng;
+			    $scope.currentPictureLocationLatLon = $scope.markers[0].lat + ', ' + $scope.markers[0].lng;
+			});
 		}
 
 		
-		$scope.getCurrentLatLng = function() {
-			if($scope.markers) {
-				return $scope.markers[0].lat + ', ' + $scope.markers[0].lng;
-			} else {
-				return '39.001676741504525, -94.59741353988647'
+		$scope.selectedSeason = function(season) {
+			$scope.currentPictureSeason = season;
+		}
+		
+		$scope.deleteImage = function() {
+			for( var i=0; i < $scope.weatherPictures.length; i++ ) {
+				if($scope.weatherPictures[i].path == $scope.currentPicturePath) {
+					$scope.weatherPictures.splice(i, 1);
+					$scope.currentPicturePath = 'cherry_blossoms.jpg';
+					$('#weatherImageDetail').fadeOut();
+				}
 			}
+		}
+		
+		$scope.saveImage = function() {
 			
 		}
 
@@ -359,8 +416,7 @@
 								}
 							}
 							
-							console.log(pictureObject.lat);
-							console.log(pictureObject.lon);
+							if()
 						})
 					} else {
 						/*console.log('ere')
