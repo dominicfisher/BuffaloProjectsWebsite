@@ -164,6 +164,10 @@ input[type=submit]:focus
 	text-decoration:none;
 }
 
+.weatherTag {
+	
+}
+
 .animate-show.ng-hide-add, .animate-show.ng-hide-remove {
     transition: all linear 0.5s;
     display: block !important;
@@ -175,4 +179,14 @@ input[type=submit]:focus
 
 .animate-show.ng-hide-add, .animate-show.ng-hide-remove.ng-hide-remove-active {
     opacity: 1;
+}
+
+#submitWeatherTagButton
+{
+	background: transparent url('/views/public/assets/img/addWeatherTagButton.jpg') left top no-repeat;
+	height: 51px;
+	width: 132px;
+	display:inline-block;
+	padding-bottom:10px;
+	cursor:pointer;
 }

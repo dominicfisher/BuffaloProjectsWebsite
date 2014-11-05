@@ -176,13 +176,27 @@
 					<leaflet  center="london" width="100%" height="100%" defaults="defaults" markers="markers" tiles="tiles"></leaflet>
 				</div>
 			</li>
-			<li style="width:100%; float:left;">
+			<li style="width:100%; float:left; padding-bottom: 10px;">
 				<div style="width:100%; height:65px; background-color: #FEFEFE;">
 					<span style="padding-left:10px; padding-top:10px; font-family: 'museo-sans-condensed',sans-serif; font-size:14px; color:#333333; font-weight:300; color:#333333; padding-bottom:10px;">Which season was this photo taken?</span>
 					<a class="radioItem" ng-class="{radioItemSelected: currentPictureSeason=='Spring'}" ng-click="selectedSeason('Spring')" href>Spring</a>
 					<a class="radioItem" ng-class="{radioItemSelected: currentPictureSeason=='Summer'}" ng-click="selectedSeason('Summer')" href>Summer</a>
 					<a class="radioItem" ng-class="{radioItemSelected: currentPictureSeason=='Fall'}" ng-click="selectedSeason('Fall')" href>Fall</a>
 					<a class="radioItem" ng-class="{radioItemSelected: currentPictureSeason=='Winter'}" ng-click="selectedSeason('Winter')" href>Winter</a>
+				</div>
+			</li>
+			<li style="width:100%; float:left;">
+				<div style="width:100%; height:100px; background-color: #FEFEFE;">
+					<div style="width:90%; padding-left: 10px; padding-top: 10px;">
+						<form ng-submit="addWeatherTag()">
+							<input id="weatherTagInput" type="text" ng-model="weatherTagToAdd" style="padding-left:10px; float:left;" /><input id="submitWeatherTagButton" type="submit" value="" />
+						</form>
+					</div>
+				</div>
+				<div ng-repeat="weatherTag in currentPictureWeatherTags">
+					<div>
+						<span>{{weatherTag}}</span><a href ng-click="removeTag(weatherTag)"><img ng-src="/views/public/assets/img/weather_tag_right.png"/></a>
+					</div>
 				</div>
 			</li>
 		</ul>

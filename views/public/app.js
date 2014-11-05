@@ -185,6 +185,8 @@
 		$scope.currentPictureSeason = '';
 		$scope.currentPictureLocationLabel = '';
 		$scope.currentPictureLocationLatLon = '';
+		$scope.currentPictureWeatherTags = [];
+		$scope.weatherTagToAdd = '';
 		
 		var tilesDict = {
 			mapbox_streets: {
@@ -337,6 +339,21 @@
 			$scope.currentPictureSeason = season;
 		}
 		
+		$scope.addWeatherTag = function() {
+			var found = false;
+			for(var i = 0; i<$scope.currentPictureWeatherTags.length; i++) {
+				if($scope.currentPictureWeatherTags[i]== $scope.weatherTagToAdd) {
+					found = true;
+				}
+			}
+			
+			if(!found) {
+				$scope.currentPictureWeatherTags.unshift($scope.weatherTagToAdd)
+			}
+			
+			$scope.weatherTagToAdd
+		}
+		
 		$scope.deleteImage = function() {
 			for( var i=0; i < $scope.weatherPictures.length; i++ ) {
 				if($scope.weatherPictures[i].path == $scope.currentPicturePath) {
@@ -415,8 +432,7 @@
 									pictureObject.lon = exifObject.GPSLongitude[0] + (exifObject.GPSLongitude[1]/60);
 								}
 							}
-							
-							if()
+
 						})
 					} else {
 						/*console.log('ere')
