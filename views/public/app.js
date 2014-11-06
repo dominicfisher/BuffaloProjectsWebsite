@@ -2,7 +2,7 @@
 
 
 
-	var app = angular.module('bpwebsiteApp', ['ngRoute', 'leaflet-directive', 'ngCookies', 'angularFileUpload']);
+	var app = angular.module('bpwebsiteApp', ['ngRoute', 'leaflet-directive', 'ngCookies', 'angularFileUpload', 'auth0', 'angular-storage', 'angular-jwt']);
 
 	app.directive('ngEnter', function () {
 		return function (scope, element, attrs) {
@@ -74,7 +74,7 @@
 
 
 	app.config(
-			function($routeProvider, $locationProvider) {
+			function($routeProvider, $locationProvider, authProvider, $httpProvider, jwtInterceptorProvider) {
 				$routeProvider.
 				when('/home', {
 					templateUrl: '/views/public/templates/home.html',
@@ -130,6 +130,33 @@
 				});
 
 				$locationProvider.html5Mode(true);
+
+				authProvider.init({
+					domain: 'buffaloprojects.auth0.com',
+					clientID: 'iGcC29FY463ceuL7OUNxwv1LUTQieXkn',
+					callbackURL: location.href,
+					loginUrl: '/weather'
+				});
+
+				jwtInterceptorProvider.tokenGetter = function(store) {
+					return store.get('token');
+				}
+
+				$httpProvider.interceptors.push('jwtInterceptor');
+			}).run(function($rootScope, auth, store, jwtHelper, $location) {
+				$rootScope.$on('$locationChangeStart', function() {
+					if (!auth.isAuthenticated) {
+						var token = store.get('token');
+						if (token) {
+							if (!jwtHelper.isTokenExpired(token)) {
+								auth.authenticate(store.get('profile'), token);
+							} else {
+								$location.path('/weather');
+							}
+						}
+					}
+
+				});
 			});
 
 	app.controller('appController', function( $scope, $route, $routeParams ){
@@ -264,17 +291,17 @@
 			}
 
 			$('#mainCol .placeholder img').fadeOut(function() {
-				
+
 				$(this).remove();
-				
+
 				$('#mainCol .placeholder').append('<img id="item_'+photo.id+'+" src="'+photo.src+'" alt="" style="display: none;" />')
-										  .append('<img id="ajaxLoader" src="/images/ajaxload/big/green.gif" />')
-										  .find('img:eq(0)')
-										  .load(function() {
-											$('#ajaxLoader').remove();
-											$(this).fadeIn();
-										  });
-				
+				.append('<img id="ajaxLoader" src="/images/ajaxload/big/green.gif" />')
+				.find('img:eq(0)')
+				.load(function() {
+					$('#ajaxLoader').remove();
+					$(this).fadeIn();
+				});
+
 			});
 			$('#weatherbackgroundContainer').fadeOut(function() {
 
@@ -629,7 +656,142 @@
 		}
 	})
 
-	app.controller('LoginFormController', function($scope, $http) {
+	app.controller('SignupFormController', function($scope, $http) {
+
+		$scope.weatherSignup = function() {
+
+			if($.trim($scope.username) == "" && $.trim($scope.password) == "") {
+				$scope.login_error = "We know it's weird, but we have to have a username and passord to get this going.";
+				$('#singupError').fadeIn(500);
+				return false;
+			} else {
+				$('#signupError').fadeOut(500);
+				$('#signupLoader').css('display', 'inline-block');
+				$("#signupChildren").animate({ opacity: 0.25 }, 1000, "easeOutQuart", function() {
+
+					$http.post('https://buffaloprojects.auth0.com/api/users/', {email:$scope.username, password:$scope.password, connection:'Username-Password-Authentication', email_verified:'false'}).
+					success(function(data, status, headers, config) {
+						if(data.error == null) {
+							$scope.changeUserPicture(data.data.profilePicture);
+							$scope.changeUserName(data.data.name);
+							$scope.changeUserId(data.data.userid);
+							$('#signupLoader').fadeOut();
+							$('#signupFormParent').fadeOut();
+							$("#signupChildren").animate({ opacity: 1}, {queue:false, duration:1000, easing : "easeOutQuart"});
+							//$('#userSideBar').fadeIn();
+							//$('#sidebar').animate({'left': '0px'}, {queue:false, duration:1000, easing : "easeOutQuart"});
+							//$('#sidebarHeight').animate({'margin-top' : '0%'}, {queue:false, duration:1000, easing : "easeOutQuart"});
+							//$('#loginChildren').animate({'top': '0%'}, {queue:false, duration:1000, easing : "easeOutQuart"});
+
+							//$('#sidebar').animate({backgroundColor: 'rgba(0,0,0,1.0)'}, 1000);
+
+						} else {
+							$("#signupChildren").animate({ opacity: 1 }, 1000, "easeOutQuart");
+							$scope.signup_error = data.error;
+							$('#signupError').fadeIn(500);
+							$('#signupLoader').fadeOut();
+						}
+					}).
+					error(function(data, status, headers, config) {
+						// called asynchronously if an error occurs
+						// or server returns response with an error status.
+						$scope.signup_error = "We know it's weird, but we have to have a username and passord to get this going.";
+						$('#signupError').fadeIn(500);
+					});
+
+				});
+			}
+		}
+	});
+
+	app.controller('LoginFormController', function($scope, $http, auth, store) {
+
+		$scope.username = '';
+		$scope.password = '';
+
+		function onLoginSuccess(profile, token) {
+			//$scope.message.text = '';
+			store.set('profile', profile);
+			store.set('token', token);
+			
+			$scope.token = token
+			//$location.path('/');
+			//$scope.loading = false;
+			console.log(token)
+			//$scope.changeUserPicture(data.data.profilePicture);
+			$scope.changeUserName(profile.email);
+			$scope.changeUserId(profile.user_id);
+
+			store.set('userToken', token);
+			store.set('profile', JSON.stringify(profile));
+			
+			initialize_security_context(showSidebar)
+
+		}
+		
+		function get_aws_token(options, callback) {
+		      var auth0 = new Auth0({
+		        domain: 'buffaloprojects.auth0.com',
+		        clientID: 'iGcC29FY463ceuL7OUNxwv1LUTQieXkn',
+		        id_token:  $scope.token,
+		        callbackURL: 'dummy'
+		      });
+		      auth0.getDelegationToken({
+		      role: options.role,
+		      id_token:  $scope.token,
+		      principal: options.principal
+		    }, callback);
+		  }
+		
+		  window.user = {
+		    get: function() {
+		      if (!store.get('profile')) return;
+		      return {
+		        profile: JSON.parse(store.get('profile')),
+		        token: store.get('userToken'),
+		        aws_creds: store.get('aws_creds') ?
+		          JSON.parse(store.get('aws_creds')) : undefined
+		      };
+		    }
+		  };
+		  
+		  function initialize_security_context(callback) {
+		    if (!user.get()) return location.href = 'index.html';
+		    // if token is not expired, return 
+		    if (user.get().aws_creds && new Date(user.get().aws_creds.Expiration) > new Date())
+		      return callback();
+		    get_aws_token(window.config, function(err, delegationResult) {
+		      if (err) return location.href = 'index.html';
+		      store.set('aws_creds', JSON.stringify(delegationResult.Credentials));
+		      callback();
+		    });
+		  }
+
+		function showSidebar() {
+
+			$('#loginLoader').fadeOut();
+			$('#loginFormParent').fadeOut();
+			$('#defaultUserPicture').fadeOut();
+			$('#userPicture').css('display', 'inline-block');
+			$('#userpicture').fadeIn();
+			$("#loginChildren").animate({ opacity: 1}, {queue:false, duration:1000, easing : "easeOutQuart"});
+			$('#userSideBar').fadeIn();
+			$('#sidebar').animate({'left': '0px'}, {queue:false, duration:1000, easing : "easeOutQuart"});
+			$('#sidebarHeight').animate({'margin-top' : '0%'}, {queue:false, duration:1000, easing : "easeOutQuart"});
+			$('#loginChildren').animate({'top': '0%'}, {queue:false, duration:1000, easing : "easeOutQuart"});
+
+			$('#sidebar').animate({backgroundColor: 'rgba(0,0,0,1.0)'}, 1000);
+		}
+
+		function onLoginFailed(data) {
+			//$scope.message.text = 'invalid credentials';
+			//$scope.loading = false;
+			console.log(data)
+			$("#loginChildren").animate({ opacity: 1 }, 1000, "easeOutQuart");
+			$scope.login_error = 'invalid credentials';
+			$('#loginError').fadeIn(500);
+			$('#loginLoader').fadeOut();
+		}
 
 		$scope.weatherLogin = function() {
 			if($.trim($scope.username) == "" && $.trim($scope.password) == "") {
@@ -641,8 +803,19 @@
 				$('#loginLoader').css('display', 'inline-block');
 				$("#loginChildren").animate({ opacity: 0.25 }, 1000, "easeOutQuart", function() {
 
-					$http.post('/login', {username:$scope.username, password:$scope.password}).
+					auth.signin({
+						connection: 'Username-Password-Authentication',
+						username: $scope.username,
+						password: $scope.password,
+						authParams: {
+							scope : 'openid profile'
+						}
+					}, onLoginSuccess, onLoginFailed);
+
+					/*$http.post('https://buffaloprojects.auth0.com/oauth/ro', {username:$scope.username, password:$scope.password, client_id:'iGcC29FY463ceuL7OUNxwv1LUTQieXkn', connection:'Username-Password-Authentication', grant_type:'password', scope:'openid'}).
 					success(function(data, status, headers, config) {
+						alert('made it')
+						console.log(data)
 						if(data.error == null) {
 							$scope.changeUserPicture(data.data.profilePicture);
 							$scope.changeUserName(data.data.name);
@@ -668,11 +841,13 @@
 						}
 					}).
 					error(function(data, status, headers, config) {
+						alert('uh no')
+						console.log(data)
 						// called asynchronously if an error occurs
 						// or server returns response with an error status.
 						$scope.login_error = "We know it's weird, but we have to have a username and passord to get this going.";
 						$('#loginError').fadeIn(500);
-					});
+					});*/
 
 				});
 			}

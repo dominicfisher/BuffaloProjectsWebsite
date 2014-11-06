@@ -148,7 +148,50 @@
 					</div>
 				</div>
 				<div id="signUpContainer" style="position: absolute; background-color: #FF0000; width: 100%; height: 100%;">
-					signup
+					
+					<!----Start signup-->
+					<div id="signupChildren" style="position:absolute; top:50%; display:block; width:33.33%">
+						<div id="sidebarHeight" style="padding:20px; margin-top: -50%;">
+							<div>
+									<div id="signupFormParent">
+										<form name="signupForm" action="" class="login-form" ng-submit="weatherSignup()" ng-controller="SignupFormController as signup">
+											<li style="padding-bottom:10px;">
+												<div id="signupError" style="background-color: #FF0000; color: #FFFFFF; font-family: 'museo-sans-condensed',serif; font-size: 14px; padding: 10px; display:none;">
+													{{signup_error}}
+												</div>
+											</li>
+											<li style="padding-bottom:10px;">
+												<input type="text" placeholder="username" tabindex="1" ng-model="username"  ng-enter="signupLogin()">
+											</li>
+											<li style="padding-bottom: 20px;padding-bottom: 20px;">
+												<input type="password" placeholder="password" tabindex="2" ng-model="password"  ng-enter="signupLogin()">
+											</li>
+											<li style="text-align:center; width:100%; float: left; margin auto;">
+												<input type="submit" value="SIGNUP" tabindex="3" style="font-family: 'museo-sans-condensed',serif; border: none; background-color: rgba(0, 0, 0, 0); color: #FFFFFF; text-decoration: none; font-style:normal; font-weight:300; font-size:21px;  text-align: center; display: inner-block;" />
+											</li>
+
+										</form>
+									</div>
+								</div>
+						</div>
+					</div>
+					<div id="signupLoader" style="position: absolute; z-index: 99999;  top:50%;left:0px; width: 33.33%; height:300px; display:none;">
+						<div style="margin-top:-70%;  width: 100%; height:100%;">
+							<ul style="list-style-type: none; padding-top: 130px;">
+								<li style="text-align: center">
+									<img src="/views/public/assets/img/728.gif" style="display: inline-block" />
+								</li>
+								<li style="width:100%; text-align: center; font-family: 'museo-sans-condensed',serif; font-size: 14px; color:#FFFFFF; padding-top: 20px;">
+									creating your account
+								</li>
+							</ul>
+						</div>
+					</div>
+					
+					<!--- end signup-->
+						
+					
+					
 				</div>
 			</div>
 			<div id="sidebar" style=" float: left; background-color: #00FF00; width: 33.33%; height: 100%; display: inline-block">
