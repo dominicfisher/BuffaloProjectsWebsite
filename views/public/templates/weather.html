@@ -1,6 +1,13 @@
 <div style="width: 100%; height: 100%" ng-controller='WeatherController as home'>
-	<div id="weatherbackgroundContainer" style="width: 100%; height: 100%; overflow: hidden; position:absolute; z-index:999; top:0px; left:0px;">
+	<div id="weatherbackgroundContainer" style="width: 100%; height: 100%; overflow: hidden; position:absolute; z-index:900; top:0px; left:0px;">
 		<img id="weatherbackground"  ng-src="https://s3.amazonaws.com/buffaloimages/{{currentPicturePath}}" style="opacity:0.0"  imageonload />
+	</div>
+	<div id="weatherBackgroundSlideshowContainer" style="width:100%; height:100%; overflow:hidden; position: absolute; z-index:901; top:0px; left:0px;">
+		<div class="fadein">
+			<p ng-repeat="slideImage in homeWeatherImages">
+				<img id="slide{{slideImage.id}}" class="slide"  ng-src="{{slideImage.path}}" />
+			</p>
+		</div>
 	</div>
 
 	<div id="sidebar" style="opacity:0.0; position:absolute; z-index:999; top:0px; width:25%; height: 100%; border-left: 1px solid #999999; border-right:  1px solid #999999; background: rgba(0, 0, 0, 0.25); overflow: hidden; left:37.5%; ">

@@ -233,3 +233,6 @@ a {
 .terms.selected {
 	font-weight:700;
 }
+
+.fadein { position:relative; height:100%; width:100%; }
+.fadein p { position:absolute; left:0; top:0; }

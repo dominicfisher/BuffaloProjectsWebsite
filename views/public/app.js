@@ -49,11 +49,11 @@
 			return $sce.trustAsResourceUrl(url);
 		};
 	}]);
-	
+
 	app.run(['$location', '$rootScope', function($location, $rootScope, $scope) {
 		$rootScope.isWeather = '';
 		$rootScope.$on('$routeChangeSuccess', function (event, current, previous) {
-			
+
 			if(current.$$route) {
 				$rootScope.title = current.$$route.title;
 			} else {
@@ -206,15 +206,11 @@
 
 			}
 		}
-	})
-
-
-
-
-
+	});
 
 	app.controller('WeatherController', function($scope, $cookies, $upload, leafletData, auth, store) {
 
+		$scope.homeWeatherImages = homeImages;
 		$scope.currentPicturePath = 'cherry_blossoms.jpg';
 		$scope.currentPictureSeason = '';
 		$scope.currentPictureLocationLabel = '';
@@ -230,20 +226,37 @@
 		if($scope.weatherFirstLoad) {
 			$('#weatherbackground').load(function() {
 				resizeBackgroundImage();
-				$('#weatherbackground').animate({'opacity': 1}, 1000, "easeOutQuart");
+				//$('#weatherbackground').animate({'opacity': 1}, 1000, "easeOutQuart");
 				$('#sidebar').animate({'opacity': 1}, 1000, "easeOutQuart");
 			})
 
-			if(Modernizr.geolocation) {
-				navigator.geolocation.getCurrentPosition(setDefaultLatLon);
-			}
+			$( ".slide" ).each(function() {
+				if($(this).width() < $('#weatherBackgroundSlideshowContainer').width()) {
+
+					var startWidth = $(this).width();
+					var startHeight = $(this).height();
+					$(this).width($('#weatherBackgroundSlideshowContainer').width());
+					$(this).height( ($('#weatherBackgroundSlideshowContainer').width()/startWidth) * startHeight )
+				}
+
+				if($(this).height() < $('#weatherBackgroundSlideshowContainer').height()) {
+
+					var startWidth = $(this).width();
+					var startHeight = $(this).height();
+
+					$(this).height($('#weatherBackgroundSlideshowContainer').height());
+					$(this).width( ($('#weatherBackgroundSlideshowContainer').height()/startHeight) * startWidth )
+				}
+			});
+
+			$('.fadein p:gt(0)').hide();
+		   setInterval(function(){$('.fadein > :first-child').fadeOut().next('p').fadeIn().end().appendTo('.fadein');}, 3000);
+
+			getUserLocation();
 			$scope.weatherFirstLoad = false;
 		}
 
-		function setDefaultLatLon(position) {
-			$scope.defaultLat = position.coords.latitude.toString();
-			$scope.defaultLon = position.coords.longitude.toString();
-		}
+
 
 		var tilesDict = {
 			mapbox_streets: {
@@ -493,7 +506,6 @@
 		}
 
 		$scope.saveImage = function() {
-			alert('save')
 			for( var i=0; i < $scope.weatherPictures.length; i++ ) {
 				if($scope.weatherPictures[i].path == $scope.currentPicturePath) {
 					$scope.weatherPictures[i].lat = $scope.markers[0].lat;
@@ -625,7 +637,7 @@
 		$scope.changeUserId = function(userid) {
 			$scope.userid = userid;
 		}
-		
+
 		function getPictureLatLon(pictureObject) {
 			$('#file').fileExif(function(exifObject) {
 
@@ -650,10 +662,10 @@
 				}
 
 			})
-			
+
 			return pictureObject
 		}
-		
+
 		function uniqueWeatherFileName() {
 			var text     = "weatherbg_";
 			var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -662,6 +674,17 @@
 				text += possible.charAt(Math.floor(Math.random() * possible.length));
 			}
 			return text;
+		}
+
+		function getUserLocation() {
+			if(Modernizr.geolocation) {
+				navigator.geolocation.getCurrentPosition(setDefaultLatLon);
+			}
+		}
+
+		function setDefaultLatLon(position) {
+			$scope.defaultLat = position.coords.latitude.toString();
+			$scope.defaultLon = position.coords.longitude.toString();
 		}
 	})
 
@@ -1361,3 +1384,54 @@ var privacySections = [
 	];
 var privacySummary = 'Buffalo Projects is founded on the principle of helping people discover new photos and photographers. We know that you care about how your personal information is used and shared, and we take your privacy very seriously. By visiting the Buffalo Projects website, you are accepting the practices outlined in this policy.';
 
+var homeImages = [
+	{
+		id	:		'0',
+		path	:	'/views/public/assets/img/cherry_blossoms.jpg'
+	},
+	{
+		id	:		'1',
+		path	:	'/views/public/assets/img/fall1.jpg'
+	},
+	{
+		id	:		'2',
+		path	:	'/views/public/assets/img/poppies.jpg'
+	},
+	{
+		id	:		'3',
+		path	:	'/views/public/assets/img/winter.jpg'
+	},
+	{
+		id	:		'4',
+		path	:	'/views/public/assets/img/fall2.jpg.jpg'
+	},
+	{
+		id	:		'5',
+		path	:	'/views/public/assets/img/fall3.gif'
+	},
+	{
+		id	:		'6',
+		path	:	'/views/public/assets/img/spring2.jpg'
+	},
+	{
+		id	:		'7',
+		path	:	'/views/public/assets/img/spring3.jpg'
+	},
+	{
+		id	:		'8',
+		path	:	'/views/public/assets/img/summer2.jpg'
+	},
+	{
+		id	:		'9',
+		path	:	'/views/public/assets/img/summer3.jpg'
+	},
+	{
+		id	:		'10',
+		path	:	'/views/public/assets/img/winter2.jpg'
+	},
+	{
+		id	:		'11',
+		path	:	'/views/public/assets/img/winter3.jpg'
+	},
+
+	]
