@@ -1,9 +1,9 @@
 <div style="width: 100%; height: 100%" ng-controller='WeatherController as home'>
 	<div id="weatherbackgroundContainer" style="width: 100%; height: 100%; overflow: hidden; position:absolute; z-index:999; top:0px; left:0px;">
-		<img id="weatherbackground"  ng-src="https://s3.amazonaws.com/buffaloimages/{{currentPicturePath}}"  imageonload />
+		<img id="weatherbackground"  ng-src="https://s3.amazonaws.com/buffaloimages/{{currentPicturePath}}" style="opacity:0.0"  imageonload />
 	</div>
 
-	<div id="sidebar" style="position:absolute; z-index:999; top:0px; width:25%; height: 100%; border-left: 1px solid #999999; border-right:  1px solid #999999; background: rgba(0, 0, 0, 0.25); overflow: hidden; left:37.5%; ">
+	<div id="sidebar" style="opacity:0.0; position:absolute; z-index:999; top:0px; width:25%; height: 100%; border-left: 1px solid #999999; border-right:  1px solid #999999; background: rgba(0, 0, 0, 0.25); overflow: hidden; left:37.5%; ">
 
 		<div id="slideContainer" style="height:100%; width: 300%; position: absolute; ">
 			<div id="weatherHomeLoginContainer" style="text-align: center; margin 0 auto;  float: left; height: 100%; width: 33.33%; vertical-align: middle">
@@ -100,7 +100,7 @@
 												<div style="width:100%">
 													<span ng-show="!weatherPictures.length" style="color:#FFFFFF; font-family: 'museo-sans-condensed',serif; text-align: center; font-size: 12px;">Upload some pictures to get start.</span>
 												    <div id="weatherThumbnails" style="width:45%;  float:left; margin-right:10px; display: inline-block; background-color:#666666;" ng-repeat="weatherPictureItem in weatherPictures">
-												    		<a href ng-click="showImageDetail(weatherPictureItem.path)"><img ng-src="https://s3.amazonaws.com/buffaloimages/{{weatherPictureItem.path}}" class="thumbnail"></a>
+												    		<a href ng-click="showImageDetail(weatherPictureItem.path)"><img ng-src="{{weatherPictureItem.signedPath}}" class="thumbnail"></a>
 												    </div>
 												</div>
 												
@@ -147,7 +147,7 @@
 						</div>
 					</div>
 				</div>
-				<div id="signUpContainer" style="position: absolute; background-color: #FF0000; width: 100%; height: 100%;">
+				<div id="signUpContainer" style="position: absolute; width: 100%; height: 100%;">
 					
 					<!----Start signup-->
 					<div id="signupChildren" style="position:absolute; top:50%; display:block; width:33.33%">
@@ -156,15 +156,18 @@
 									<div id="signupFormParent">
 										<form name="signupForm" action="" class="login-form" ng-submit="weatherSignup()" ng-controller="SignupFormController as signup">
 											<li style="padding-bottom:10px;">
-												<div id="signupError" style="background-color: #FF0000; color: #FFFFFF; font-family: 'museo-sans-condensed',serif; font-size: 14px; padding: 10px; display:none;">
+												<div id="signupError" style=" color: #FFFFFF; font-family: 'museo-sans-condensed',serif; font-size: 14px; padding: 10px; display:none;">
 													{{signup_error}}
 												</div>
 											</li>
 											<li style="padding-bottom:10px;">
 												<input type="text" placeholder="username" tabindex="1" ng-model="username"  ng-enter="signupLogin()">
 											</li>
-											<li style="padding-bottom: 20px;padding-bottom: 20px;">
+											<li style="padding-bottom: 20px;">
 												<input type="password" placeholder="password" tabindex="2" ng-model="password"  ng-enter="signupLogin()">
+											</li>
+											<li style="padding-bottom:20px">
+												<div style="font-family: 'museo-sans-condensed',serif; font-size:12px; color:#FFFFFF; line-height: 16px;">By clicking "Sign up ", you agree to our <a style="display:inline;" href="/weatherterms">terms of service</a> and <a style="display:inline;" href="weatherterms">privacy policy</a>. We will send you account related emails occasionally.</div>
 											</li>
 											<li style="text-align:center; width:100%; float: left; margin auto;">
 												<input type="submit" value="SIGNUP" tabindex="3" style="font-family: 'museo-sans-condensed',serif; border: none; background-color: rgba(0, 0, 0, 0); color: #FFFFFF; text-decoration: none; font-style:normal; font-weight:300; font-size:21px;  text-align: center; display: inner-block;" />
@@ -211,12 +214,19 @@
 					<div style="width:100%; height:140px; background-color: #FEFEFE;">
 						<span style="color: #333333; font-family: 'museo-sans-condensed',sans-serif; font-size:14px; font-weight:300; padding:10px;">Search for an address or lat/lon to assign to this picture</span>
 						<div style="margin-left:10px; width:90%">
-							<input type="text" value="{{currentPictureLocationLabel}}">
+							<input type="text"  ng-model="currentPictureLocationLabel" ng-change="searchForAddress()" placeholder="Find the place this picture was taken.">
 						</div>
 						<span style="color: #999999; font-family: 'museo-sans-condensed',sans-serif; font-size:12px; font-weight:300; padding:10px; text-align: center" ng-bind="currentPictureLocationLatLon"></span>
 					</div>
 					<div id="detailMap" style="width:100%">
 						<leaflet  center="london" width="100%" height="100%" defaults="defaults" markers="markers" tiles="tiles"></leaflet>
+					</div>
+					<div style="position:absolute; top:20px;">
+						<ul>
+							<li ng-repeat="possibleAddress in suggestedAddresses">
+								<div style="width:100%; height:40px;" ng-click="selectAddress(possibleAddress.latlon)">{{possibleAddress.address}}</div>
+							</li>
+						</ul>
 					</div>
 				</li>
 				<li style="width:100%; float:left; padding-bottom: 10px;">

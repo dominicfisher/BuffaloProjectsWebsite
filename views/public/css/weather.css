@@ -26,6 +26,12 @@ input[type=submit]:focus
 	outline: 0;
 }
 
+a {
+	color:#347ec4;
+	text-decoration:none;
+	font-weight:700;
+}
+
 .weatherSubHeader
 {
 	height: 25px;
@@ -213,4 +219,17 @@ input[type=submit]:focus
 	display:inline-block;
 	float:left;
 	padding-bottom:10px;
+}
+
+.terms {
+	font-family: "museo-sans-condensed",sans-serif;
+	font-weight:300;
+	font-size:24px;
+	color:#444444;
+	padding-right:20px;
+	
+}
+
+.terms.selected {
+	font-weight:700;
 }
