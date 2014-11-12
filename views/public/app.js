@@ -72,14 +72,6 @@
 		};
 	});
 
-
-
-	app.filter('unsafe', function($sce) {
-		return function(val) {
-			return $sce.trustAsHtml(val);
-		};
-	});
-
 	app.filter('trusted', ['$sce', function ($sce) {
 		return function(url) {
 			return $sce.trustAsResourceUrl(url);
@@ -333,6 +325,7 @@
 				leafletData.getMap().then(function(map) {
 					map.invalidateSize();
 				});
+				$('.fadein').animate({'opacity': 0}, 2000, "easeOutQuart");
 				$('#weatherImageDetailScroller').height( $('#weatherImageDetail').height() - 51);
 			}
 
@@ -512,11 +505,24 @@
 		}
 
 		$scope.deleteImage = function() {
+			var j = 0;
 			for( var i=0; i < $scope.weatherPictures.length; i++ ) {
 				if($scope.weatherPictures[i].path == $scope.currentPicturePath) {
-					$scope.weatherPictures.splice(i, 1);
-					$scope.currentPicturePath = 'cherry_blossoms.jpg';
-					$('#weatherImageDetail').fadeOut();
+					j = 1;
+					$http.post('/deleteImage/', { image : $scope.weatherPictures[i]}).
+					success(function(data, status, headers, config) {
+						if(data.error == null) {
+							$scope.weatherPictures.splice(j, 1);
+							$('#weatherImageDetail').fadeOut();
+							$('.fadein').animate({'opacity': 0}, 2000, "easeOutQuart");
+						} else {
+							console.log('image did not delete');
+						}
+					}).
+					error(function(data, status, headers, config) {
+						console.log('failed to delete image');
+					});
+					
 				}
 			}
 		}
@@ -612,8 +618,21 @@
 							bucket.getSignedUrl('getObject', { Expires: 24 * 60, Key: objKey }, function(err, url) {
 								pictureObject.path = uniqueFileName;
 								pictureObject.signedPath = url;
-								$scope.weatherPictures.unshift(pictureObject);
-								$scope.$apply();
+								
+								
+								$http.post('/saveImage/', {translated_user : $scope.translated_user, image : $scope.weatherPictures[i]}).
+								success(function(data, status, headers, config) {
+									if(data.error == null) {
+										$scope.weatherPictures.unshift(data.data[0]);
+										$scope.$apply();
+									} else {
+										console.log('image did not save');
+									}
+								}).
+								error(function(data, status, headers, config) {
+									console.log('failed to save image');
+								});
+								
 							});
 						}
 					})
@@ -808,84 +827,8 @@
 				$('#loginError').fadeIn(500);
 				$('#loginLoader').fadeOut();
 			})
-
-			
-
-
-			//console.log(t.resp)
-			//store.set('aws_creds',)
-
-			//console.log(store.get('aws_creds').Creditials);
-			/*var auth0 = new Auth0({
-				    domain:         'buffaloprojects.auth0.com',
-				    clientID:       'iGcC29FY463ceuL7OUNxwv1LUTQieXkn',
-				    callbackURL:    'dummy'
-				  });
-
-
-			  var auth0 = new Auth0({
-			        domain: 'buffaloprojects.auth0.com',
-			        clientID: 'iGcC29FY463ceuL7OUNxwv1LUTQieXkn',
-			        callbackURL: 'dummy'
-			      });
-			      auth0.getDelegationToken('iGcC29FY463ceuL7OUNxwv1LUTQieXkn', store.get('token'), {
-			      role: 'arn:aws:iam::203816133875:role/buffaloprojects-s3user',
-			      principal: 'arn:aws:iam::203816133875:saml-provider/auto0-buffaloprojects-provider'
-			    }, function(err, result) {
-			    	aws_creds = result.Credentials;
-			    });*/
-
-
-			//initialize_security_context(showSidebar)
-
 		}
 
-		function onCedSuccess(err, response) {
-			console.log('success');
-
-		}
-
-		function onCredFailed() {
-			console.log('failed')
-		}
-
-		/*function get_aws_token(options, callback) {
-		      var auth0 = new Auth0({
-		        domain: 'buffaloprojects.auth0.com',
-		        clientID: 'iGcC29FY463ceuL7OUNxwv1LUTQieXkn',
-		        id_token:  $scope.token,
-		        callbackURL: 'dummy'
-		      });
-		      auth0.getDelegationToken({
-		      role: options.role,
-		      id_token:  $scope.token,
-		      principal: options.principal
-		    }, callback);
-		  }
-
-		  window.user = {
-		    get: function() {
-		      if (!store.get('profile')) return;
-		      return {
-		        profile: JSON.parse(store.get('profile')),
-		        token: store.get('userToken'),
-		        aws_creds: store.get('aws_creds') ?
-		          JSON.parse(store.get('aws_creds')) : undefined
-		      };
-		    }
-		  };
-
-		  function initialize_security_context(callback) {
-		    if (!user.get()) return location.href = 'index.html';
-		    // if token is not expired, return 
-		    if (user.get().aws_creds && new Date(user.get().aws_creds.Expiration) > new Date())
-		      return callback();
-		    get_aws_token(window.config, function(err, delegationResult) {
-		      if (err) return location.href = 'index.html';
-		      store.set('aws_creds', JSON.stringify(delegationResult.Credentials));
-		      callback();
-		    });
-		  }*/
 
 		function showSidebar() {
 

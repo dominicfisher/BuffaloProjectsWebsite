@@ -10,8 +10,9 @@ var AWS = require('aws-sdk');
 
 AWS.config.loadFromPath('config.json');
 app.post('/login/', login.login);
-app.post('/create_user/', weather_images.create_user_document)
-app.post('/saveImage/', weather_images.save_image)
+app.post('/create_user/', weather_images.create_user_document);
+app.post('/saveImage/', weather_images.save_image);
+app.post('/deleteImage/', weather_images.delete_image);
 app.use(express.static(__dirname));
 app.disable('etag');
 //app.use(app.router);

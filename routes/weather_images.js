@@ -4,67 +4,22 @@ exports.create_user_document = function(req, res) {
 	var content = '';
 
 	req.on('data', function (data) {
-		// Append data.
 		content += data;
 	});
 
 	req.on('end', function () {
-		// Assuming, we're receiving JSON, parse the string into a JSON object to return.
 		var data = JSON.parse(content);
-		console.log(data.user)
 
 		var translated_user = translate_user(data.user);
-		data = {
-			translated_id : translated_user
-		}
-		var output = {error:null, data:data};
-		res.end(JSON.stringify(output) + "\n");
-		/*var documentToCreate = {
-			_id		:	translated_user,
-			images	:	[]
-		}
-
-		var db = require('../data/db.js');
-		var buffaloWeatherImages = db.buffaloimages
-
-		buffaloWeatherImages.insert(documentToCreate, {safe: true}, function(err, inserted_doc) {
-			console.log(err);
-			console.log(inserted_doc);
-			if(err && err.name == "MongoError" && err.code == 11000) {
-				//Album already exists
-				console.log('document already exists');
-				buffaloWeatherImages.find({_id :translated_user}).toArray(function(err, results) {
-					if(results) {
-						data = {
-							translated_id : translated_user,
-							images : results.images
-						}
-					}
-					console.log('found dup');
-					var output = {error:null, data:data};
-					res.end(JSON.stringify(output) + "\n");
-
-				})
-				return
-			} else if (err) {
-				console.log('something bad happened');
-				console.log(err);
-				error = "Something bad happened";
-				var output = {error:null, data:data};
-				res.end(JSON.stringify(output) + "\n");
-				return
-			} else {
-				console.log('made new doc')
-				data = {
-					translated_id : translated_user
-				}
-				var output = {error:null, data:data};
-				res.end(JSON.stringify(output) + "\n");
+		buffaloWeatherImages.find({translated_user : image.translated_user}).toArray(function(err, items){
+			data = {
+				translated_id : translated_user,
+				images	: items
 			}
-		})*/
+			var output = {error:null, data:data};
+			res.end(JSON.stringify(output) + "\n");
+		})
 	});
-
-
 }
 
 exports.save_image = function(req, res) {
@@ -78,7 +33,6 @@ exports.save_image = function(req, res) {
 	var content = '';
 
 	req.on('data', function (data) {
-		// Append data.
 		content += data;
 	});
 
@@ -87,7 +41,6 @@ exports.save_image = function(req, res) {
 
 		var translated_user = data.translated_user;
 		var image = data.image;
-		console.log(image.season)
 
 		buffaloWeatherImages.insert(image, {w:1, safe:true}, function(err, inserted_doc) {
 			if(err && err.name == "MongoError" && err.code == 11000) {
@@ -97,14 +50,10 @@ exports.save_image = function(req, res) {
 					console.log(err)
 					console.log('updated image')
 					buffaloWeatherImages.find({path : image.path}).toArray(function(err, items){
-						data = 
-							'made new image'
-
 							var output = {error:null, data:items};
 							res.end(JSON.stringify(output) + "\n");
 					})
 				})
-
 				return
 			} else if (err) {
 				console.log('something bad happened');
@@ -115,40 +64,36 @@ exports.save_image = function(req, res) {
 				return
 			} else {
 				console.log('made new image');
-				buffaloWeatherImages.find({path : image.path}).toArray(function(err, items){
-					data = 
-						'made new image'
-
-						var output = {error:null, data:items};
+				buffaloWeatherImages.find({path : image.path}).toArray(function(err, items){var output = {error:null, data:items};
 						res.end(JSON.stringify(output) + "\n");
 				})
-
 			}
 		})
 	});
 
-	/*buffaloWeatherImages.insert(buffaloimage, {safe:true}, function(err, inserted_doc) {
-		if(err && err.name == "MongoError" && err.code == 11000) {
-			//Album already exists
-			console.log('document already exists');
-
-			return
-		} else if (err) {
-			console.log('something bad happened');
-			console.log(err);
-			error = "Something bad happened";
-			return
-		} else {
-			data = {
-				success : 'true'
-			}
-		}*/
-
-
 }
 
 exports.delete_image = function(req, res) {
+	var db = require('../data/db.js');
+	var buffaloWeatherImages = db.buffaloimages
 
+	res.writeHead(200, {"Content-Type": "application/json"});
+	var data;
+
+	var content = '';
+
+	req.on('data', function (data) {
+		content += data;
+	});
+
+	req.on('end', function () {
+		var data = JSON.parse(content);
+		var image = data.image;
+		
+		buffaloWeatherImages.remove({_id:image.path});
+		var output = {error:null, data:'done'};
+		res.end(JSON.stringify(output) + "\n");
+	}
 }
 
 
