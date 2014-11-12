@@ -1,0 +1,79 @@
+<div id="header" ng-controller='HomeController as home'>
+	<div class="scrollSlide">
+		<video id="video0" style="width:100%;" loop="1" autoplay="true" muted="true" ng-src="{{home.homepageSplash.videoPath | trusted}}"></video>
+		<div id="videoOverlay0" style="background-color:rgba(0, 0, 0, 0.75); top:0; left:0; width:100%; height:100%; position:absolute;"></div>
+		<div id="videoOverlayText0" style="position:absolute; width:100%; height: 100%; top: 0; left:0;">
+			<div id="homepageSplashText" style="text-align: left; width: 40%; border-style:solid; border-width: 1px; border-color: #FFFFFF; padding:20px;   position: absolute; ">
+				<div id="homepageBegin" style="float:left;">
+					<div class="section-title">
+						{{home.homepageSplash.title}}
+					</div>
+					<div class="section-body">
+						{{home.homepageSplash.bodyCopy}}
+					</div>
+					<div style="text-align: center; width:100%; padding-top:20px; padding-bottom: 20px;">
+						<a class="greyButtonWrapper" href ng-click="playHomePageVideo(0)">
+						<div class="grey-button">
+							LEARN MORE
+						</div></a>
+						<a class="greyButtonWrapper" href="asd">
+						<div class="grey-button">
+							&nbsp;&nbsp;&nbsp;&nbsp;SIGN UP&nbsp;&nbsp;&nbsp;&nbsp;
+						</div></a>
+					</div>
+				</div>
+				
+				<!-- Add the start you profile stuff in the div below-->
+				<div></div>
+			</div>
+		</div>
+	</div>
+	<div style="width:100%; height:301px; background-color: #FFFFFF;" ng-controller='QuotesController as quotes'>
+		<div style="width:100%; height:100%; overflow: hidden">
+			<div id="quoteContainer" style="width:75%; margin: 0 auto; ">
+				<div ng-repeat="quoteItem in quotes.quotes">
+					<div style="width:100%; float: left; height:301px;margin: 0 auto; position:relative; text-align: center; display: block; ">
+						<!--QUOTE BELOW-->
+						<div class="quote-item">
+							&quot;{{quoteItem.quote}}&quot;<br>
+							<!--QUOTE AUTHOR BELOW-->
+							<p class="quote-author" style="text-align: left; float:right">
+								{{quoteItem.author}}
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+		</div>
+	</div>
+	<div class="scrollSlide" ng-repeat="homeVideoItem in home.homeSlides">
+		<video id="video{{homeVideoItem.id}}" style="width:100%;" loop="1" autoplay="true" muted="true" ng-src="{{homeVideoItem.videoPath | trusted}}"></video>
+		<div id="videoOverlay{{homeVideoItem.id}}" style="background-color:rgba(0, 0, 0, 0.75); top:0; left:0; width:100%; height:100%; position:absolute;"></div>
+		<div id="videoOverlayText{{homeVideoItem.id}}" style="position: absolute; top: 0; left: 0; width: 100%; height:100%; margin:auto 0" >
+			<div style="text-align:center; padding-top:100px; width: 40%; margin-left:auto; margin-right: auto; display:block;">
+				<div style="text-align: left; border-style:solid; border-width: 1px; border-color: #FFFFFF; padding:20px;">
+					<div class="section-title">
+						{{homeVideoItem.title}}
+					</div>
+					<div class="section-body">
+						{{homeVideoItem.bodyCopy}}
+					</div>
+					<div style="text-align: center; width:100%; padding-top:20px; padding-bottom: 20px;">
+						<a class="greyButtonWrapper" href ng-click="playHomePageVideo(homeVideoItem.id)">
+						<div class="grey-button">
+							LEARN MORE
+						</div></a>
+						<a class="greyButtonWrapper" href="asd">
+						<div class="grey-button">
+							&nbsp;&nbsp;&nbsp;&nbsp;SIGN UP&nbsp;&nbsp;&nbsp;&nbsp;
+						</div></a>
+					</div>
+				</div>
+
+				<!-- Add the start you profile stuff in the div below-->
+				<div></div>
+			</div>
+		</div>
+	</div>
+</div>

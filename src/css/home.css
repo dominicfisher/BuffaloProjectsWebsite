@@ -1,0 +1,149 @@
+/* style.scss */
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+   }
+   
+html, body {
+	height:100%;
+}
+
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+  display: block; }
+
+body {
+  line-height: 1; }
+
+ol, ul {
+  list-style: none; }
+
+blockquote, q {
+  quotes: none; }
+
+blockquote:before, blockquote:after,
+q:before, q:after {
+  content: '';
+  content: none; }
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0; }
+
+.typekit-badge {
+  display: none !important; }
+
+
+.footer-item a {
+	color:#ffffff;
+	font-size:14px;
+	font-family: "kepler-std-display",serif;
+	text-decoration: none;
+}
+.footer-item {
+	color:#ffffff;
+	font-size:14px;
+	font-family: "kepler-std-display",serif;
+}
+
+.header-item {
+	display: inline;
+	float: left;
+}
+
+.header-item a {
+	display: inline;
+	float: left;
+	color:#ffffff;
+	font-size:14px;
+	font-family: "museo-sans-condensed",serif;
+	font-weight: 900;
+	text-decoration: none;
+	padding-right: 15px;
+	padding-top: 31px;
+}
+
+.footer-item {
+	color:#ffffff;
+	font-size:14px;
+	font-family: "kepler-std-display",serif;
+}
+
+.section-title{
+	color:#ffffff;
+	font-size:36px;
+	font-family: "kepler-std-display",serif;
+}
+
+.section-body {
+	color:#ffffff;
+	font-size:14px;
+	font-family: "museo-sans-condensed",sans-serif;
+	line-height:24px;
+	font-weight: 300;
+}
+
+.greyButtonWrapper {
+	display: inline-block;
+	padding-right:20px;
+}
+
+.greyButtonWrapper:hover .grey-button {
+	background-color:rgba(255, 255, 255, 0.25);
+	color: #252525;
+}
+
+.grey-button  {
+	background-color: rgba(0, 0, 0, .25);
+	border-color:#FFFFFF;
+	border-style:solid;
+	border-width:1px;;
+	color: #FFFFFF;
+	font-family: "museo-sans-condensed",sans-serif;
+	font-weight:700;
+	font-size: 14px;
+	padding-left: 30px;
+	padding-right: 30px;
+	padding-top: 17px;
+	padding-bottom: 17px;
+	display: inline-block;
+	width:auto;
+	cursor:hand;
+	float:left;
+}
+
+.quote-item {
+	font-family: 'kepler-std-display',serif;
+	font-size:50px;
+	font-weight: 300; 
+	text-align: center;
+	text-transform:lowercase;
+	font-style: italic;
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.quote-author {
+	font-family: 'museo-sans-condensed',serif;
+	font-style:normal;
+	text-transform: none;
+	font-size:20px;
+}
+	

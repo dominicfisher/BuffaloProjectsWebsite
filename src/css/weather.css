@@ -1,0 +1,238 @@
+input[type=text]
+{
+	width: 100%;
+	height: 30px;
+	border: 1px solid #CCC;
+	padding: 0px 10px 8px 10px;
+	width: 93%;
+}
+
+input[type=password]
+{
+	width: 100%;
+	height: 30px;
+	border: 1px solid #CCC;
+	padding: 0px 10px 8px 10px;
+	width: 93%;
+}
+
+input[type=submit]
+{
+	cursor: pointer;
+}
+
+input[type=submit]:focus
+{
+	outline: 0;
+}
+
+a {
+	color:#347ec4;
+	text-decoration:none;
+	font-weight:700;
+}
+
+.weatherSubHeader
+{
+	height: 25px;
+	font-family: 'kepler-std-display', serif;
+	font-size: 26px;
+	color: #FFFFFF;
+	width: 100%;
+	float: left;
+	padding-top: 0;
+	padding-bottom: 10px;
+}
+
+.weatherFormFieldTitle
+{
+	font-family: "tk-freight-display-pro", serif;
+	font-size: 12px;
+	color: #666666;
+	margin: 0px 0 0px 0;
+	padding: 0px 0px 10px;
+}
+
+.file_button_container, .file_button_container input
+{
+	background: transparent url('/assets/img/uploadButton.png') left top no-repeat;
+	height: 51px;
+	width: 132px;
+	display:inline-block;
+	padding-bottom:10px;
+	cursor:pointer;
+}
+
+.file_button_container
+{
+	background: transparent url('/assets/img/uploadButton.png') left top no-repeat;
+	display:inline-block;
+	padding-bottom:10px;
+	cursor:pointer;
+}
+
+.file_button_container input
+{
+	opacity: 0;
+}
+
+.meter {
+	width:100%;
+	height:2px;
+}
+
+.meter span {
+	display:block;
+	height:100%;
+	background-color: #347ec4;
+}
+
+.drop-box {
+	display:inline-block;
+	background: #333333;
+	border: 1px dashed #DDD;
+	width: 132px;
+	height: 50px; 
+	text-align: center;
+	padding-top: 25px; 
+	color:#FFFFFF;
+	font-family: "museo-sans-condensed",sans-serif;
+	font-weight:300;
+	font-size: 14px;
+}
+
+.drop-box.dragover {
+	border: 1px dashed #347ec4;
+	background:#FFFFFF;
+	color:#347ec4;
+}
+
+.leaflet-container .leaflet-control-attribution {
+	display:none;
+}
+
+.thumbnail {
+	border:none;
+	width: 100%;
+	width:100%;
+	vertical-align: middle;
+	padding-bottom:10px;
+}
+
+.thumbnail.selected {
+	border: 3px solid #347ec4;
+}
+
+.dropdownItem {
+	color:#333333;
+	font-family: "museo-sans-condensed",sans-serif;
+	font-weight:300;
+	font-size: 18px;
+	cursor:pointer;
+}
+
+.dropdownItem span {
+	background-color:#FFFFFF;
+	height:40px;
+	padding-left:10px;
+	padding-top:10px;
+}
+
+.dropdownItem:hover span {
+	background-color:#347ec4;
+	color:#FFFFFF;
+}
+
+.radioItem {
+	color:#333333;
+	font-family: "museo-sans-condensed",sans-serif;
+	font-weight:300;
+	font-size: 18px;
+	cursor:pointer;
+	float:left;
+	padding-left:10px;
+	padding-right:10px;
+	text-decoration:none;
+}
+
+.radioItem:hover {
+	color:#347ec4;
+}
+
+.radioItemSelected {
+	color:#347ec4;
+	font-family: "museo-sans-condensed",sans-serif;
+	font-weight:300;
+	font-size: 18px;
+	cursor:pointer;
+	float:left;
+	padding-left:10px;
+	padding-right:10px;
+	text-decoration:none;
+}
+
+
+
+.animate-show.ng-hide-add, .animate-show.ng-hide-remove {
+    transition: all linear 0.5s;
+    display: block !important;
+}
+
+.animate-show.ng-hide-add.ng-hide-add-active, .animate-show.ng-hide-remove {
+    opacity: 0;
+}
+
+.animate-show.ng-hide-add, .animate-show.ng-hide-remove.ng-hide-remove-active {
+    opacity: 1;
+}
+
+#submitWeatherTagButton
+{
+	background: transparent url('/assets/img/addWeatherTagButton.jpg') left top no-repeat;
+	height: 40px;
+	width: 79px;
+	display:inline-block;
+	padding-bottom:10px;
+	cursor:pointer;
+	border:none;
+	float:right;
+}
+
+.weatherTag span {
+	height:26px;
+	background:#FFFFFF;
+	padding-top:12px;
+	padding-right:5px;
+	padding-left:5px;
+	border-bottom:  1px solid #347EC4;
+	border-left:  1px solid #347EC4;
+	border-top:  1px solid #347EC4;
+	font-family: "museo-sans-condensed",sans-serif;
+	font-weight:300;
+	font-size: 14px;
+	color:#333333;
+	display:inline-block;
+	float:left;
+}
+
+.weatherTag {
+	display:inline-block;
+	float:left;
+	padding-bottom:10px;
+}
+
+.terms {
+	font-family: "museo-sans-condensed",sans-serif;
+	font-weight:300;
+	font-size:24px;
+	color:#444444;
+	padding-right:20px;
+	
+}
+
+.terms.selected {
+	font-weight:700;
+}
+
+.fadein { position:relative; height:100%; width:100%; opacity:0.0 }
+.fadein p { position:absolute; left:0; top:0; }
