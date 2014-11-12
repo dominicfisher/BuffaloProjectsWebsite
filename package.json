@@ -11,7 +11,8 @@
     "express": "4.x",
     "express-jwt": "^0.4.0",
     "jade": "*",
-    "mongodb": "*",
+    "mongodb": "2.6.5",
+    "async" : "*",
     "node-uuid": "1.x"
   }
 }

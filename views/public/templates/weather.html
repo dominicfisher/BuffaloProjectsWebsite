@@ -4,7 +4,7 @@
 	</div>
 	<div id="weatherBackgroundSlideshowContainer" style="width:100%; height:100%; overflow:hidden; position: absolute; z-index:901; top:0px; left:0px;">
 		<div class="fadein">
-			<p ng-repeat="slideImage in homeWeatherImages">
+			<p ng-repeat="slideImage in homeWeatherImages" my-repeat-directive>
 				<img id="slide{{slideImage.id}}" class="slide"  ng-src="{{slideImage.path}}" />
 			</p>
 		</div>

@@ -30,6 +30,42 @@
 		}
 	});
 
+	app.directive('myRepeatDirective', function() {
+		return function(scope, element, attrs) {
+			if (scope.$last){
+				scope.imagesLoaded = 0;
+
+				$( ".slide" ).each(function() {
+					$(this).load(function() {
+						//alert('loaded')
+						if($(this).width() < $('#weatherBackgroundSlideshowContainer').width()) {
+
+							var startWidth = $(this).width();
+							var startHeight = $(this).height();
+							$(this).width($('#weatherBackgroundSlideshowContainer').width());
+							$(this).height( ($('#weatherBackgroundSlideshowContainer').width()/startWidth) * startHeight )
+						}
+
+						if($(this).height() < $('#weatherBackgroundSlideshowContainer').height()) {
+
+							var startWidth = $(this).width();
+							var startHeight = $(this).height();
+
+							$(this).height($('#weatherBackgroundSlideshowContainer').height());
+							$(this).width( ($('#weatherBackgroundSlideshowContainer').height()/startHeight) * startWidth )
+						}
+						scope.imagesLoaded++;
+						if(scope.imagesLoaded == scope.homeWeatherImages.length-1) {
+							scope.startSlideshow()
+						}
+
+					})
+
+				});
+			}
+		};
+	})
+
 	app.filter('unsafe', function($sce) {
 		return function(val) {
 			return $sce.trustAsHtml(val);
@@ -208,7 +244,7 @@
 		}
 	});
 
-	app.controller('WeatherController', function($scope, $cookies, $upload, leafletData, auth, store) {
+	app.controller('WeatherController', function($scope, $cookies, $upload, leafletData, auth, store, $http) {
 
 		$scope.homeWeatherImages = homeImages;
 		$scope.currentPicturePath = 'cherry_blossoms.jpg';
@@ -224,36 +260,16 @@
 		$scope.weatherFirstLoad = true;
 
 		if($scope.weatherFirstLoad) {
-			$('#weatherbackground').load(function() {
-				resizeBackgroundImage();
-				//$('#weatherbackground').animate({'opacity': 1}, 1000, "easeOutQuart");
-				$('#sidebar').animate({'opacity': 1}, 1000, "easeOutQuart");
-			})
-
-			$( ".slide" ).each(function() {
-				if($(this).width() < $('#weatherBackgroundSlideshowContainer').width()) {
-
-					var startWidth = $(this).width();
-					var startHeight = $(this).height();
-					$(this).width($('#weatherBackgroundSlideshowContainer').width());
-					$(this).height( ($('#weatherBackgroundSlideshowContainer').width()/startWidth) * startHeight )
-				}
-
-				if($(this).height() < $('#weatherBackgroundSlideshowContainer').height()) {
-
-					var startWidth = $(this).width();
-					var startHeight = $(this).height();
-
-					$(this).height($('#weatherBackgroundSlideshowContainer').height());
-					$(this).width( ($('#weatherBackgroundSlideshowContainer').height()/startHeight) * startWidth )
-				}
-			});
-
-			$('.fadein p:gt(0)').hide();
-		   setInterval(function(){$('.fadein > :first-child').fadeOut().next('p').fadeIn().end().appendTo('.fadein');}, 3000);
 
 			getUserLocation();
 			$scope.weatherFirstLoad = false;
+		}
+
+		$scope.startSlideshow = function() {
+			$('#sidebar').animate({'opacity': 1}, 2000, "easeOutQuart");
+			$('.fadein').animate({'opacity': 1}, 2000, "easeOutQuart");
+			$('.fadein p:gt(0)').hide();
+			setInterval(function(){$('.fadein > :first-child').fadeOut(2000).next('p').fadeIn(2000).end().appendTo('.fadein');}, 7000);
 		}
 
 
@@ -506,13 +522,34 @@
 		}
 
 		$scope.saveImage = function() {
+			console.log('save clicked')
+			var j = 0
 			for( var i=0; i < $scope.weatherPictures.length; i++ ) {
 				if($scope.weatherPictures[i].path == $scope.currentPicturePath) {
+					$scope.weatherPictures[i]._id = $scope.weatherPictures[i].path
+					$scope.weatherPictures[i].translated_user = $scope.translated_user;
 					$scope.weatherPictures[i].lat = $scope.markers[0].lat;
-					$scope.weatherPictures[i].lon - $scope.markers[0].lon;
+					$scope.weatherPictures[i].lon - $scope.markers[0].lng;
 					$scope.weatherPictures[i].address = $scope.currentPictureLocationLabel;
 					$scope.weatherPictures[i].season = $scope.currentPictureSeason;
 					$scope.weatherPictures[i].tags = $scope.currentPictureWeatherTags;
+					console.log($scope.weatherPictures[i].lon)
+					j = i;
+					console.log('saving image')
+					$http.post('/saveImage/', {translated_user : $scope.translated_user, image : $scope.weatherPictures[i]}).
+					success(function(data, status, headers, config) {
+						if(data.error == null) {
+							console.log('image saved');
+							console.log(data)
+							$scope.weatherPictures[j] = data.data[0];
+							console.log($scope.weatherPictures[j])
+						} else {
+							console.log('image did not save');
+						}
+					}).
+					error(function(data, status, headers, config) {
+						console.log('failed to save image');
+					});
 				}
 			}
 		}
@@ -732,37 +769,47 @@
 		$scope.password = '';
 
 		function onLoginSuccess(profile, token) {
-			//$scope.message.text = '';
 			store.set('profile', profile);
 			store.set('token', token);
 
 			$scope.token = token
-			//$location.path('/');
-			//$scope.loading = false;
-			console.log(token)
-			//$scope.changeUserPicture(data.data.profilePicture);
+
 			$scope.changeUserName(profile.email);
 			$scope.changeUserId(profile.user_id);
 
 			store.set('id_token', token);
 			store.set('profile', JSON.stringify(profile));
-
-			showSidebar();
-
-			console.log(auth);
-
-			auth.delegate({
-				api : 'aws',
-				client_id :'iGcC29FY463ceuL7OUNxwv1LUTQieXkn',
-				target:'iGcC29FY463ceuL7OUNxwv1LUTQieXkn',
-				scope:'openid',
-				api_type:'aws',
-				principal:'arn:aws:iam::203816133875:saml-provider/auto0-buffaloprojects-provider',
-				role:'arn:aws:iam::203816133875:role/buffaloprojects-s3user'
-			}).then(function(delegationResult){
-				console.log(delegationResult)
-				store.set('aws_creds', delegationResult.Credentials);
+			
+			$http.post('/create_user/', {user:$scope.username}).
+			success(function(data) {
+				console.log(data)
+				$scope.translateUserId = data.translated_id;
+				$scope.weatherPictures = data.images;
+				
+				//TODO get sign url for images
+				
+				auth.delegate({
+					api : 'aws',
+					client_id :'iGcC29FY463ceuL7OUNxwv1LUTQieXkn',
+					target:'iGcC29FY463ceuL7OUNxwv1LUTQieXkn',
+					scope:'openid',
+					api_type:'aws',
+					principal:'arn:aws:iam::203816133875:saml-provider/auto0-buffaloprojects-provider',
+					role:'arn:aws:iam::203816133875:role/buffaloprojects-s3user'
+				}).then(function(delegationResult){
+					console.log(delegationResult)
+					store.set('aws_creds', delegationResult.Credentials);
+					showSidebar();
+				})
+			}).
+			error(function(data) {
+				$("#loginChildren").animate({ opacity: 1 }, 1000, "easeOutQuart");
+				$scope.login_error = "Oh shizzle, we have some issues of our own going on.  We're on it plus we called the therapist to take care of insecurities";
+				$('#loginError').fadeIn(500);
+				$('#loginLoader').fadeOut();
 			})
+
+			
 
 
 			//console.log(t.resp)
@@ -857,11 +904,8 @@
 		}
 
 		function onLoginFailed(data) {
-			//$scope.message.text = 'invalid credentials';
-			//$scope.loading = false;
-			console.log(data)
 			$("#loginChildren").animate({ opacity: 1 }, 1000, "easeOutQuart");
-			$scope.login_error = 'invalid credentials';
+			$scope.login_error = "So this is awkward but we can't find anyone with those creditials."
 			$('#loginError').fadeIn(500);
 			$('#loginLoader').fadeOut();
 		}
@@ -1403,7 +1447,7 @@ var homeImages = [
 	},
 	{
 		id	:		'4',
-		path	:	'/views/public/assets/img/fall2.jpg.jpg'
+		path	:	'/views/public/assets/img/fall2.jpg'
 	},
 	{
 		id	:		'5',
