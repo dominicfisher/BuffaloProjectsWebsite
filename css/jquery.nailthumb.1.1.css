@@ -16,8 +16,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 .nailthumb-container {
-  width: auto;
-  height: auto;
+  width: 100px;
+  height: 100px;
   margin: 0 0 11px;
   padding: 0px;
   overflow: hidden;

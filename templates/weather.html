@@ -106,8 +106,8 @@
 											<li style="float:left; padding-top:20px; width: 100%;">
 												<div style="width:100%">
 													<span ng-show="!weatherPictures.length" style="color:#FFFFFF; font-family: 'museo-sans-condensed',serif; text-align: center; font-size: 12px;">Upload some pictures to get start.</span>
-												    <div id="weatherThumbnails" style="width:45%;  float:left; margin-right:10px; display: inline-block; background-color:#666666;" ng-repeat="weatherPictureItem in weatherPictures">
-												    		<a href ng-click="showImageDetail(weatherPictureItem.path)"><img ng-src="{{weatherPictureItem.signedPath}}" class="thumbnail"></a>
+												    <div class="nailthumb-container square"  ng-repeat="weatherPictureItem in weatherPictures">
+												    		<a href ng-click="showImageDetail(weatherPictureItem.path)"><img ng-src="{{weatherPictureItem.signedPath}}"></a>
 												    </div>
 												</div>
 												

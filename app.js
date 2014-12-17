@@ -619,6 +619,7 @@
 								success(function(data, status, headers, config) {
 									if(data.error == null) {
 										$scope.weatherPictures.unshift(data.data[0]);
+										jQuery('.weatherThumbnails').nailthumb({width:100,height:100,fitDirection:'center',replaceAnimation:'fade', preload:true});
 										//$scope.$apply();
 									} else {
 										console.log('image did not save');

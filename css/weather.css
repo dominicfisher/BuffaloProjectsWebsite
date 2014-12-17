@@ -236,3 +236,8 @@ a {
 
 .fadein { position:relative; height:100%; width:100%; opacity:0.0 }
 .fadein p { position:absolute; left:0; top:0; }
+
+.square {
+	width:100px;
+	height:100px;
+}
