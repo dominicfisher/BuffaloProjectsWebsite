@@ -230,7 +230,7 @@
 				break;
 			default :
 				$scope.weatherTermsSections = termsSections;
-				$scope.weatherTermsSummary = termsSummary;
+			$scope.weatherTermsSummary = termsSummary;
 
 			}
 		}
@@ -248,6 +248,7 @@
 		$scope.suggestedAddresses = [];
 		$scope.defaultLat = '39.001676741504525';
 		$scope.defaultLon = '-94.59741353988647';
+		$scope.email_verified = false;
 
 		$scope.weatherFirstLoad = true;
 
@@ -517,7 +518,7 @@
 					error(function(data, status, headers, config) {
 						console.log('failed to delete image');
 					});
-					
+
 				};
 			};
 		};
@@ -613,8 +614,8 @@
 							bucket.getSignedUrl('getObject', { Expires: 24 * 60, Key: objKey }, function(err, url) {
 								pictureObject.path = uniqueFileName;
 								pictureObject.signedPath = url;
-								
-								
+
+
 								$http.post('/saveImage/', {translated_user : $scope.translated_user, image : pictureObject}).
 								success(function(data, status, headers, config) {
 									if(data.error == null) {
@@ -628,7 +629,7 @@
 								error(function(data, status, headers, config) {
 									console.log('failed to save image');
 								});
-								
+
 							});
 						};
 					})
@@ -689,6 +690,19 @@
 		$scope.changeUserId = function(userid) {
 			$scope.userid = userid;
 		};
+		
+		$scope.resend_weather_verification_email = function() {
+			
+			$http.post(' https://buffaloprojects.auth0.com/api/users/' + $scope.userid + '/send_verification_email', {authorization:'Bearer lHalCKYuhVQcIzuIfOlXHtP8uqoJtLuNT6TidwFa6jLQACsFgkicaYBLDBjVy3jP'}).
+			success(function(data) {
+				alert('done');
+				console.log(data);
+			}).
+			error(function(data) {
+				alert('not sent');
+				alert(data);
+			});
+		};
 
 		function getPictureLatLon(pictureObject) {
 			$('#file').fileExif(function(exifObject) {
@@ -740,39 +754,134 @@
 		};
 	});
 
-	app.controller('SignupFormController', function($scope, $http) {
+	app.controller('SignupFormController', function($scope, $http, auth) {
+
+		function onLoginSuccess(profile, token) {
+			store.set('profile', profile);
+			store.set('token', token);
+
+			$scope.token = token;
+
+			console.log(profile)
+			alert(profile.picture);
+
+			$scope.changeUserName(profile.given_name + ' ' + profile.family_name);
+			$scope.changeUserId(profile.user_id);
+			$scope.changeUserPicture(profile.picture);
+			
+			
+
+			store.set('id_token', token);
+			store.set('profile', JSON.stringify(profile));
+
+			$http.post('/create_user/', {user:$scope.username}).
+			success(function(data) {
+				$scope.translateUserId = data.translated_id;
+				$scope.weatherPictures = data.images;
+
+				//TODO get sign url for images
+
+				auth.delegate({
+					api : 'aws',
+					client_id :'iGcC29FY463ceuL7OUNxwv1LUTQieXkn',
+					target:'iGcC29FY463ceuL7OUNxwv1LUTQieXkn',
+					scope:'openid',
+					api_type:'aws',
+					principal:'arn:aws:iam::203816133875:saml-provider/auto0-buffaloprojects-provider',
+					role:'arn:aws:iam::203816133875:role/buffaloprojects-s3user'
+				}).then(function(delegationResult){
+					store.set('aws_creds', delegationResult.Credentials);
+					showSidebar();
+				});
+			}).
+			error(function(data) {
+				$("#loginChildren").animate({ opacity: 1 }, 1000, "easeOutQuart");
+				$scope.login_error = "Oh shizzle, we have some issues of our own going on.  We're on it plus we called the therapist to take care of insecurities";
+				$('#loginError').fadeIn(500);
+				$('#loginLoader').fadeOut();
+			});
+		};
+
+
+		function showSidebar() {
+
+			$('#loginLoader').fadeOut();
+			$('#loginFormParent').fadeOut();
+			$('#defaultUserPicture').fadeOut();
+			$('#userPicture').css('display', 'inline-block');
+			$('#userpicture').fadeIn();
+			$("#loginChildren").animate({ opacity: 1}, {queue:false, duration:1000, easing : "easeOutQuart"});
+			$('#userSideBar').fadeIn();
+			$('#sidebar').animate({'left': '0px'}, {queue:false, duration:1000, easing : "easeOutQuart"});
+			$('#sidebarHeight').animate({'margin-top' : '0%'}, {queue:false, duration:1000, easing : "easeOutQuart"});
+			$('#loginChildren').animate({'top': '0%'}, {queue:false, duration:1000, easing : "easeOutQuart"});
+			$('#loginContainer').css('display','block');
+			$('#loginChildren').fadeIn();
+
+			$('#sidebar').animate({backgroundColor: 'rgba(0,0,0,1.0)'}, 1000);
+		}
+
+		function onLoginFailed(data) {
+			alert('failed login');
+			$("#loginChildren").animate({ opacity: 1 }, 1000, "easeOutQuart");
+			$scope.login_error = "So this is awkward but we can't find anyone with those creditials.";
+			$('#loginError').fadeIn(500);
+			$('#loginLoader').fadeOut();
+		}
 
 		$scope.weatherSignup = function() {
 
-			if($.trim($scope.username) == "" && $.trim($scope.password) == "") {
+			if($.trim($scope.signup.user) == "" && $.trim($scope.signup.pass) == "") {
 				$scope.login_error = "We know it's weird, but we have to have a username and passord to get this going.";
+				$('#singupError').fadeIn(500);
+				return false;
+			} else if($.trim($scope.signup.firstname) == "" || $.trim($scope.signup.lastname) == "") {
+				$scope.login_error = "You foget to give us your name.  We like to keep things as personal as the interwebs will allow us to be.";
+				$('#singupError').fadeIn(500);
+				return false;
+			} else if($scope.signup.pass != $scope.signup.passcheck) {
+				$scope.login_error = "Your passwords dont' match.  We get it, trying to type it twice with just astricks is awkward.";
 				$('#singupError').fadeIn(500);
 				return false;
 			} else {
 				$('#signupError').fadeOut(500);
 				$('#signupLoader').css('display', 'inline-block');
 				$("#signupChildren").animate({ opacity: 0.25 }, 1000, "easeOutQuart", function() {
+					alert($scope.signup.pass);
 
-					$http.post('https://buffaloprojects.auth0.com/api/users/', {email:$scope.username, password:$scope.password, connection:'Username-Password-Authentication', email_verified:'false'}).
-					success(function(data, status, headers, config) {
-						if(data.error == null) {
-							$scope.changeUserPicture(data.data.profilePicture);
-							$scope.changeUserName(data.data.name);
-							$scope.changeUserId(data.data.userid);
-							$('#signupLoader').fadeOut();
-							$('#signupFormParent').fadeOut();
-							$("#signupChildren").animate({ opacity: 1}, {queue:false, duration:1000, easing : "easeOutQuart"});
-						} else {
+					$http({method: 'POST', url: '/custom-signup',
+						data: {
+							email:    $scope.signup.user,
+							password:     $scope.signup.pass,
+							given_name:	$scope.signup.firstname,
+							family_name:	$scope.signup.lastname,
+						}})
+						.success(function (data, status, headers, config) {
+							if (status === 200) {
+
+								$('#signupLoader').fadeOut();
+								$('#signupFormParent').fadeOut();
+								$("#signupChildren").animate({ opacity: 1}, {queue:false, duration:1000, easing : "easeOutQuart"});
+
+								auth.signin({
+									connection: 'Username-Password-Authentication',
+									username:   $scope.signup.user,
+									password:   $scope.signup.pass,
+									authParams: {
+										scope : 'openid profile'
+									}
+								}, onLoginSuccess, onLoginFailed);
+							}
+						})
+						.error(function (data, status, headers, config) {
+							alert('dont got it');
 							$("#signupChildren").animate({ opacity: 1 }, 1000, "easeOutQuart");
 							$scope.signup_error = data.error;
 							$('#signupError').fadeIn(500);
 							$('#signupLoader').fadeOut();
-						}
-					}).
-					error(function(data, status, headers, config) {
-						$scope.signup_error = "We know it's weird, but we have to have a username and passord to get this going.";
-						$('#signupError').fadeIn(500);
-					});
+							$scope.login_error = "Uhhh check this out" + data.code;
+							console.log(data);
+						});
 				});
 			};
 		};
@@ -789,19 +898,21 @@
 
 			$scope.token = token;
 
-			$scope.changeUserName(profile.email);
+			$scope.changeUserName(profile.given_name + ' ' + profile.family_name);
 			$scope.changeUserId(profile.user_id);
+			$scope.changeUserPicture(profile.picture);
+			$scope.email_verified = profile.email_verified;
 
 			store.set('id_token', token);
 			store.set('profile', JSON.stringify(profile));
-			
+
 			$http.post('/create_user/', {user:$scope.username}).
 			success(function(data) {
 				$scope.translateUserId = data.translated_id;
 				$scope.weatherPictures = data.images;
-				
+
 				//TODO get sign url for images
-				
+
 				auth.delegate({
 					api : 'aws',
 					client_id :'iGcC29FY463ceuL7OUNxwv1LUTQieXkn',
@@ -1077,12 +1188,12 @@
 
 var tempBodyCopy = 'Letterpress mlkshk wayfarers, kogi retro ugh before they sold out viral flannel mustache. Swag aliqua cupidatat distillery. Pork belly Odd Future gluten-free tousled, lo-fi Shoreditch plaid. Salvia PBR synth dolore. Exercitation shabby chic McSweeney&apos;s cred 90&apos;s laboris. Cornhole accusamus street art slow-carb YOLO semiotics iPhone, salvia voluptate.';
 
-	var homepageSplash = {
-		id				:	'0',
-		videoPath		:	'http://www.beamtv.com/archive/file/RsMtCdstcS/hd?width=1280&height=720',
-		title			:	'Love life',
-		bodyCopy		:	tempBodyCopy,
-		learnMoreAction	:	''
+var homepageSplash = {
+	id				:	'0',
+	videoPath		:	'http://www.beamtv.com/archive/file/RsMtCdstcS/hd?width=1280&height=720',
+	title			:	'Love life',
+	bodyCopy		:	tempBodyCopy,
+	learnMoreAction	:	''
 };
 
 var homepageSlides = [

@@ -498,6 +498,7 @@ Auth0.prototype.signup = function (options, callback) {
     method:  'post',
     type:    'html',
     data:    query,
+    contentType: 'application/x-www-form-urlencoded',
     success: success,
     crossOrigin: true,
     error: function (err) {

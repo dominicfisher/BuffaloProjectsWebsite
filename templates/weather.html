@@ -77,7 +77,8 @@
 
 									<div id="userPicture"  style=" height:50px; position: absolute; z-index: 999; text-align: center; padding:0px; left: 50%; display: none; ">
 										<div style="width:50px; height:50px; display:inline-block; position: relative; text-align: center; margin-left:-25px;">
-											<img ng-src="{{userpicture}}" width="50px" height="50px">
+
+											<img ng-src="{{userpicture}}" width="50px" height="50px" class="logo-mask">
 										</div>
 									</div>
 									<div id="userSideBar" style=" display: none; padding-top: 60px;">
@@ -85,6 +86,11 @@
 											<li>
 												<div style="width:100%; text-align: center; font-family: 'museo-sans-condensed',serif; font-size: 22px; color:#FFFFFF">
 													{{name}}
+												</div>
+											</li>
+											<li ng-show="!email_verified">
+												<div style="width:100%; text-align: center; font-family: 'museo-sans-condensed',serif; font-size: 12px; color:#FFFFFF">
+													In order to keep the system running up to snuff we need to make sure you are who you are.  You should have received an email to verify who you are.  <a href="" ng-click="resend_weather_verification_email()">Resend the email</a>
 												</div>
 											</li>
 											<li style="padding-top:20px; text-align: center; float: left; margin: 0 auto; width: 100%;">
@@ -168,10 +174,19 @@
 												</div>
 											</li>
 											<li style="padding-bottom:10px;">
-												<input type="text" placeholder="username" tabindex="1" ng-model="username"  ng-enter="signupLogin()">
+												<input type="text" placeholder="email address" tabindex="1" ng-model="signup.user"  ng-enter="weatherSignup()">
+											</li>
+											<li style="padding-bottom:10px;">
+												<input type="text" placeholder="first name" tabindex="1" ng-model="signup.firstname"  ng-enter="weatherSignup()">
+											</li>
+											<li style="padding-bottom:10px;">
+												<input type="text" placeholder="last name" tabindex="1" ng-model="signup.lastname"  ng-enter="weatherSignup()">
 											</li>
 											<li style="padding-bottom: 20px;">
-												<input type="password" placeholder="password" tabindex="2" ng-model="password"  ng-enter="signupLogin()">
+												<input type="password" placeholder="password" tabindex="2" ng-model="signup.pass"  ng-enter="weatherSignup()">
+											</li>
+											<li style="padding-bottom: 20px;">
+												<input type="password" placeholder="verify password" tabindex="2" ng-model="signup.passcheck"  ng-enter="weatherSignup()">
 											</li>
 											<li style="padding-bottom:20px">
 												<div style="font-family: 'museo-sans-condensed',serif; font-size:12px; color:#FFFFFF; line-height: 16px;">By clicking "Sign up ", you agree to our <a style="display:inline;" href="/weatherterms">terms of service</a> and <a style="display:inline;" href="weatherterms">privacy policy</a>. We will send you account related emails occasionally.</div>
@@ -277,6 +292,12 @@
 			<div ng-click="saveImage()" style="cursor:pointer; width:50%; background: #347ec4; color:#FFFFFF; float:left; text-align:center; height: 100%; font-family: 'museo-sans-condensed',sans-serif; font-size:18px;">
 				<span style="margin-top:17px;">SAVE IMAGE</span>
 			</div>
+		</div>
+	</div>
+	
+	<div id="user_profile_details" style="position: absolute; z-index:1000; top:0px; left:25%; width:25%; height: 100%;  display: none; ">
+		<div id="weatherImageDetailScroller" style="width:100%; height:100%; overflow-y: scroll">
+			
 		</div>
 	</div>
 </div>
