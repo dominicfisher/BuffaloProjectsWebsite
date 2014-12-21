@@ -743,15 +743,30 @@
 
         $scope.resend_weather_verification_email = function () {
 
-            $http.post(' https://buffaloprojects.auth0.com/api/users/' + $scope.userid + '/send_verification_email', {
+            $http.post(' https://buffaloprojects.auth0.com/api/users/' + $scope.userid + '/change_password_ticket', {
                 authorization: 'Bearer lHalCKYuhVQcIzuIfOlXHtP8uqoJtLuNT6TidwFa6jLQACsFgkicaYBLDBjVy3jP'
             }).
             success(function (data) {}).
             error(function (data) {});
         };
-        
-        $scope.changePassword = function() {
-            
+
+        $scope.changePassword = function () {
+            $('#changePasswordError').fadeIn( function() {
+                $('#changePasswordError').css({'display': 'none'});
+            });
+            if ($scope.new_password == $scope.new_password_verify) {
+                $https.post('https://buffaloprojects.auth0.com/api/users/' + $scope.userid + , {
+                    authorization: 'Bearer XAUqDIJXSBWQUWgXSV17LIMcXx10nwxXS1dBImd8QgPMWbTJSc027DnYFtvLAsmT ',
+                    Content - Type: 'application/json',
+                    {
+                        "newPassword": $scope.new_password;
+                    }
+                }).success(function (data) {}).
+                error(function (data) {});
+            } else {
+                $scope.change_password_error = "Your new password and password verification don't match.";
+                $('#changePasswordError').fadeIn();
+            }
         }
 
         function getPictureLatLon(pictureObject) {
