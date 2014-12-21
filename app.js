@@ -757,7 +757,7 @@
             if ($scope.new_password == $scope.new_password_verify) {
                 $https.post('https://buffaloprojects.auth0.com/api/users/' + $scope.userid + , {
                     authorization: 'Bearer XAUqDIJXSBWQUWgXSV17LIMcXx10nwxXS1dBImd8QgPMWbTJSc027DnYFtvLAsmT ',
-                    Content - Type: 'application/json',
+                    Content-Type: 'application/json',
                     {
                         "newPassword": $scope.new_password;
                     }
@@ -767,6 +767,43 @@
                 $scope.change_password_error = "Your new password and password verification don't match.";
                 $('#changePasswordError').fadeIn();
             }
+        }
+        
+        $scope.goToLogin = function() {
+            $('#signUpContainer').fadeOut();
+            $('#loginContainer').fadeIn();
+        }
+        
+        $scope.goToSignUp = function() {
+            $('#signUpContainer').fadeIn();
+            $('#loginContainer').fadeOut();
+        }
+        
+        $scope.showForgottenPassword = function() {
+            $'#loginContainer').fadeOut();
+            $('#forgotPasswordContainer').fadeIn();
+        }
+        
+        $scope.sendForgottenPasswordEmail = function() {
+            if($.trim($scope.forgotten_password_user).length!=0) {
+                if() {
+                $http.put('https://buffaloprojects.auth0.com/api/users/' + $scope.forgotten_password_user + '/password', {
+                    authorization: 'Bearer XAUqDIJXSBWQUWgXSV17LIMcXx10nwxXS1dBImd8QgPMWbTJSc027DnYFtvLAsmT',
+                    Content-Type: 'application/json',
+                    {
+                    email: $scope.forgotten_password_user,
+                    password: $scope.forgotten_password_password,
+                    connection: 'Username-Password-Authentication',
+                    verify: true
+                    }
+                }). success(function(data){}).
+                error(function(data){});
+                } else {
+                    $scope.forgotten_password_error = "Your new password and password verification don't match";
+                $('#forgottenPasswordError').fadeIn();
+            } else {
+                $scope.forgotten_password_error = "Uh, we kind of need your email/username to help your reset your password.";
+                $('#forgottenPasswordError').fadeIn();
         }
 
         function getPictureLatLon(pictureObject) {

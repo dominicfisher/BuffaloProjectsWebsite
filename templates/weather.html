@@ -143,7 +143,31 @@
                                             <li style="text-align:center; width:100%; float: left; margin auto;">
                                                 <input type="submit" value="LOGIN" tabindex="3" style="font-family: 'museo-sans-condensed',serif; border: none; background-color: rgba(0, 0, 0, 0); color: #FFFFFF; text-decoration: none; font-style:normal; font-weight:300; font-size:21px;  text-align: center; display: inner-block;" />
                                             </li>
-
+                                            <li>
+                                                <a href="" ng-click="goToSignUp()">Create new account</a>
+                                                <a href="" ng-click="showForgottenPassword()">Forgot my password</a>
+                                            </li>
+                                        </form>
+                                    </div>
+                                    <div id="forgotPasswordContainer" style="display:none;">
+                                        <form name="forgotPassword" action="" class="forgtten_password_form" ng-submit="showForgottenPassword()" ng-controller="LoginFormController as login">
+                                            <li style="padding-bottom:10px;">
+                                                <div id="forgottenPasswordError" style="background-color: #FF0000; color: #FFFFFF; font-family: 'museo-sans-condensed',serif; font-size: 14px; padding: 10px; display:none;">
+                                                    {{forgotten_password_error}}
+                                                </div>
+                                            </li>
+                                            <li style="padding-bottom:10px;">
+                                                <input type="text" placeholder="username" tabindex="1" ng-model="forgotten_password_user" ng-change="loginChange()" ng-enter="weatherLogin()">
+                                            </li>
+                                            <li style="padding-bottom: 20px;padding-bottom: 20px;">
+                                                <input type="password" placeholder="password" tabindex="2" ng-model="forgotten_password_password" ng-change="loginChange()" ng-enter="weatherLogin()">
+                                            </li>
+                                            <li style="padding-bottom: 20px;padding-bottom: 20px;">
+                                                <input type="password" placeholder="password" tabindex="2" ng-model="forgotten_password_password_verify" ng-change="loginChange()" ng-enter="weatherLogin()">
+                                            </li>
+                                            <li style="text-align:center; width:100%; float: left; margin auto;">
+                                                <input type="submit" value="LOGIN" tabindex="3" style="font-family: 'museo-sans-condensed',serif; border: none; background-color: rgba(0, 0, 0, 0); color: #FFFFFF; text-decoration: none; font-style:normal; font-weight:300; font-size:21px;  text-align: center; display: inner-block;" />
+                                            </li>
                                         </form>
                                     </div>
                                 </div>
@@ -197,6 +221,9 @@
                                         </li>
                                         <li style="text-align:center; width:100%; float: left; margin auto;">
                                             <input type="submit" value="SIGNUP" tabindex="3" style="font-family: 'museo-sans-condensed',serif; border: none; background-color: rgba(0, 0, 0, 0); color: #FFFFFF; text-decoration: none; font-style:normal; font-weight:300; font-size:21px;  text-align: center; display: inner-block;" />
+                                        </li>
+                                        <li>
+                                            <a href="" ng-click="goToLogin()">Login</a>
                                         </li>
 
                                     </form>
