@@ -800,6 +800,16 @@
             });
 
         }
+        
+        $scope.showProfileSideBar = function() {
+            if ($('#weatherImageDetail').css('display') != "none") {
+                $('#weatherImageDetail').fadeOut();
+            }
+            
+            if ($('#user_profile_details').css('display') == "none") {
+                $('#user_profile_details').fadeIn();
+            }
+        }
 
         $scope.cancelResetPassword = function () {
             $('#forgotPasswordContainer').fadeOut(function () {
@@ -933,8 +943,13 @@
 
             $scope.first_name = profile.given_name;
             $scope.last_name = profile.family_name;
+            $scope.email_verified = profile.email_verified;
 
-            $scope.changeUserName(profile.given_name + ' ' + profile.family_name);
+            if($scope.first_name != undefined) {
+                $scope.changeUserName(profile.given_name + ' ' + profile.family_name);
+            } else {
+                $scope.changeUserName(profile.email);
+            }
             $scope.changeUserId(profile.user_id);
             $scope.changeUserPicture(profile.picture);
 
@@ -1116,11 +1131,14 @@
             store.set('token', token);
 
             $scope.token = token;
-
             $scope.first_name = profile.given_name;
             $scope.last_name = profile.family_name;
-
-            $scope.changeUserName(profile.given_name + ' ' + profile.family_name);
+            if($scope.first_name != undefined) {
+                $scope.changeUserName(profile.given_name + ' ' + profile.family_name);
+            } else {
+                $scope.changeUserName(profile.email);
+            }
+            
             $scope.changeUserId(profile.user_id);
             $scope.changeUserPicture(profile.picture);
             $scope.email_verified = profile.email_verified;
