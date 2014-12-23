@@ -762,12 +762,13 @@
             if (isValidPassword($scope.new_password)) {
 
                 if ($scope.new_password == $scope.new_password_verify) {
-                    $https.post('https://buffaloprojects.auth0.com/api/users/' + $scope.userid + , {
-                        authorization: 'Bearer XAUqDIJXSBWQUWgXSV17LIMcXx10nwxXS1dBImd8QgPMWbTJSc027DnYFtvLAsmT ',
-                        Content - Type: 'application/json',
-                        {
-                            "newPassword": $scope.new_password;
-                        }
+                    $http({
+                        url: 'https://buffaloprojects.auth0.com/api/users/' + $scope.userid + '/change_password_ticket',
+                        method: 'POST',
+                        headers: {
+                            "Content-Type": 'application/json'
+                        },
+                        authorization: 'Bearer XAUqDIJXSBWQUWgXSV17LIMcXx10nwxXS1dBImd8QgPMWbTJSc027DnYFtvLAsmT'
                     }).success(function (data) {}).
                     error(function (data) {});
                 } else {
@@ -793,28 +794,38 @@
         }
 
         $scope.showForgottenPassword = function () {
-            $('#loginContainer').fadeOut();
-            $('#forgotPasswordContainer').fadeIn();
+            $('#loginFormParent').fadeOut();
+            $('#defaultUserPicture').fadeOut(function () {
+                $('#forgotPasswordContainer').fadeIn()
+            });
+
+        }
+
+        $scope.cancelResetPassword = function () {
+            $('#forgotPasswordContainer').fadeOut(function () {
+                $('#loginFormParent').fadeIn();
+                $('#defaultUserPicture').fadeIn();
+            })
         }
 
         $scope.sendForgottenPasswordEmail = function () {
             if ($.trim($scope.forgotten_password_user).length != 0) {
-                if (isValidPassword($scope.new_password)) {
-                    if ($scope.forgotten_password_password == $scope.forgotten_password_password_verify && ) {
-                        $http.put('https://buffaloprojects.auth0.com/api/users/' + $scope.forgotten_password_user + '/password', {
-                            authorization: 'Bearer XAUqDIJXSBWQUWgXSV17LIMcXx10nwxXS1dBImd8QgPMWbTJSc027DnYFtvLAsmT',
-                            Content - Type: 'application/json',
-                            {
-                                email: $scope.forgotten_password_user,
-                                password: $scope.forgotten_password_password,
-                                connection: 'Username-Password-Authentication',
-                                verify: true
-                            }
-                        }).success(function (data) {}).
-                        error(function (data) {});
+                if (isValidPassword($scope.forgotten_password_password)) {
+                    if ($scope.forgotten_password_password == $scope.forgotten_password_password_verify) {
+                        $('#forgotPasswordLoader').fadeIn();
+                        $("#forgotPasswordContainer").animate({
+                            opacity: 0.25
+                        }, 1000, "easeOutQuart");
+                        auth.reset({
+                            email: $scope.forgotten_password_user,
+                            password: $scope.forgotten_password_password,
+                            connection: 'Username-Password-Authentication',
+                            verify: true
+                        }, sendForgottenPasswordEmailSuccess, sendForgottenPasswordEmailFailure);
                     } else {
                         $scope.forgotten_password_error = "Your new password and password verification don't match";
                         $('#forgottenPasswordError').fadeIn();
+
                     }
                 } else {
                     $scope.forgotten_password_error = "Your new password must be at least 8 characters long and have at least 3 of the following <ul><li>lowercase letter (a-z)</li><li>uppercase letter (A-Z)</li><li>numbers (0-9)</li><li>special characters</li></ul>";
@@ -825,6 +836,39 @@
                 $scope.forgotten_password_error = "Uh, we kind of need your email/username to help your reset your password.";
                 $('#forgottenPasswordError').fadeIn();
             }
+        }
+
+        function sendForgottenPasswordEmailSuccess(data) {
+            console.log('sucess');
+            console.log(data);
+            $('#forgotPasswordLoader').fadeOut();
+            $('#forgotPasswordContainer').fadeOut(function () {
+
+                $('#forgotPasswordConfirmationContainer').fadeIn(function () {
+                    window.setInterval(function () {
+                        $('#forgotPasswordConfirmationContainer').fadeOut(function() {
+                            $('#defaultUserPicture').fadeIn();
+                            $('#loginFormParent').fadeIn();
+                        });
+                    }, 5000);
+                });
+            });
+        }
+
+        function sendForgottenPasswordEmailFailure(data) {
+            console.log('failed');
+            console.log(data.code)
+            $('#forgotPasswordLoader').fadeOut();
+            $("#forgotPasswordContainer").animate({
+                            opacity: 1.0
+                        }, 1000, "easeOutQuart");
+            if(data.code == 'invalid_user') {
+                $scope.forgotten_password_error = "Well that's weird but we don't know anyone with that username.";
+            } else {
+                $scope.forgotten_password_error = 'Well this is awkward but check this out, ' + data.code;
+            }
+            
+            $('#forgottenPasswordError').fadeIn();
         }
 
         function getPictureLatLon(pictureObject) {
@@ -995,14 +1039,14 @@
                 $scope.login_error = "You forgot to give us your name.  We like to keep things as personal as the interwebs will allow us to be.";
                 $('#singupError').fadeIn(500);
                 return false;
-            } else if(!isValidUsername($scope.signup.user)) {
+            } else if (!isValidUsername($scope.signup.user)) {
                 $scope.login_error = "Your username must be a valid email address";
                 $('#singupError').fadeIn(500);
                 return false;
-            } else if(!isValidPassword($scope.signup.pass)) {
+            } else if (!isValidPassword($scope.signup.pass)) {
                 $scope.login_error = "Your new password must be at least 8 characters long and have at least 3 of the following <ul><li>lowercase letter (a-z)</li><li>uppercase letter (A-Z)</li><li>numbers (0-9)</li><li>special characters</li></ul>";
                 $('#singupError').fadeIn(500);
-                return false;    
+                return false;
             } else if ($scope.signup.pass != $scope.signup.passcheck) {
                 $scope.login_error = "Your passwords dont' match.  We get it, trying to type it twice with just astricks is awkward.";
                 $('#singupError').fadeIn(500);
@@ -1414,6 +1458,7 @@
     }
 
     function isValidPassword(possiblePassword) {
+
         if (possiblePassword.length < 8) {
             return false;
         }

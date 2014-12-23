@@ -50,6 +50,7 @@ app.post('/custom-signup/', function(req, res) {
 	});
 
 });
+
 app.use(express.static(__dirname));
 app.disable('etag');
 //app.use(app.router);

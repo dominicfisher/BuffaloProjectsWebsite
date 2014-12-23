@@ -144,13 +144,14 @@
                                                 <input type="submit" value="LOGIN" tabindex="3" style="font-family: 'museo-sans-condensed',serif; border: none; background-color: rgba(0, 0, 0, 0); color: #FFFFFF; text-decoration: none; font-style:normal; font-weight:300; font-size:21px;  text-align: center; display: inner-block;" />
                                             </li>
                                             <li>
-                                                <a href="" ng-click="goToSignUp()">Create new account</a>
-                                                <a href="" ng-click="showForgottenPassword()">Forgot my password</a>
+                                                <a href="" ng-click="goToSignUp()" style="padding-top:7px; text-align:center; font-size:14px; font-family:'museo-sans-condensed',serif">Create new account</a>
+                                                <a href="" ng-click="showForgottenPassword()" style="text-align:center; font-size:14px; font-family:'museo-sans-condensed',serif">Forgot my password</a>
                                             </li>
                                         </form>
                                     </div>
                                     <div id="forgotPasswordContainer" style="display:none;">
-                                        <form name="forgotPassword" action="" class="forgtten_password_form" ng-submit="showForgottenPassword()" ng-controller="LoginFormController as login">
+                                        <span style="font-family: 'kepler-std-display',serif; color:#FFFFFF; font-size: 40px; text-align: center;"> Reset Password</span>
+                                        <form name="forgotPassword" action="" class="forgtten_password_form" ng-submit="sendForgottenPasswordEmail()">
                                             <li style="padding-bottom:10px;">
                                                 <div id="forgottenPasswordError" style="background-color: #FF0000; color: #FFFFFF; font-family: 'museo-sans-condensed',serif; font-size: 14px; padding: 10px; display:none;">
                                                     {{forgotten_password_error}}
@@ -169,6 +170,12 @@
                                                 <input type="submit" value="SUBMIT" tabindex="3" class="textButton" />
                                             </li>
                                         </form>
+                                        <a href="" ng-click="cancelResetPassword()" style="text-align:center; font-size:14px; font-family:'museo-sans-condensed',serif">Cancel</a>
+                                    </div>
+                                    <div id="forgotPasswordConfirmationContainer" style="display:none;">
+                                        <div  style=" color: #FFFFFF; font-family: 'museo-sans-condensed',serif; font-size: 14px; padding: 10px">
+                                                    We have sent you a password reset confirmation.  Your password will remain your old password until you confirm you new one through the email, we just sent.
+                                                </div>
                                     </div>
                                 </div>
 
@@ -187,6 +194,18 @@
                             </ul>
                         </div>
                     </div>
+                    <div id="forgotPasswordLoader" style="position: absolute; z-index: 99999;  top:50%;left:0px; width: 33.33%; height:300px; display:none;">
+                        <div style="margin-top:-70%;  width: 100%; height:100%;">
+                            <ul style="list-style-type: none; padding-top: 130px;">
+                                <li style="text-align: center">
+                                    <img src="assets/img/728.gif" style="display: inline-block" />
+                                </li>
+                                <li style="width:100%; text-align: center; font-family: 'museo-sans-condensed',serif; font-size: 14px; color:#FFFFFF; padding-top: 20px;">
+                                    working on it.
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
                 <div id="signUpContainer" style="position: absolute; width: 100%; height: 100%;">
 
@@ -195,6 +214,7 @@
                         <div id="sidebarHeight" style="padding:20px; margin-top: -50%;">
                             <div>
                                 <div id="signupFormParent">
+                                    <span style="font-family: 'kepler-std-display',serif; color:#FFFFFF; font-size: 40px; text-align: center;">Create Account</span>
                                     <form name="signupForm" action="" class="login-form" ng-submit="weatherSignup()" ng-controller="SignupFormController as signup">
                                         <li style="padding-bottom:10px;">
                                             <div id="signupError" style=" color: #FFFFFF; font-family: 'museo-sans-condensed',serif; font-size: 14px; padding: 10px; display:none;">
@@ -223,7 +243,7 @@
                                             <input type="submit" value="SIGNUP" tabindex="3" style="font-family: 'museo-sans-condensed',serif; border: none; background-color: rgba(0, 0, 0, 0); color: #FFFFFF; text-decoration: none; font-style:normal; font-weight:300; font-size:21px;  text-align: center; display: inner-block;" />
                                         </li>
                                         <li>
-                                            <a href="" ng-click="goToLogin()">Login</a>
+                                            <a href="" ng-click="goToLogin()" style="text-align:center; font-size:14px; font-family:'museo-sans-condensed',serif">Login</a>
                                         </li>
 
                                     </form>
