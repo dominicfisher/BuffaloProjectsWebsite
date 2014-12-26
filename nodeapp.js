@@ -20,6 +20,7 @@ var CONNECTION = 'Username-Password-Authentication';
 
 
 app.post('/create_user/', weather_images.create_user_document);
+app.post('/get_user', weather_images.get_user_document);
 app.post('/saveImage/', weather_images.save_image);
 app.post('/deleteImage/', weather_images.delete_image);
 app.post('/custom-signup/', function(req, res) {

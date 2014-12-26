@@ -117,6 +117,10 @@
                                                     <div class="nailthumb-container square" ng-repeat="weatherPictureItem in weatherPictures">
                                                         <a href ng-click="showImageDetail(weatherPictureItem.path)">
                                                             <img ng-src="{{weatherPictureItem.signedPath}}">
+                                                            <div style="position:absolute; top:0px; left:0px;">
+                                                                <img ng-show="{{!weatherPictureItem.approved}}" ng-src="/assets/img/weahter_image_approved_normal.png"/>
+                                                                <img ng-show="{{weatherPictureItem.approved}}" ng-src="/assets/img/weahter_image_approved_selected.png"/>
+                                                            </div>
                                                         </a>
                                                     </div>
                                                 </div>
@@ -364,7 +368,7 @@
                         <input type="text" placeholder="{{$scope.first_name}}" tabindex="1" ng-model="new_first_name">
                     </div>
                     <div style="width:100%; height:60px; background-color: #FEFEFE;">
-                        <input type="text" placeholder="{{{$scope.last_name}}}" tabindex="1" ng-model="new_last_name">
+                        <input type="text" placeholder="{{$scope.last_name}}" tabindex="1" ng-model="new_lastname">
                     </div>
                     <div class="textButton" style="color:#333333" ng-click="changePassword()">SAVE</div>
                 </li>

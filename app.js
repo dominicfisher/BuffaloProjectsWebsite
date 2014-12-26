@@ -250,12 +250,16 @@
         $scope.currentPictureLocationLabel = '';
         $scope.currentPictureLocationLatLon = '';
         $scope.currentPictureWeatherTags = [];
+         $scope.currentPictureApproved = false;
         $scope.weatherTagToAdd = '';
         $scope.suggestedAddresses = [];
         $scope.defaultLat = '39.001676741504525';
         $scope.defaultLon = '-94.59741353988647';
         $scope.email_verified = false;
-
+        $scope.first_name = '';
+        $scope.last_name='';
+        $scope.new_first_name = '';
+        $scope.new_last_name = '';
         $scope.weatherFirstLoad = true;
 
         if ($scope.weatherFirstLoad) {
@@ -366,6 +370,12 @@
 
                         if ($scope.weatherPictures[i].tags) {
                             $scope.currentPictureWeatherTags = $scope.weatherPictures[i].tags;
+                        }
+                        
+                        if($scope.weatherPictures[i].approved) {
+                             $scope.currentPictureApproved = $scope.weatherPictures[i].approved;
+                        } else {
+                             $scope.currentPictureApproved = false;
                         }
                     }
                 }
@@ -557,6 +567,7 @@
                     $scope.weatherPictures[i].address = $scope.currentPictureLocationLabel;
                     $scope.weatherPictures[i].season = $scope.currentPictureSeason;
                     $scope.weatherPictures[i].tags = $scope.currentPictureWeatherTags;
+                    $scope.weatherPictures[i].approved = $scope.currentPictureApproved;
                     console.log($scope.weatherPictures[i].lon);
                     j = i;
                     console.log('saving image');
@@ -623,6 +634,7 @@
                     uniqueFileName += fileExtension;
                     pictureObject.path = uniqueFileName;
                     pictureObject.season = '';
+                    pictureObject.approved = false;
 
                     if ($scope.fileBrowser) {
                         pictureObject = getPictureLatLon(pictureObject);
@@ -950,6 +962,8 @@
             } else {
                 $scope.changeUserName(profile.email);
             }
+            alert('heello');
+            alert(profile.picture)
             $scope.changeUserId(profile.user_id);
             $scope.changeUserPicture(profile.picture);
 
@@ -959,10 +973,16 @@
             store.set('profile', JSON.stringify(profile));
 
             $http.post('/create_user/', {
-                user: $scope.username
+                user: profile.email,
+                first_name: $scope.first_name,
+                last_name: $scope.last_name,
+                profile_image: profile.picture,
             }).
             success(function (data) {
                 $scope.translateUserId = data.translated_id;
+                $scope.first_name = data.first_name;
+                $scope.last_name = data.last_name;
+                 $scope.changeUserPicture(data.profile_image);
                 $scope.weatherPictures = data.images;
 
                 //TODO get sign url for images
@@ -1146,12 +1166,15 @@
             store.set('id_token', token);
             store.set('profile', JSON.stringify(profile));
 
-            $http.post('/create_user/', {
-                user: $scope.username
+            $http.post('/get_user/', {
+                user: $scope.username,
+                first_name : $scope.first_name,
+                last_name:  $scope.last_name
             }).
             success(function (data) {
                 $scope.translateUserId = data.translated_id;
                 $scope.weatherPictures = data.images;
+                console.log(data)
 
                 //TODO get sign url for images
 
