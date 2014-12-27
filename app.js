@@ -794,6 +794,111 @@
             }
 
         }
+        
+        $scope.uploadProfileImage = function ($files) {
+
+            var bucket = new AWS.S3({
+                params: {
+                    Bucket: 'buffaloimages'
+                }
+            });
+            bucket.config.credentials = new AWS.Credentials(store.get('aws_creds').AccessKeyId, store.get('aws_creds').SecretAccessKey, store.get('aws_creds').SessionToken);
+
+            $('.meter span').animate({
+                width: '0%'
+            }, 500, "easeOutQuart");
+            //config.region = 'us-east-1';
+
+            $scope.file = $files[0];
+
+            $scope.weatherWidth = '0 px';
+
+            var pictureObject = {};
+            if ($scope.file) {
+
+                var fileExtension = $scope.file.name.substring($scope.file.name.lastIndexOf("."), $scope.file.name.length);
+                fileExtension = fileExtension.toLowerCase();
+
+                if (fileExtension == ".jpg" || fileExtension == ".jpeg" || fileExtension == ".png") {
+
+                    var uniqueFileName = uniqueWeatherFileName();
+                    uniqueFileName += fileExtension;
+                    pictureObject.path = uniqueFileName;
+                    pictureObject.season = '';
+                    pictureObject.approved = false;
+
+                    if ($scope.fileBrowser) {
+                        pictureObject = getPictureLatLon(pictureObject);
+                    } else {
+                        pictureObject.lat = $scope.defaultLat;
+                        pictureObject.lon = $scope.defaultLon;
+                    }
+
+                    var objKey = 'buffaloimages/' + auth.profile.user_id + '/' + uniqueFileName;
+                    var params = {
+                        Key: objKey,
+                        ContentType: $scope.file.type,
+                        Body: $scope.file
+                    };
+
+                    bucket.putObject(params, function (err, data) {
+                        if (err) {
+                            console.log(err.message);
+                            return false;
+                        } else {
+                            $('.meter span').animate({
+                                width: '0%'
+                            }, 100, "easeOutQuart");
+
+                            bucket.getSignedUrl('getObject', {
+                                Expires: 24 * 60,
+                                Key: objKey
+                            }, function (err, url) {
+                                pictureObject.path = uniqueFileName;
+                                pictureObject.signedPath = url;
+
+
+                                $http.post('/saveNewImage/', {
+                                    translated_user: $scope.translated_user,
+                                    image: pictureObject
+                                }).
+                                success(function (data, status, headers, config) {
+                                    if (data.error == null) {
+                                        $scope.weatherPictures.unshift(data.data[0]);
+                                        jQuery('.weatherThumbnails').nailthumb({
+                                            width: 100,
+                                            height: 100,
+                                            fitDirection: 'center',
+                                            replaceAnimation: 'fade',
+                                            preload: true
+                                        });
+                                        //$scope.$apply();
+                                    } else {
+                                        console.log('image did not save');
+                                    }
+                                }).
+                                error(function (data, status, headers, config) {
+                                    console.log('failed to save image');
+                                });
+
+                            });
+                        };
+                    })
+                        .on('httpUploadProgress', function (progress) {
+                            $('.meter span').animate({
+                                width: Math.round(progress.loaded / progress.total * 100) + '%'
+                            }, 100, "easeOutQuart");
+                        });
+                };
+            } else {
+                console.log('No File Selected');
+            }
+            $scope.$apply();
+        };
+        
+        $scope.saveProfile = function() {
+            
+        }
 
         $scope.goToLogin = function () {
             $('#signUpContainer').fadeOut();
