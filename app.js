@@ -667,7 +667,7 @@
                                 pictureObject.signedPath = url;
 
 
-                                $http.post('/saveImage/', {
+                                $http.post('/saveNewImage/', {
                                     translated_user: $scope.translated_user,
                                     image: pictureObject
                                 }).

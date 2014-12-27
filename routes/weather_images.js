@@ -178,7 +178,7 @@ exports.get_user_document = function (req, res) {
     });
 }
 
-exports.save_image = function (req, res) {
+exports.save_new_image = function (req, res) {
 
     var db = require('../data/db.js');
     var buffaloWeatherImages = db.buffaloimages;
@@ -209,6 +209,36 @@ exports.save_image = function (req, res) {
         });
     });
 };
+
+exports.save_image = function(req, res) {
+    var db = require('../data/db.js');
+    var buffaloWeatherImages = db.buffaloimages;
+
+    res.writeHead(200, {
+        "Content-Type": "application/json"
+    });
+    var data;
+
+    var content = '';
+
+    req.on('data', function (data) {
+        content += data;
+    });
+
+    req.on('end', function () {
+        var data = JSON.parse(content);
+        var image = data.image;
+
+        buffaloWeatherImages.update({
+            _id: image.path
+        }, {image});
+        var output = {
+            error: null,
+            data: 'done'
+        };
+        res.end(JSON.stringify(output) + "\n");
+    });
+}
 
 exports.delete_image = function (req, res) {
     var db = require('../data/db.js');

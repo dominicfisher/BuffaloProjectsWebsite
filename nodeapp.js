@@ -21,8 +21,11 @@ var CONNECTION = 'Username-Password-Authentication';
 
 app.post('/create_user/', weather_images.create_user_document);
 app.post('/get_user', weather_images.get_user_document);
+app.post('/saveNewImage', weather_images.save_new_image)
 app.post('/saveImage/', weather_images.save_image);
 app.post('/deleteImage/', weather_images.delete_image);
+app.post('save_profile_image'), weather_images.save_profile_image);
+app.post('save_profile', weather_images.save_profile);
 app.post('/custom-signup/', function(req, res) {
 	
 	var content = '';
