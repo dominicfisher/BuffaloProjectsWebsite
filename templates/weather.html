@@ -79,7 +79,9 @@
                                     <div id="userPicture" style=" height:50px; position: absolute; z-index: 999; text-align: center; padding:0px; left: 50%; display: none; ">
                                         <div style="width:50px; height:50px; display:inline-block; position: relative; text-align: center; margin-left:-25px;">
 
-                                            <a href="" ng-click="showProfileSideBar()"> <img ng-src="{{userpicture}}" width="50px" height="50px" class="logo-mask"></a>
+                                            <a href="" ng-click="showProfileSideBar()">
+                                                <img ng-src="{{userpicture}}" width="50px" height="50px" class="logo-mask">
+                                            </a>
                                         </div>
                                     </div>
                                     <div id="userSideBar" style=" display: none; padding-top: 60px;">
@@ -118,8 +120,8 @@
                                                         <a href ng-click="showImageDetail(weatherPictureItem.path)">
                                                             <img ng-src="{{weatherPictureItem.signedPath}}">
                                                             <div style="position:absolute; top:0px; left:0px;">
-                                                                <img ng-show="{{!weatherPictureItem.approved}}" ng-src="/assets/img/weahter_image_approved_normal.png"/>
-                                                                <img ng-show="{{weatherPictureItem.approved}}" ng-src="/assets/img/weahter_image_approved_selected.png"/>
+                                                                <img ng-show="{{!weatherPictureItem.approved}}" ng-src="/assets/img/weahter_image_approved_normal.png" />
+                                                                <img ng-show="{{weatherPictureItem.approved}}" ng-src="/assets/img/weahter_image_approved_selected.png" />
                                                             </div>
                                                         </a>
                                                     </div>
@@ -177,9 +179,9 @@
                                         <a href="" ng-click="cancelResetPassword()" style="text-align:center; font-size:14px; font-family:'museo-sans-condensed',serif">Cancel</a>
                                     </div>
                                     <div id="forgotPasswordConfirmationContainer" style="display:none;">
-                                        <div  style=" color: #FFFFFF; font-family: 'museo-sans-condensed',serif; font-size: 14px; padding: 10px">
-                                                    We have sent you a password reset confirmation.  Your password will remain your old password until you confirm you new one through the email, we just sent.
-                                                </div>
+                                        <div style=" color: #FFFFFF; font-family: 'museo-sans-condensed',serif; font-size: 14px; padding: 10px">
+                                            We have sent you a password reset confirmation. Your password will remain your old password until you confirm you new one through the email, we just sent.
+                                        </div>
                                     </div>
                                 </div>
 
@@ -358,19 +360,23 @@
             <ul style="list-style-type: none; width:100%;">
                 <li style="float:left; padding-top:10px; padding-bottom: 10px; width: 100%">
                     <!-- insert stuff for changing profile picture-->
-                    <div style="background-color:#FFFFFF; padding:10px;">
-                        <input type="file" id="file" ng-file-select="uploadProfileImage($files)" accept="image/jpeg, image/png">
+                    <div style="background-color:#FFFFFF; padding:10px; text-align:center;">
+                        <div class="uploadProfileImageButton">
+                            <input type="file" id="file" ng-file-select="uploadProfileImage($files)" accept="image/jpeg, image/png">
+                        </div>
                     </div>
                 </li>
                 <li style="float:left; padding-bottom:10px; width:100%;">
                     <!-- insert stuff for changing general user info-->
                     <div style="width:100%; height:60px; background-color: #FEFEFE;">
-                        <input type="text" placeholder="{{$scope.first_name}}" tabindex="1" ng-model="new_first_name">
+                        <input style="margin-left:10px;" type="text" placeholder="{{$scope.first_name.length>0 ? $scope.first_name : 'first name'}}" tabindex="1" ng-model="new_first_name">
                     </div>
                     <div style="width:100%; height:60px; background-color: #FEFEFE;">
-                        <input type="text" placeholder="{{$scope.last_name}}" tabindex="1" ng-model="new_last_name">
+                        <input style="margin-left:10px;" type="text" placeholder="{{$scope.last_name.length>0 ? $scope.last_name : 'last name'}}" tabindex="1" ng-model="new_last_name">
                     </div>
-                    <div class="textButton" style="color:#333333" ng-click="saveProfile()">SAVE</div>
+                    <div style="width:100%; height:60px; background-color: #FEFEFE; text-align:center">
+                        <div class="textButton" style="color:#333333" ng-click="saveProfile()">SAVE</div>
+                    </div>
                 </li>
                 <li style="float:left; padding:10px; width:100%;">
                     <div id="changePasswordError" style="background-color: #FF0000; color: #FFFFFF; font-family: 'museo-sans-condensed',serif; font-size: 14px; padding: 10px; display:none;">
@@ -378,12 +384,14 @@
                     </div>
 
                     <div style="width:100%; height:60px; background-color: #FEFEFE;">
-                        <input type="password" placeholder="new password" tabindex="1" ng-model="new_password">
+                        <input style="margin-left:10px;" type="password" placeholder="new password" tabindex="1" ng-model="new_password">
                     </div>
                     <div style="width:100%; height:60px; background-color: #FEFEFE;">
-                        <input type="password" placeholder="new password_verify" tabindex="1" ng-model="new_password_verify">
+                        <input style="margin-left:10px;" type="password" placeholder="new password_verify" tabindex="1" ng-model="new_password_verify">
                     </div>
-                    <div class="textButton" style="color:#333333" ng-click="changePassword()">SAVE</div>
+                    <div style="width:100%; height:60px; background-color: #FEFEFE; text-align:center">
+                        <div class="textButton" style="color:#333333" ng-click="changePassword()">SAVE</div>
+                    </div>
                 </li>
             </ul>
         </div>

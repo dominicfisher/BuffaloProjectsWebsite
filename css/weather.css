@@ -259,5 +259,28 @@ a {
     font-weight:300;
     font-size:21px; 
     text-align: center;
-    display: inner-block;"
+    display:inline-block;
+    cursor: pointer;
+}
+
+.uploadProfileImageButton,  .uploadProfileImageButton input {
+    background: transparent url('/assets/img/uploadProfileImageButton.jpg') left top no-repeat;
+	height: 51px;
+	width: 192px;
+	display:inline-block;
+	padding-bottom:0px;
+	cursor:pointer;
+}
+
+.uploadProfileImageButton
+{
+	background: transparent url('/assets/img/uploadProfileImageButton.jpg') left top no-repeat;
+	display:inline-block;
+	padding-bottom:0px;
+	cursor:pointer;
+}
+
+.uploadProfileImageButton input
+{
+	opacity: 0;
 }

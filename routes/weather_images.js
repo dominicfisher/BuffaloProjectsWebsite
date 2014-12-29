@@ -208,11 +208,15 @@ exports.save_new_image = function (req, res) {
         }, {
             $push: {
                 images: image
-            },
-            $position: 0
+            }
         }, function (err, items) {
             console.log(err);
-            console.log(items)
+            console.log(items.result);
+            var output = {
+            error: null,
+            data: 'done'
+        };
+        res.end(JSON.stringify(output) + "\n");
         });
     });
 };
