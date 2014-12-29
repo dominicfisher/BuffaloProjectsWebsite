@@ -1,22 +1,33 @@
+var data = '';
+var output = [];
+var contact = '';
+
+var db = require('../data/db.js');
+var buffaloWeatherImages = db.buffaloimages;
+
 exports.create_user_document = function (req, res) {
 
     console.log('Creating new user')
-    var content = '';
+    res.writeHead(200, {
+        "Content-Type": "application/json"
+    });
+    
+    data = '';
+    content = '';
 
     req.on('data', function (data) {
         content += data;
     });
 
     req.on('end', function () {
-        var data = JSON.parse(content);
+        data = JSON.parse(content);
 
-        var db = require('../data/db.js');
-        var buffaloWeatherImages = db.buffaloimages;
+        db = require('../data/db.js');
+        buffaloWeatherImages = db.buffaloimages;
 
         /* ***********************************
         Create new user
         *************************************/
-        console.log(data)
         var translated_user = translate_user(data.user);
         var new_user = {
             translated_id: translated_user,
@@ -38,7 +49,7 @@ exports.create_user_document = function (req, res) {
                 console.log('something bad happened');
                 console.log(err);
                 error = "Something bad happened";
-                var output = {
+                output = {
                     error: null,
                     data: data
                 };
@@ -58,13 +69,10 @@ exports.create_user_document = function (req, res) {
                         profile_image: data1.profile_image,
                         images: data1.images
                     }
-                    var output = {
+                    output = {
                         error: null,
                         data: return_data
                     };
-                    res.writeHead(200, {
-                        "Content-Type": "application/json"
-                    });
                     res.end(JSON.stringify(output) + "\n");
                 });
             };
@@ -74,18 +82,22 @@ exports.create_user_document = function (req, res) {
 
 exports.get_user_document = function (req, res) {
 
-
-    var content = '';
+    res.writeHead(200, {
+        "Content-Type": "application/json"
+    });
+    
+    data = '';
+    content = '';
 
     req.on('data', function (data) {
         content += data;
     });
 
     req.on('end', function () {
-        var data = JSON.parse(content);
+        data = JSON.parse(content);
 
-        var db = require('../data/db.js');
-        var buffaloWeatherImages = db.buffaloimages;
+        db = require('../data/db.js');
+        buffaloWeatherImages = db.buffaloimages;
 
         var translated_user = translate_user(data.user);
 
@@ -116,7 +128,7 @@ exports.get_user_document = function (req, res) {
                         console.log('something bad happened');
                         console.log(err);
                         error = "Something bad happened";
-                        var output = {
+                        output = {
                             error: null,
                             data: data
                         };
@@ -136,13 +148,10 @@ exports.get_user_document = function (req, res) {
                                 profile_image: data1.profile_image,
                                 images: data1.images
                             }
-                            var output = {
+                            output = {
                                 error: null,
                                 data: return_data
                             };
-                            res.writeHead(200, {
-                                "Content-Type": "application/json"
-                            });
                             res.end(JSON.stringify(output) + "\n");
                         });
                     };
@@ -162,13 +171,10 @@ exports.get_user_document = function (req, res) {
                     profile_image: data1.profile_image,
                     images: data1.images
                 }
-                var output = {
+                output = {
                     error: null,
                     data: return_data
                 };
-                res.writeHead(200, {
-                    "Content-Type": "application/json"
-                });
                 res.end(JSON.stringify(output) + "\n");
             };
 
@@ -180,15 +186,12 @@ exports.get_user_document = function (req, res) {
 
 exports.save_new_image = function (req, res) {
 
-    var db = require('../data/db.js');
-    var buffaloWeatherImages = db.buffaloimages;
-
     res.writeHead(200, {
         "Content-Type": "application/json"
     });
-    var data;
-
-    var content = '';
+    
+    data = '';
+    content = '';
 
     req.on('data', function (data) {
         content += data;
@@ -200,26 +203,28 @@ exports.save_new_image = function (req, res) {
         var translated_user = data.translated_user;
         var image = data.image;
 
-        buffaloWeatherImages.update(
-            {translated_id: translated_user}, 
-            {$push: {images: image}, $position:0
-        }, function(err, items) {
+        buffaloWeatherImages.update({
+            translated_id: translated_user
+        }, {
+            $push: {
+                images: image
+            },
+            $position: 0
+        }, function (err, items) {
             console.log(err);
             console.log(items)
         });
     });
 };
 
-exports.save_image = function(req, res) {
-    var db = require('../data/db.js');
-    var buffaloWeatherImages = db.buffaloimages;
+exports.save_image = function (req, res) {
 
     res.writeHead(200, {
         "Content-Type": "application/json"
     });
-    var data;
-
-    var content = '';
+    
+    data = '';
+    content = '';
 
     req.on('data', function (data) {
         content += data;
@@ -231,7 +236,7 @@ exports.save_image = function(req, res) {
 
         buffaloWeatherImages.update({
             _id: image.path
-        }, {image});
+        }, image);
         var output = {
             error: null,
             data: 'done'
@@ -241,15 +246,13 @@ exports.save_image = function(req, res) {
 }
 
 exports.delete_image = function (req, res) {
-    var db = require('../data/db.js');
-    var buffaloWeatherImages = db.buffaloimages;
-
+    
     res.writeHead(200, {
         "Content-Type": "application/json"
     });
-    var data;
-
-    var content = '';
+    
+    data = '';
+    content = '';
 
     req.on('data', function (data) {
         content += data;
@@ -270,6 +273,73 @@ exports.delete_image = function (req, res) {
     });
 };
 
+exports.save_profile_image = function (req, res) {
+    
+    res.writeHead(200, {
+        "Content-Type": "application/json"
+    });
+    
+    data = '';
+    content = '';
+
+    req.on('data', function (data) {
+        content += data;
+    });
+
+    req.on('end', function () {
+        var data = JSON.parse(content);
+
+        var translated_user = data.translated_user;
+
+        buffaloWeatherImages.update(
+            {translated_id: translated_user},
+            {
+                $set : {'profile_image': data.profile_image_path}
+            }
+            , function (err, results) {
+                var output = {
+                    error: null,
+                    data: 'done'
+                };
+                res.end(JSON.stringify(output) + "\n");
+            });
+
+    });
+}
+
+exports.save_profile = function (req, res) {
+    
+    res.writeHead(200, {
+        "Content-Type": "application/json"
+    });
+    
+    data = '';
+    content = '';
+
+    req.on('data', function (data) {
+        content += data;
+    });
+
+    req.on('end', function () {
+        var data = JSON.parse(content);
+
+        var translated_user = data.translated_user;
+
+        buffaloWeatherImages.update(
+            {translated_id: translated_user},
+            {
+                $set : {'first_name': data.first_name, 'last_name': data.last_name}
+            }
+            , function (err, results) {
+                var output = {
+                    error: null,
+                    data: 'done'
+                };
+                res.end(JSON.stringify(output) + "\n");
+            });
+
+    });
+}
 
 function translate_user(user) {
     var translate_array = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", ];

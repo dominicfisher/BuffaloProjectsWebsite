@@ -821,7 +821,8 @@
 
                 if (fileExtension == ".jpg" || fileExtension == ".jpeg" || fileExtension == ".png") {
 
-                    var uniqueFileName = uniqueWeatherFileName();
+                    var uniqueFileName = 'profile';
+                    uniqueFileName += uniqueWeatherFileName();
                     uniqueFileName += fileExtension;
                     pictureObject.path = uniqueFileName;
                     pictureObject.season = '';
@@ -860,19 +861,11 @@
 
                                 $http.post('/saveNewImage/', {
                                     translated_user: $scope.translated_user,
-                                    image: pictureObject
+                                    image: pictureObject.profile_image_path
                                 }).
                                 success(function (data, status, headers, config) {
                                     if (data.error == null) {
-                                        $scope.weatherPictures.unshift(data.data[0]);
-                                        jQuery('.weatherThumbnails').nailthumb({
-                                            width: 100,
-                                            height: 100,
-                                            fitDirection: 'center',
-                                            replaceAnimation: 'fade',
-                                            preload: true
-                                        });
-                                        //$scope.$apply();
+                                       //Profile image path saved in db
                                     } else {
                                         console.log('image did not save');
                                     }
@@ -897,7 +890,21 @@
         };
         
         $scope.saveProfile = function() {
-            
+            $http.post('/save_profile/', {
+                                    translated_user: $scope.translated_user,
+                                    first_name: $scope.new_first_name,
+                                    last_name: $scope.new_last_name
+                                }).
+                                success(function (data, status, headers, config) {
+                                    if (data.error == null) {
+                                       //Profile saved in db
+                                    } else {
+                                        console.log('image did not save');
+                                    }
+                                }).
+                                error(function (data, status, headers, config) {
+                                    console.log('failed to save image');
+                                });
         }
 
         $scope.goToLogin = function () {
