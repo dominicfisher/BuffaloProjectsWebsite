@@ -250,22 +250,34 @@
         $scope.currentPictureLocationLabel = '';
         $scope.currentPictureLocationLatLon = '';
         $scope.currentPictureWeatherTags = [];
-         $scope.currentPictureApproved = false;
+        $scope.currentPictureApproved = false;
         $scope.weatherTagToAdd = '';
         $scope.suggestedAddresses = [];
         $scope.defaultLat = '39.001676741504525';
         $scope.defaultLon = '-94.59741353988647';
         $scope.email_verified = false;
         $scope.first_name = '';
-        $scope.last_name='';
+        $scope.last_name = '';
         $scope.new_first_name = '';
         $scope.new_last_name = '';
         $scope.weatherFirstLoad = true;
+        $scope.translateUserId = '';
 
         if ($scope.weatherFirstLoad) {
 
             getUserLocation();
             $scope.weatherFirstLoad = false;
+        }
+
+        $scope.updateMainItems = function (translatedId, first_name, last_name) {
+            $scope.translateUserId = translatedId;
+            $scope.first_name = first_name;
+            $scope.last_name = last_name;
+            if($scope.first_name){
+                $scope.new_first_name = $scope.first_name;
+                $scope.new_last_name = $scope.last_name;
+            }
+            console.log($scope.translateUserId);
         }
 
         $scope.startSlideshow = function () {
@@ -371,11 +383,11 @@
                         if ($scope.weatherPictures[i].tags) {
                             $scope.currentPictureWeatherTags = $scope.weatherPictures[i].tags;
                         }
-                        
-                        if($scope.weatherPictures[i].approved) {
-                             $scope.currentPictureApproved = $scope.weatherPictures[i].approved;
+
+                        if ($scope.weatherPictures[i].approved) {
+                            $scope.currentPictureApproved = $scope.weatherPictures[i].approved;
                         } else {
-                             $scope.currentPictureApproved = false;
+                            $scope.currentPictureApproved = false;
                         }
                     }
                 }
@@ -794,7 +806,7 @@
             }
 
         }
-        
+
         $scope.uploadProfileImage = function ($files) {
 
             var bucket = new AWS.S3({
@@ -865,7 +877,7 @@
                                 }).
                                 success(function (data, status, headers, config) {
                                     if (data.error == null) {
-                                       //Profile image path saved in db
+                                        //Profile image path saved in db
                                     } else {
                                         console.log('image did not save');
                                     }
@@ -888,23 +900,34 @@
             }
             $scope.$apply();
         };
-        
-        $scope.saveProfile = function() {
+
+        $scope.saveProfile = function () {
+            console.log('saving profile')
+            console.log($scope.translateUserId)
             $http.post('/save_profile/', {
-                                    translated_user: $scope.translated_user,
-                                    first_name: $scope.new_first_name,
-                                    last_name: $scope.new_last_name
-                                }).
-                                success(function (data, status, headers, config) {
-                                    if (data.error == null) {
-                                       //Profile saved in db
-                                    } else {
-                                        console.log('image did not save');
-                                    }
-                                }).
-                                error(function (data, status, headers, config) {
-                                    console.log('failed to save image');
-                                });
+                translated_user: $scope.translateUserId,
+                first_name: $scope.new_first_name,
+                last_name: $scope.new_last_name
+            }).
+            success(function (data, status, headers, config) {
+                console.log(data)
+                if (data.error == null) {
+                    //Profile saved in db
+                    $scope.first_name = data.data.first_name;
+                    $scope.last_name = data.data.last_name;
+                    if ($scope.first_name != undefined) {
+                        $scope.changeUserName($scope.first_name + ' ' + $scope.last_name);
+                    } else {
+                        $scope.changeUserName($scope.userid);
+                    }
+                    console.log(data.first_name);
+                } else {
+                    console.log('image did not save');
+                }
+            }).
+            error(function (data, status, headers, config) {
+                console.log('failed to save image');
+            });
         }
 
         $scope.goToLogin = function () {
@@ -924,12 +947,12 @@
             });
 
         }
-        
-        $scope.showProfileSideBar = function() {
+
+        $scope.showProfileSideBar = function () {
             if ($('#weatherImageDetail').css('display') != "none") {
                 $('#weatherImageDetail').fadeOut();
             }
-            
+
             if ($('#user_profile_details').css('display') == "none") {
                 $('#user_profile_details').fadeIn();
             }
@@ -980,7 +1003,7 @@
 
                 $('#forgotPasswordConfirmationContainer').fadeIn(function () {
                     window.setInterval(function () {
-                        $('#forgotPasswordConfirmationContainer').fadeOut(function() {
+                        $('#forgotPasswordConfirmationContainer').fadeOut(function () {
                             $('#defaultUserPicture').fadeIn();
                             $('#loginFormParent').fadeIn();
                         });
@@ -994,14 +1017,14 @@
             console.log(data.code)
             $('#forgotPasswordLoader').fadeOut();
             $("#forgotPasswordContainer").animate({
-                            opacity: 1.0
-                        }, 1000, "easeOutQuart");
-            if(data.code == 'invalid_user') {
+                opacity: 1.0
+            }, 1000, "easeOutQuart");
+            if (data.code == 'invalid_user') {
                 $scope.forgotten_password_error = "Well that's weird but we don't know anyone with that username.";
             } else {
                 $scope.forgotten_password_error = 'Well this is awkward but check this out, ' + data.code;
             }
-            
+
             $('#forgottenPasswordError').fadeIn();
         }
 
@@ -1069,7 +1092,7 @@
             $scope.last_name = profile.family_name;
             $scope.email_verified = profile.email_verified;
 
-            if($scope.first_name != undefined) {
+            if ($scope.first_name != undefined) {
                 $scope.changeUserName(profile.given_name + ' ' + profile.family_name);
             } else {
                 $scope.changeUserName(profile.email);
@@ -1091,11 +1114,14 @@
                 profile_image: profile.picture,
             }).
             success(function (data) {
-                $scope.translateUserId = data.translated_id;
-                $scope.first_name = data.first_name;
-                $scope.last_name = data.last_name;
-                 $scope.changeUserPicture(data.profile_image);
-                $scope.weatherPictures = data.images;
+                console.log(data.data.translated_id)
+                $scope.translateUserId = data.data.translated_id;
+                console.log($scope.translateUserId);
+                $scope.first_name = data.data.first_name;
+                $scope.last_name = data.data.last_name;
+                $scope.changeUserPicture(data.data.profile_image);
+                $scope.weatherPictures = data.data.images;
+                console.log(data)
 
                 //TODO get sign url for images
 
@@ -1163,7 +1189,7 @@
             $('#loginChildren').fadeIn();
 
             $('#sidebar').animate({
-                backgroundColor: 'rgba(0,0,0,1.0)'
+                backgroundColor: 'rgba(255, 255, 255, 1.0)'
             }, 1000);
         }
 
@@ -1265,12 +1291,12 @@
             $scope.token = token;
             $scope.first_name = profile.given_name;
             $scope.last_name = profile.family_name;
-            if($scope.first_name != undefined) {
+            if ($scope.first_name != undefined) {
                 $scope.changeUserName(profile.given_name + ' ' + profile.family_name);
             } else {
                 $scope.changeUserName(profile.email);
             }
-            
+
             $scope.changeUserId(profile.user_id);
             $scope.changeUserPicture(profile.picture);
             $scope.email_verified = profile.email_verified;
@@ -1280,13 +1306,24 @@
 
             $http.post('/get_user/', {
                 user: $scope.username,
-                first_name : $scope.first_name,
-                last_name:  $scope.last_name
+                first_name: $scope.first_name,
+                last_name: $scope.last_name
             }).
             success(function (data) {
-                $scope.translateUserId = data.translated_id;
-                $scope.weatherPictures = data.images;
+                console.log(data.data.translated_id)
+                $scope.translateUserId = data.data.translated_id;
+                console.log($scope.translateUserId);
+                $scope.first_name = data.data.first_name;
+                $scope.last_name = data.data.last_name;
+                $scope.changeUserPicture(data.data.profile_image);
+                $scope.weatherPictures = data.data.images;
                 console.log(data)
+                $scope.updateMainItems(data.data.translated_id, data.data.first_name, data.data.last_name);
+                if ($scope.first_name != undefined) {
+                $scope.changeUserName($scope.first_name + ' ' + $scope.last_name);
+            } else {
+                $scope.changeUserName(data.data.user);
+            }
 
                 //TODO get sign url for images
 
@@ -1352,7 +1389,7 @@
             });
 
             $('#sidebar').animate({
-                backgroundColor: 'rgba(0,0,0,1.0)'
+                backgroundColor: 'rgba(255, 255, 255, 1.0)'
             }, 1000);
         }
 

@@ -11,7 +11,7 @@ exports.create_user_document = function (req, res) {
     res.writeHead(200, {
         "Content-Type": "application/json"
     });
-    
+
     data = '';
     content = '';
 
@@ -85,7 +85,7 @@ exports.get_user_document = function (req, res) {
     res.writeHead(200, {
         "Content-Type": "application/json"
     });
-    
+
     data = '';
     content = '';
 
@@ -189,7 +189,7 @@ exports.save_new_image = function (req, res) {
     res.writeHead(200, {
         "Content-Type": "application/json"
     });
-    
+
     data = '';
     content = '';
 
@@ -213,10 +213,10 @@ exports.save_new_image = function (req, res) {
             console.log(err);
             console.log(items.result);
             var output = {
-            error: null,
-            data: 'done'
-        };
-        res.end(JSON.stringify(output) + "\n");
+                error: null,
+                data: 'done'
+            };
+            res.end(JSON.stringify(output) + "\n");
         });
     });
 };
@@ -226,7 +226,7 @@ exports.save_image = function (req, res) {
     res.writeHead(200, {
         "Content-Type": "application/json"
     });
-    
+
     data = '';
     content = '';
 
@@ -250,11 +250,11 @@ exports.save_image = function (req, res) {
 }
 
 exports.delete_image = function (req, res) {
-    
+
     res.writeHead(200, {
         "Content-Type": "application/json"
     });
-    
+
     data = '';
     content = '';
 
@@ -278,11 +278,11 @@ exports.delete_image = function (req, res) {
 };
 
 exports.save_profile_image = function (req, res) {
-    
+
     res.writeHead(200, {
         "Content-Type": "application/json"
     });
-    
+
     data = '';
     content = '';
 
@@ -295,28 +295,29 @@ exports.save_profile_image = function (req, res) {
 
         var translated_user = data.translated_user;
 
-        buffaloWeatherImages.update(
-            {translated_id: translated_user},
-            {
-                $set : {'profile_image': data.profile_image_path}
+        buffaloWeatherImages.update({
+            translated_id: translated_user
+        }, {
+            $set: {
+                'profile_image': data.profile_image_path
             }
-            , function (err, results) {
-                var output = {
-                    error: null,
-                    data: 'done'
-                };
-                res.end(JSON.stringify(output) + "\n");
-            });
+        }, function (err, results) {
+            var output = {
+                error: null,
+                data: 'done'
+            };
+            res.end(JSON.stringify(output) + "\n");
+        });
 
     });
 }
 
 exports.save_profile = function (req, res) {
-    
+
     res.writeHead(200, {
         "Content-Type": "application/json"
     });
-    
+
     data = '';
     content = '';
 
@@ -325,22 +326,43 @@ exports.save_profile = function (req, res) {
     });
 
     req.on('end', function () {
+        console.log('trying to update profile');
         var data = JSON.parse(content);
 
         var translated_user = data.translated_user;
-
-        buffaloWeatherImages.update(
-            {translated_id: translated_user},
-            {
-                $set : {'first_name': data.first_name, 'last_name': data.last_name}
+        console.log(data.translated_user);
+        console.log(data.first_name);
+        buffaloWeatherImages.update({
+            translated_id: translated_user
+        }, {
+            $set: {
+                'first_name': data.first_name,
+                'last_name': data.last_name
             }
-            , function (err, results) {
-                var output = {
+        }, function (err, results) {
+            console.log('result of update')
+            console.log(err);
+            console.log(results.result);
+            if (err) {
+                output = {
                     error: null,
-                    data: 'done'
+                    data: {
+                        first_name: data.first_name,
+                        last_name: data.last_name
+                    }
                 };
+            } else {
+                output = {
+                    error: err,
+                    data: {
+                        first_name: data.first_name,
+                        last_name: data.last_name
+                    }
+                }
+
                 res.end(JSON.stringify(output) + "\n");
-            });
+            }
+        });
 
     });
 }

@@ -13,7 +13,7 @@ var extend = require('extend');
 var api = new Auth0({
 	domain:	'buffaloprojects.auth0.com',
 	clientID:	'iGcC29FY463ceuL7OUNxwv1LUTQieXkn',
-	clientSecret:	''
+	clientSecret:	'xwml9E6lDcaOhTtwsmgmtnJ_WEOo5y84pKKSxvluZshQT7on9p_TWSsvy5ZBFGVS'
 });
 
 var CONNECTION = 'Username-Password-Authentication';
@@ -24,8 +24,8 @@ app.post('/get_user', weather_images.get_user_document);
 app.post('/saveNewImage', weather_images.save_new_image)
 app.post('/saveImage/', weather_images.save_image);
 app.post('/deleteImage/', weather_images.delete_image);
-app.post('save_profile_image', weather_images.save_profile_image);
-app.post('save_profile', weather_images.save_profile);
+app.post('/save_profile_image/', weather_images.save_profile_image);
+app.post('/save_profile/', weather_images.save_profile);
 app.post('/custom-signup/', function(req, res) {
 	
 	var content = '';
@@ -72,7 +72,9 @@ db.init(function(err, results) {
 		console.error("FATAL ERROR ON START");
 		console.error(err);
 		process.exit(1);
-	}
+	} else {
+        console.log('Server started -- lets got');
+    }
 	
 	app.listen(3000);
 });

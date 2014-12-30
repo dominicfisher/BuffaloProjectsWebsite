@@ -10,7 +10,7 @@
         </div>
     </div>
 
-    <div id="sidebar" style="opacity:0.0; position:absolute; z-index:999; top:0px; width:25%; height: 100%; border-left: 1px solid #999999; border-right:  1px solid #999999; background: rgba(0, 0, 0, 0.25); overflow: hidden; left:37.5%; ">
+    <div id="sidebar" style="opacity:0.0; position:absolute; z-index:999; top:0px; width:25%; height: 100%; border-left: 1px solid #999999; border-right:  1px solid #999999; background-color: rgba(0, 0, 0, 0.25); overflow: hidden; left:37.5%; ">
 
         <div id="slideContainer" style="height:100%; width: 300%; position: absolute; ">
             <div id="weatherHomeLoginContainer" style="text-align: center; margin 0 auto;  float: left; height: 100%; width: 33.33%; vertical-align: middle">
@@ -87,13 +87,13 @@
                                     <div id="userSideBar" style=" display: none; padding-top: 60px;">
                                         <ul>
                                             <li>
-                                                <div style="width:100%; text-align: center; font-family: 'museo-sans-condensed',serif; font-size: 22px; color:#FFFFFF">
+                                                <div style="width:100%; text-align: center; font-family: 'museo-sans-condensed',serif; font-size: 22px; color:#333333">
                                                     {{name}}
                                                 </div>
                                             </li>
-                                            <li ng-show="!email_verified">
-                                                <div style="width:100%; text-align: center; font-family: 'museo-sans-condensed',serif; font-size: 12px; color:#FFFFFF">
-                                                    In order to keep the system running up to snuff we need to make sure you are who you are. You should have received an email to verify who you are. <a href="" ng-click="resend_weather_verification_email()">Resend the email</a>
+                                            <li ng-show="!email_verified" style="padding-top:20px; padding-bottom:20px;">
+                                                <div style="width:100%; text-align: center; font-family: 'museo-sans-condensed',serif; font-size: 12px; color:#FF0000">
+                                                    In order to keep the system running up to snuff we need to make sure you are who you are. You should have received an email to verify who you are. <a href="" ng-click="resend_weather_verification_email()"><span style="font-size:15px">Resend the email</span></a>
                                                 </div>
                                             </li>
                                             <li style="padding-top:20px; text-align: center; float: left; margin: 0 auto; width: 100%;">
@@ -115,7 +115,7 @@
                                             </li>
                                             <li style="float:left; padding-top:20px; width: 100%;">
                                                 <div style="width:100%">
-                                                    <span ng-show="!weatherPictures.length" style="color:#FFFFFF; font-family: 'museo-sans-condensed',serif; text-align: center; font-size: 12px;">Upload some pictures to get start.</span>
+                                                    <span ng-show="!weatherPictures.length" style="color:#333333; font-family: 'museo-sans-condensed',serif; text-align: center; font-size: 12px;">Upload some pictures to get start.</span>
                                                     <div class="nailthumb-container square" ng-repeat="weatherPictureItem in weatherPictures">
                                                         <a href ng-click="showImageDetail(weatherPictureItem.path)">
                                                             <img ng-src="{{weatherPictureItem.signedPath}}">
@@ -276,7 +276,7 @@
 
                 </div>
             </div>
-            <div id="sidebar" style=" float: left; background-color: #00FF00; width: 33.33%; height: 100%; display: inline-block">
+            <div id="sidebar1" style=" float: left; background-color: #00FF00; width: 33.33%; height: 100%; display: inline-block">
                 sdfsdfsd
             </div>
         </div>
@@ -358,10 +358,10 @@
     <div id="user_profile_details" style="position: absolute; z-index:1000; top:0px; left:25%; width:25%; height: 100%;  display: none; ">
         <div id="weatherImageDetailScroller" style="width:100%; height:100%; overflow-y: scroll">
             <ul style="list-style-type: none; width:100%;">
-                <li style="float:left; padding-top:10px; padding-bottom: 10px; width: 100%">
+                <li style="float:left; padding-top:10px; padding-bottom: 10px; margin-bottom:10px; width: 100%; background-color:#FEFEFE;">
                     <!-- insert stuff for changing profile picture-->
-                    <div style="padding-top:10px; margin-left:10px; font-size:20px; color:#333333; font-family:'museo-sans-condensed',serif; background-color: #FEFEFE; height:60px;">Change Profile Picture</div>
-                    <div style="background-color:#FFFFFF; padding:10px; text-align:center;">
+                    <div style="padding-top:10px; margin-left:10px; font-size:20px; color:#333333; font-family:'museo-sans-condensed',serif;  height:40px;">Change Profile Picture</div>
+                    <div style="padding:10px; text-align:center;">
                         <div class="uploadProfileImageButton">
                             <input type="file" id="file" ng-file-select="uploadProfileImage($files)" accept="image/jpeg, image/png">
                         </div>
@@ -379,16 +379,16 @@
                         </div>
                     </div>
                 </li>
-                <li style="float:left; padding-bottom:10px; width:100%;">
-                    <div style="padding-top:10px; margin-left:10px; font-size:20px; color:#333333; font-family:'museo-sans-condensed',serif; background-color: #FEFEFE; height:60px;">Change Profile</div>
+                <li style="float:left; padding-bottom:10px; margin-bottom:10px; width:100%; background-color:#FEFEFE;">
+                    <div style="padding-top:10px; margin-left:10px; font-size:20px; color:#333333; font-family:'museo-sans-condensed',serif; height:40px;">Change Profile</div>
                     <!-- insert stuff for changing general user info-->
-                    <div style="width:100%; height:60px; background-color: #FEFEFE;">
-                        <input style="margin-left:10px;" type="text" placeholder="{{$scope.first_name.length>0 ? $scope.first_name : 'first name'}}" tabindex="1" ng-model="new_first_name">
+                    <div style="width:100%; height:60px;">
+                        <input style="margin-left:10px; width:90%;" type="text" placeholder="{{$scope.first_name.length>0 ? $scope.first_name : 'first name'}}" tabindex="1" ng-model="new_first_name">
                     </div>
-                    <div style="width:100%; height:60px; background-color: #FEFEFE;">
-                        <input style="margin-left:10px;" type="text" placeholder="{{$scope.last_name.length>0 ? $scope.last_name : 'last name'}}" tabindex="1" ng-model="new_last_name">
+                    <div style="width:100%; height:60px;">
+                        <input style="margin-left:10px; width:90%;" type="text" placeholder="{{$scope.last_name.length>0 ? $scope.last_name : 'last name'}}" tabindex="1" ng-model="new_last_name">
                     </div>
-                    <div style="width:100%; height:60px; background-color: #FEFEFE; text-align:center">
+                    <div style="width:100%; height:30px;  text-align:center">
                         <div class="textButton" style="color:#333333" ng-click="saveProfile()">SAVE</div>
                     </div>
                     <div id="changeProfileLoader" style="position: absolute; z-index: 99999;  top:50%;left:0px; width: 33.33%; height:300px; display:none;">
@@ -404,19 +404,19 @@
                         </div>
                     </div>
                 </li>
-                <li style="float:left; padding:10px; width:100%;">
-                    <div style="padding-top:10px; margin-left:10px; font-size:20px; color:#333333; font-family:'museo-sans-condensed',serif; background-color: #FEFEFE; height:60px;">Change Password</div>
+                <li style="float:left; padding-bottom:10px; width:100%; margin-bottom:10px; background-color:#FEFEFE">
+                    <div style="padding-top:10px; margin-left:10px; font-size:20px; color:#333333; font-family:'museo-sans-condensed',serif;  height:40px;">Change Password</div>
                     <div id="changePasswordError" style="background-color: #FF0000; color: #FFFFFF; font-family: 'museo-sans-condensed',serif; font-size: 14px; padding: 10px; display:none;">
                         {{change_password_error}}
                     </div>
 
-                    <div style="width:100%; height:60px; background-color: #FEFEFE;">
-                        <input style="margin-left:10px;" type="password" placeholder="new password" tabindex="1" ng-model="new_password">
+                    <div style="width:100%; height:60px;">
+                        <input style="margin-left:10px; width:90%;" type="password" placeholder="new password" tabindex="1" ng-model="new_password">
                     </div>
-                    <div style="width:100%; height:60px; background-color: #FEFEFE;">
-                        <input style="margin-left:10px;" type="password" placeholder="new password_verify" tabindex="1" ng-model="new_password_verify">
+                    <div style="width:100%; height:60px;">
+                        <input style="margin-left:10px; width:90%;" type="password" placeholder="new password_verify" tabindex="1" ng-model="new_password_verify">
                     </div>
-                    <div style="width:100%; height:60px; background-color: #FEFEFE; text-align:center">
+                    <div style="width:100%; height:30px; text-align:center">
                         <div class="textButton" style="color:#333333" ng-click="changePassword()">SAVE</div>
                     </div>
                     <div id="changePasswordLoader" style="position: absolute; z-index: 99999;  top:50%;left:0px; width: 33.33%; height:300px; display:none;">
