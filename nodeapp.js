@@ -13,7 +13,7 @@ var extend = require('extend');
 var api = new Auth0({
 	domain:	'buffaloprojects.auth0.com',
 	clientID:	'iGcC29FY463ceuL7OUNxwv1LUTQieXkn',
-	clientSecret:	'xwml9E6lDcaOhTtwsmgmtnJ_WEOo5y84pKKSxvluZshQT7on9p_TWSsvy5ZBFGVS'
+	clientSecret:	''
 });
 
 var CONNECTION = 'Username-Password-Authentication';
