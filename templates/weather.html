@@ -360,6 +360,7 @@
             <ul style="list-style-type: none; width:100%;">
                 <li style="float:left; padding-top:10px; padding-bottom: 10px; width: 100%">
                     <!-- insert stuff for changing profile picture-->
+                    <div style="padding-top:10px; margin-left:10px; font-size:20px; color:#333333; font-family:'museo-sans-condensed',serif; background-color: #FEFEFE; height:60px;">Change Profile Picture</div>
                     <div style="background-color:#FFFFFF; padding:10px; text-align:center;">
                         <div class="uploadProfileImageButton">
                             <input type="file" id="file" ng-file-select="uploadProfileImage($files)" accept="image/jpeg, image/png">
@@ -367,6 +368,7 @@
                     </div>
                 </li>
                 <li style="float:left; padding-bottom:10px; width:100%;">
+                    <div style="padding-top:10px; margin-left:10px; font-size:20px; color:#333333; font-family:'museo-sans-condensed',serif">Change Profile</div>
                     <!-- insert stuff for changing general user info-->
                     <div style="width:100%; height:60px; background-color: #FEFEFE;">
                         <input style="margin-left:10px;" type="text" placeholder="{{$scope.first_name.length>0 ? $scope.first_name : 'first name'}}" tabindex="1" ng-model="new_first_name">
@@ -379,6 +381,7 @@
                     </div>
                 </li>
                 <li style="float:left; padding:10px; width:100%;">
+                    <div style="padding-top:10px; margin-left:10px; font-size:20px; color:#333333; font-family:'museo-sans-condensed',serif">Change Password</div>
                     <div id="changePasswordError" style="background-color: #FF0000; color: #FFFFFF; font-family: 'museo-sans-condensed',serif; font-size: 14px; padding: 10px; display:none;">
                         {{change_password_error}}
                     </div>
