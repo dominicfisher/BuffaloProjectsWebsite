@@ -1,7 +1,14 @@
 var express = require('express')
 , weather_images = require('./routes/weather_images')
 , http = require('http')
-, path = require('path');
+, path = require('path')
+, profiles = require('./routes/profiles')
+, user = require('./routes/user')
+  , today= require('./routes/today')
+  , todos = require('./routes/todo')
+  , meetings = require('./routes/meetings')
+  , contacts = require('./routes/contacts')
+  , conversations = require('./routes/conversations');
 var app = express();
 var bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -54,6 +61,41 @@ app.post('/custom-signup/', function(req, res) {
 	});
 
 });
+
+//API
+app.get('/users', user.list);
+
+//app.get('/profiles.json', profiles.fetchProfile);
+//app.post('/profiles/', profiles.createProfile);
+//app.put('/profiles/:profileid', profiles.updateProfile);
+//app.del('/profiles/', profiles.deleteProfile);
+
+app.get('/today/summary/', today.fetchTodaySummary);
+app.get('/today/summaryItems/', today.fetchTodaySummmaryListings);
+
+app.get('/todos/', todos.fetchAllToDos);
+app.post('/todos/', todos.addToDo);
+app.put('/todos/', todos.updateToDo);
+app.delete('/todos/', todos.removeToDo);
+
+app.get('/meetings/', meetings.fetchMeetings);
+app.post('/meetings/', meetings.addMeeting);
+app.put('/meetings/', meetings.updateMeeting);
+app.delete('/meetings/', meetings.deleteMeeting);
+
+app.get('/contacts/', contacts.fetchContacts);
+app.get('/contacts/topFriends/', contacts.fetchTopFriends);
+app.get('/contacts/recentFriends/', contacts.fetchRecentFriends);
+app.get('/contacts.topColleagues/', contacts.fetchTopColleagues);
+app.get('/contacts.recentColleagbues', contacts.fetchRecentColleagues);
+app.post('/contacts/', contacts.addContact);
+app.put('/contacts/', contacts.updateContact);
+app.delete('/contacts/', contacts.deleteContact);
+
+app.get('/conversations/', conversations.fetchConversations);
+app.post('/conversations/', conversations.addConversation);
+app.put('/conversations/', conversations.updateConversation);
+app.delete('/conversations/', conversations.deleteConversation);
 
 app.use(express.static(__dirname));
 app.disable('etag');
