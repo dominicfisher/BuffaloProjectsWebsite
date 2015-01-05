@@ -346,12 +346,13 @@
                 leafletData.getMap().then(function (map) {
                     map.invalidateSize();
                 });
-                $('.fadein').animate({
+                /*$('.fadein').animate({
                     'opacity': 0
-                }, 2000, "easeOutQuart");
+                }, 2000, "easeOutQuart");*/
                 $('#weatherImageDetailScroller').height($('#weatherImageDetail').height() - 51);
             }
 
+            $('#weatherBackgroundSlideshowContainer').fadeOut();
             $('#weatherbackgroundContainer').fadeOut(function () {
 
                 $('#weatherbackground').remove();
@@ -541,20 +542,32 @@
         };
 
         $scope.deleteImage = function () {
+            console.log('DELETE')
+            console.log($scope.currentPicturePath)
             var j = 0;
             for (var i = 0; i < $scope.weatherPictures.length; i++) {
                 if ($scope.weatherPictures[i].path == $scope.currentPicturePath) {
-                    j = 1;
+                    j = i;
                     $http.post('/deleteImage/', {
+                        translated_user: $scope.translateUserId,
                         image: $scope.weatherPictures[i]
                     }).
                     success(function (data, status, headers, config) {
                         if (data.error == null) {
                             $scope.weatherPictures.splice(j, 1);
                             $('#weatherImageDetail').fadeOut();
-                            $('.fadein').animate({
+                            /*$('.fadein').animate({
                                 'opacity': 0
-                            }, 2000, "easeOutQuart");
+                            }, 2000, "easeOutQuart");*/
+                            $scope.currentPictureWeatherTags = [];
+                            $scope.currentPicture = null;
+                            $scope.currentPictureApproved = false;
+                            $scope.currentPictureLocationLabel = '';
+                            $scope.currentPictureLocationLatLon = null;
+                            $scope.currentPicturePath = null;
+                            $scope.currentPictureSeason = '';
+                            $('#weatherbackgroundContainer').fadeOut();
+                            $('#weatherBackgroundSlideshowContainer').fadeIn();
                         } else {
                             console.log('image did not delete');
                         }
@@ -584,8 +597,8 @@
                     j = i;
                     console.log('saving image');
                     $http.post('/saveImage/', {
-                        translated_user: $scope.translated_user,
-                        image: $scope.weatherPictures[i]
+                        translated_user: $scope.translateUserId,
+                        images: $scope.weatherPictures
                     }).
                     success(function (data, status, headers, config) {
                         if (data.error == null) {
@@ -603,6 +616,27 @@
                 };
             };
         };
+        $scope.updateWeatherPictures = function (images) {
+
+            var bucket = new AWS.S3({
+                params: {
+                    Bucket: 'buffaloimages'
+                }
+            });
+            bucket.config.credentials = new AWS.Credentials(store.get('aws_creds').AccessKeyId, store.get('aws_creds').SecretAccessKey, store.get('aws_creds').SessionToken);
+            
+            for (var aPictureObject in images) {
+                bucket.getSignedUrl('getObject', {
+                    Expires: 24 * 60,
+                    Key: 'buffaloimages/' + auth.profile.user_id + '/' + aPictureObject.path
+                }, function (err, url) {
+                    console.log("RESULT");
+                    console.log(err);
+                    console.log(url);
+                })
+            }
+            $scope.weatherPictures = images;
+        }
 
         $scope.uploadBrowserImage = function ($files) {
             $scope.dragImage = false;
@@ -670,22 +704,24 @@
                             $('.meter span').animate({
                                 width: '0%'
                             }, 100, "easeOutQuart");
-
                             bucket.getSignedUrl('getObject', {
                                 Expires: 24 * 60,
                                 Key: objKey
                             }, function (err, url) {
+                                console.log("HELLO")
+                                console.log(url)
                                 pictureObject.path = uniqueFileName;
                                 pictureObject.signedPath = url;
 
 
                                 $http.post('/saveNewImage/', {
-                                    translated_user: $scope.translated_user,
+                                    translated_user: $scope.translateUserId,
                                     image: pictureObject
                                 }).
                                 success(function (data, status, headers, config) {
                                     if (data.error == null) {
-                                        $scope.weatherPictures.unshift(data.data[0]);
+                                        console.log(data)
+                                        $scope.weatherPictures.unshift(pictureObject);
                                         jQuery('.weatherThumbnails').nailthumb({
                                             width: 100,
                                             height: 100,
@@ -715,6 +751,7 @@
                 console.log('No File Selected');
             }
             $scope.$apply();
+            $('#file').val(null);
         };
 
         $scope.showSignup = function () {
@@ -757,7 +794,25 @@
         };
 
         $scope.changeUserPicture = function (path) {
-            $scope.userpicture = path;
+            var bucket = new AWS.S3({
+                params: {
+                    Bucket: 'buffaloimages'
+                }
+            });
+            bucket.config.credentials = new AWS.Credentials(store.get('aws_creds').AccessKeyId, store.get('aws_creds').SecretAccessKey, store.get('aws_creds').SessionToken);
+
+                bucket.getSignedUrl('getObject', {
+                    Expires: 24 * 60,
+                    Key: 'buffaloimages/' + auth.profile.user_id + '/' + path
+                }, function (err, url) {
+                    console.log("RESULT PROFILE");
+                    console.log(path)
+                    console.log(err);
+                    console.log(url);
+                     $scope.userpicture = url;
+                })
+            
+           
         };
 
         $scope.changeUserName = function (name) {
@@ -791,14 +846,14 @@
                     $http({
                         url: 'https://buffaloprojects.auth0.com/api/users/' + $scope.userid + '/change_password_ticket/',
                         method: 'POST',
-                        
+
                         headers: {
                             Authorization: 'Bearer hlrRV1oopzmkIQDSX90onUqbSfQuPfZNtW0VHmU7wu5nxHZBFYF1XYymChcM2mOX',
                             "Content-Type": 'application/json'
                         },
                         data: {
                             "newPassword": $scope.new_password,
-                            "resultUrl":""
+                            "resultUrl": ""
                         }
                     }).success(function (data) {
                         alert('good')
@@ -868,19 +923,16 @@
                                 width: '0%'
                             }, 100, "easeOutQuart");
 
-                            bucket.getSignedUrl('getObject', {
-                                Expires: 24 * 60,
-                                Key: objKey
-                            }, function (err, url) {
-                                $http.post('/save_profile_image/', {
+                            $http.post('/save_profile_image/', {
                                     translated_user: $scope.translateUserId,
-                                    image_path: url
+                                    image_path: uniqueFileName
                                 }).
                                 success(function (data, status, headers, config) {
                                     $('#changeProfileImageLoader').fadeOut();
                                     if (data.error == null) {
                                         $('#changeProfileImageLoader').fadeOut();
-                                        $scope.userpicture = url;
+                                        $scope.changeUserPicture(uniqueFileName)
+                                        //$scope.userpicture = url;
                                     } else {
                                         $('#changeProfileImageLoader').fadeOut();
                                         console.log('image did not save');
@@ -890,8 +942,7 @@
                                     $('#changeProfileImageLoader').fadeOut();
                                     console.log('failed to save image');
                                 });
-
-                            });
+                            
                         };
                     })
                         .on('httpUploadProgress', function (progress) {
@@ -1304,7 +1355,7 @@
             }
 
             $scope.changeUserId(profile.user_id);
-            $scope.changeUserPicture(profile.picture);
+            //$scope.changeUserPicture(profile.picture);
             $scope.email_verified = profile.email_verified;
 
             store.set('id_token', token);
@@ -1321,8 +1372,6 @@
                 console.log($scope.translateUserId);
                 $scope.first_name = data.data.first_name;
                 $scope.last_name = data.data.last_name;
-                $scope.changeUserPicture(data.data.profile_image);
-                $scope.weatherPictures = data.data.images;
                 console.log(data)
                 $scope.updateMainItems(data.data.translated_id, data.data.first_name, data.data.last_name);
                 if ($scope.first_name != undefined) {
@@ -1343,6 +1392,8 @@
                     role: 'arn:aws:iam::203816133875:role/buffaloprojects-s3user'
                 }).then(function (delegationResult) {
                     store.set('aws_creds', delegationResult.Credentials);
+                    $scope.updateWeatherPictures(data.data.images);
+                    $scope.changeUserPicture(data.data.profile_image);
                     showSidebar();
                 });
             }).

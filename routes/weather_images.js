@@ -236,16 +236,24 @@ exports.save_image = function (req, res) {
 
     req.on('end', function () {
         var data = JSON.parse(content);
-        var image = data.image;
+        var translated_user = data.translated_user;
+        var newImages = data.images;
 
         buffaloWeatherImages.update({
-            _id: image.path
-        }, image);
-        var output = {
-            error: null,
-            data: 'done'
-        };
-        res.end(JSON.stringify(output) + "\n");
+            translated_id: translated_user, "images.path" : image.path
+        }, {
+            $set: {
+                images: newImages
+            }
+        }, function (err, results) {
+            console.log(err);
+            console.log(results.result)
+            var output = {
+                error: err,
+                data: 'done'
+            };
+            res.end(JSON.stringify(output) + "\n");
+        });
     });
 }
 
@@ -265,15 +273,26 @@ exports.delete_image = function (req, res) {
     req.on('end', function () {
         var data = JSON.parse(content);
         var image = data.image;
+        var translated_user = data.translated_user;
 
-        buffaloWeatherImages.remove({
-            _id: image.path
+        buffaloWeatherImages.update({
+            translated_id: translated_user
+        }, {
+            $pull: {
+                'images': {
+                    "path": image.path
+                }
+            }
+        }, function (err, results) {
+            console.log(err);
+            console.log(results.result)
+            var output = {
+                error: err,
+                data: 'done'
+            };
+            res.end(JSON.stringify(output) + "\n");
         });
-        var output = {
-            error: null,
-            data: 'done'
-        };
-        res.end(JSON.stringify(output) + "\n");
+
     });
 };
 
@@ -291,7 +310,7 @@ exports.save_profile_image = function (req, res) {
     });
 
     req.on('end', function () {
-        
+
         var data = JSON.parse(content);
         console.log(data.image_path)
 
