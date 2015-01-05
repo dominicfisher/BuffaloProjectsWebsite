@@ -291,19 +291,24 @@ exports.save_profile_image = function (req, res) {
     });
 
     req.on('end', function () {
+        
         var data = JSON.parse(content);
+        console.log(data.image_path)
 
         var translated_user = data.translated_user;
+        console.log(data.translated_user)
 
         buffaloWeatherImages.update({
             translated_id: translated_user
         }, {
             $set: {
-                'profile_image': data.profile_image_path
+                'profile_image': data.image_path
             }
         }, function (err, results) {
+            console.log(err);
+            console.log(results.result)
             var output = {
-                error: null,
+                error: err,
                 data: 'done'
             };
             res.end(JSON.stringify(output) + "\n");

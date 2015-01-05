@@ -273,7 +273,7 @@
             $scope.translateUserId = translatedId;
             $scope.first_name = first_name;
             $scope.last_name = last_name;
-            if($scope.first_name){
+            if ($scope.first_name) {
                 $scope.new_first_name = $scope.first_name;
                 $scope.new_last_name = $scope.last_name;
             }
@@ -786,16 +786,30 @@
             if (isValidPassword($scope.new_password)) {
 
                 if ($scope.new_password == $scope.new_password_verify) {
+                    $('#changePasswordLoader').fadeIn();
+                    console.log($scope.userid);
                     $http({
-                        url: 'https://buffaloprojects.auth0.com/api/users/' + $scope.userid + '/change_password_ticket',
+                        url: 'https://buffaloprojects.auth0.com/api/users/' + $scope.userid + '/change_password_ticket/',
                         method: 'POST',
+                        
                         headers: {
+                            Authorization: 'Bearer hlrRV1oopzmkIQDSX90onUqbSfQuPfZNtW0VHmU7wu5nxHZBFYF1XYymChcM2mOX',
                             "Content-Type": 'application/json'
                         },
-                        authorization: 'Bearer XAUqDIJXSBWQUWgXSV17LIMcXx10nwxXS1dBImd8QgPMWbTJSc027DnYFtvLAsmT'
-                    }).success(function (data) {}).
-                    error(function (data) {});
+                        data: {
+                            "newPassword": $scope.new_password,
+                            "resultUrl":""
+                        }
+                    }).success(function (data) {
+                        alert('good')
+                        $('#changePasswordLoader').fadeOut();
+                    }).
+                    error(function (data) {
+                        alert('bad')
+                        $('#changePasswordLoader').fadeOut();
+                    });
                 } else {
+                    $('#changePasswordLoader').fadeOut();
                     $scope.change_password_error = "Your new password and password verification don't match.";
                     $('#changePasswordError').fadeIn();
                 }
@@ -808,7 +822,7 @@
         }
 
         $scope.uploadProfileImage = function ($files) {
-
+            $('#changeProfileImageLoader').fadeIn();
             var bucket = new AWS.S3({
                 params: {
                     Bucket: 'buffaloimages'
@@ -837,15 +851,6 @@
                     uniqueFileName += uniqueWeatherFileName();
                     uniqueFileName += fileExtension;
                     pictureObject.path = uniqueFileName;
-                    pictureObject.season = '';
-                    pictureObject.approved = false;
-
-                    if ($scope.fileBrowser) {
-                        pictureObject = getPictureLatLon(pictureObject);
-                    } else {
-                        pictureObject.lat = $scope.defaultLat;
-                        pictureObject.lon = $scope.defaultLon;
-                    }
 
                     var objKey = 'buffaloimages/' + auth.profile.user_id + '/' + uniqueFileName;
                     var params = {
@@ -867,22 +872,22 @@
                                 Expires: 24 * 60,
                                 Key: objKey
                             }, function (err, url) {
-                                pictureObject.path = uniqueFileName;
-                                pictureObject.signedPath = url;
-
-
-                                $http.post('/saveNewImage/', {
-                                    translated_user: $scope.translated_user,
-                                    image: pictureObject.profile_image_path
+                                $http.post('/save_profile_image/', {
+                                    translated_user: $scope.translateUserId,
+                                    image_path: url
                                 }).
                                 success(function (data, status, headers, config) {
+                                    $('#changeProfileImageLoader').fadeOut();
                                     if (data.error == null) {
-                                        //Profile image path saved in db
+                                        $('#changeProfileImageLoader').fadeOut();
+                                        $scope.userpicture = url;
                                     } else {
+                                        $('#changeProfileImageLoader').fadeOut();
                                         console.log('image did not save');
                                     }
                                 }).
                                 error(function (data, status, headers, config) {
+                                    $('#changeProfileImageLoader').fadeOut();
                                     console.log('failed to save image');
                                 });
 
@@ -890,9 +895,9 @@
                         };
                     })
                         .on('httpUploadProgress', function (progress) {
-                            $('.meter span').animate({
+                            /*$('.meter span').animate({
                                 width: Math.round(progress.loaded / progress.total * 100) + '%'
-                            }, 100, "easeOutQuart");
+                            }, 100, "easeOutQuart");*/
                         });
                 };
             } else {
@@ -903,7 +908,8 @@
 
         $scope.saveProfile = function () {
             console.log('saving profile')
-            console.log($scope.translateUserId)
+            console.log($scope.translateUserId);
+            $('#changeProfileLoader').fadeIn();
             $http.post('/save_profile/', {
                 translated_user: $scope.translateUserId,
                 first_name: $scope.new_first_name,
@@ -920,7 +926,7 @@
                     } else {
                         $scope.changeUserName($scope.userid);
                     }
-                    console.log(data.first_name);
+                    $('#changeProfileLoader').fadeOut();
                 } else {
                     console.log('image did not save');
                 }
@@ -1320,10 +1326,10 @@
                 console.log(data)
                 $scope.updateMainItems(data.data.translated_id, data.data.first_name, data.data.last_name);
                 if ($scope.first_name != undefined) {
-                $scope.changeUserName($scope.first_name + ' ' + $scope.last_name);
-            } else {
-                $scope.changeUserName(data.data.user);
-            }
+                    $scope.changeUserName($scope.first_name + ' ' + $scope.last_name);
+                } else {
+                    $scope.changeUserName(data.data.user);
+                }
 
                 //TODO get sign url for images
 
